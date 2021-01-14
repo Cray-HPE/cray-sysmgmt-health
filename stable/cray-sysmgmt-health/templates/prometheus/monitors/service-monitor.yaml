@@ -1,0 +1,80 @@
+{{- /*
+Copyright 2020 Hewlett Packard Enterprise Development LP
+*/ -}}
+{{- range $key, $val := .Values.servicemonitors }}
+{{- if $val.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ template "cray-sysmgmt-health.fullname" $ }}-{{ $val.servicename }}-{{ $val.cluster }}-exporter
+  namespace: {{ $val.serviceMonitor.namespace }}
+  labels:
+    app: {{ template "cray-sysmgmt-health.name" $ }}-{{ $val.servicename }}-{{ $val.cluster }}-exporter
+    release: {{ template "cray-sysmgmt-health.name" $ }}
+{{ include "cray-sysmgmt-health.labels" $ | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+{{ toYaml $val.serviceMonitor.matchLabels | indent 6 }}
+  namespaceSelector:
+    matchNames:
+      {{- range $val.serviceMonitor.matchNamespace }}
+      - {{ . }}
+      {{- end }}
+  endpoints:
+  - port: {{ $val.serviceMonitor.port }}
+    {{- if $val.serviceMonitor.interval }}
+    interval: {{ $val.serviceMonitor.interval }}
+    {{- end }}
+    {{- if $val.serviceMonitor.honor_labels }}
+    honorLabels: {{ $val.serviceMonitor.honor_labels }}
+    {{- end }}
+    {{- if eq $val.serviceMonitor.scheme "https" }}
+    scheme: https
+    tlsConfig:
+      {{- if $val.serviceMonitor.serverName }}
+      serverName: {{ $val.serviceMonitor.serverName }}
+      {{- end }}
+      {{- if $val.serviceMonitor.caFile }}
+      caFile: {{ $val.serviceMonitor.caFile }}
+      {{- end }}
+      {{- if  $val.serviceMonitor.certFile }}
+      certFile: {{ $val.serviceMonitor.certFile }}
+      {{- end }}
+      {{- if $val.serviceMonitor.keyFile }}
+      keyFile: {{ $val.serviceMonitor.keyFile }}
+      {{- end}}
+      {{- if $val.serviceMonitor.ca }}
+      ca:
+        secret:
+          key: {{ $val.serviceMonitor.ca.key }}
+          name: {{ $val.serviceMonitor.ca.name }}
+      {{- end }}
+      {{- if  $val.serviceMonitor.cert }}
+      cert:
+        secret:
+          key: {{ $val.serviceMonitor.cert.key }}
+          name: {{ $val.serviceMonitor.cert.name }}
+      {{- end }}
+      {{- if $val.serviceMonitor.keySecret }}
+      keySecret:
+        key: {{ $val.serviceMonitor.keySecret.key }}
+        name: {{ $val.serviceMonitor.keySecret.name }}
+      {{- end}}
+      {{- if $val.serviceMonitor.insecureSkipVerify }}
+      insecureSkipVerify: {{ $val.serviceMonitor.insecureSkipVerify }}
+      {{- end}}
+    {{ else if eq $val.serviceMonitor.scheme "http" }}
+    scheme: http
+    {{- end }}
+{{- if $val.serviceMonitor.metricRelabelings }}
+    metricRelabelings:
+{{ tpl (toYaml $val.serviceMonitor.metricRelabelings | indent 4) . }}
+{{- end }}
+{{- if $val.serviceMonitor.relabelings }}
+    relabelings:
+{{ toYaml $val.serviceMonitor.relabelings | indent 4 }}
+{{- end }}
+{{- end }}
+---
+{{- end }}

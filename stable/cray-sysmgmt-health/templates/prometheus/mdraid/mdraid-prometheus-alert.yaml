@@ -1,0 +1,62 @@
+{{- /*
+Copyright 2020 Hewlett Packard Enterprise Development LP
+*/ -}}
+{{- if and (index .Values "customRules" "create") (index .Values "customRules" "rules" "mdraid") }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ printf "%s-%s" (include "cray-sysmgmt-health.fullname" .) "mdraid-prometheus-alert.rules" | trunc 63 | trimSuffix "-" }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "cray-sysmgmt-health.name" . }}
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+{{- if (index .Values "customRules" "labels") }}
+{{ toYaml (index .Values "customRules" "labels") | indent 4 }}
+{{- end }}
+{{- if (index .Values "customRules" "annotations") }}
+  annotations:
+{{ toYaml (index .Values "customRules" "annotations") | indent 4 }}
+{{- end }}
+spec:
+  groups:
+  - name: MD RAID Arrays
+    rules:
+    - alert: MdRaidArrayGotInactive
+      expr: node_md_state{state="inactive"} > 0
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        description: 'MD RAID array "{{`{{ $labels.device }}`}}" on (instance "{{`{{ $labels.instance }}`}}") is in Inactive state'
+        summary: 'An MD RAID array is in Inactive state'
+
+    - alert: MdRaidDiskFailure
+      expr: node_md_disks{state="failed"} > 0
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        description: 'At least one device in MD RAID array "{{`{{ $labels.device }}`}}" on "{{`{{ $labels.instance }}`}}" has failed'
+        summary: 'An MD RAID has failed'
+
+    # Alert for Storage Nodes, which has older version of Node Exporter running
+    - alert: MdRaidDegradedOlderNodeExporter
+      expr: (node_md_disks - node_md_disks_active) != 0
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        description: 'An MD RAID array "{{`{{ $labels.device }}`}}" on "{{`{{ $labels.instance }}`}}" is in Degraded state: {{`{{ $value }}`}} disks failed'
+        summary: 'An MD RAID array is in Degraded state'
+
+    # Alert for Nodes, running newer version of Node Exporter running
+    - alert: MdRaidDegraded
+      expr: |
+        node_md_disks_required - ignoring (state) (node_md_disks{state="active"}) > 0
+      for: 15m
+      labels:
+        severity: critical
+      annotations:
+        description: 'An MD RAID array "{{`{{ $labels.device }}`}}" on "{{`{{ $labels.instance }}`}}" is in degraded state due to failure of {{`{{ $value }}`}} disks.'
+        summary: 'An MD RAID array is in Degraded state'
+{{- end }}

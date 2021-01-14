@@ -1,0 +1,37 @@
+{{- if (index .Values "prometheus-operator" "prometheus" "enabled") }}
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ template "cray-sysmgmt-health.fullname" . }}-prometheus
+  labels:
+    app: {{ template "cray-sysmgmt-health.name" . }}-prometheus
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+spec:
+  gateways:
+  - {{ .Values.global.authGateway }}
+  hosts:
+  - {{ (index .Values "prometheus-operator" "prometheus" "prometheusSpec" "externalAuthority") }}
+  http:
+  - match:
+    - authority:
+        exact: {{ (index .Values "prometheus-operator" "prometheus" "prometheusSpec" "externalAuthority") }}
+    route:
+    - destination:
+        host: {{ template "cray-sysmgmt-health.prometheus-operator.fullname" . }}-prometheus
+        port:
+          number: 9090
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: {{ template "cray-sysmgmt-health.fullname" . }}-prometheus
+  labels:
+    app: {{ template "cray-sysmgmt-health.name" . }}-prometheus
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+spec:
+  host: {{ template "cray-sysmgmt-health.prometheus-operator.fullname" . }}-prometheus
+  trafficPolicy:
+    tls:
+      mode: DISABLE
+{{- end }}

@@ -1,0 +1,19 @@
+{{- if .Values.cephNodeExporter.enabled }}
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: {{ template "cray-sysmgmt-health.fullname" . }}-ceph-node-exporter
+  labels:
+    app: {{ template "cray-sysmgmt-health.name" . }}-ceph-node-exporter
+    release: {{ template "cray-sysmgmt-health.name" . }}
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+subsets:
+  - addresses:
+      {{- range .Values.cephNodeExporter.endpoints }}
+      - ip: {{ . }}
+      {{- end }}
+    ports:
+      - name: http-metrics
+        port: {{ .Values.cephNodeExporter.service.port }}
+        protocol: TCP
+{{- end }}

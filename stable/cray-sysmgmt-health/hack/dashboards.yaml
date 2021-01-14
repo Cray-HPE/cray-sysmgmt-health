@@ -1,0 +1,151 @@
+# Default dashboards included with Istio 1.4
+---
+source: https://raw.githubusercontent.com/istio/istio/release-1.4/install/kubernetes/helm/istio/charts/grafana/dashboards/citadel-dashboard.json
+destination: ../templates/grafana/dashboards/istio-1.4
+type: json
+min_kubernetes: 1.17.2-0
+conditions:
+- ".Values.customDashboards.istio.enabled"
+---
+source: https://raw.githubusercontent.com/istio/istio/release-1.4/install/kubernetes/helm/istio/charts/grafana/dashboards/galley-dashboard.json
+destination: ../templates/grafana/dashboards/istio-1.4
+type: json
+min_kubernetes: 1.17.2-0
+conditions:
+- ".Values.customDashboards.istio.enabled"
+- ".Values.customDashboards.istio.galley.enabled"
+---
+source: https://raw.githubusercontent.com/istio/istio/release-1.4/install/kubernetes/helm/istio/charts/grafana/dashboards/istio-mesh-dashboard.json
+destination: ../templates/grafana/dashboards/istio-1.4
+type: json
+min_kubernetes: 1.17.2-0
+conditions:
+- ".Values.customDashboards.istio.enabled"
+---
+source: https://raw.githubusercontent.com/istio/istio/release-1.4/install/kubernetes/helm/istio/charts/grafana/dashboards/istio-performance-dashboard.json
+destination: ../templates/grafana/dashboards/istio-1.4
+type: json
+min_kubernetes: 1.17.2-0
+conditions:
+- ".Values.customDashboards.istio.enabled"
+---
+source: https://raw.githubusercontent.com/istio/istio/release-1.4/install/kubernetes/helm/istio/charts/grafana/dashboards/istio-service-dashboard.json
+destination: ../templates/grafana/dashboards/istio-1.4
+type: json
+min_kubernetes: 1.17.2-0
+conditions:
+- ".Values.customDashboards.istio.enabled"
+---
+source: https://raw.githubusercontent.com/istio/istio/release-1.4/install/kubernetes/helm/istio/charts/grafana/dashboards/istio-workload-dashboard.json
+destination: ../templates/grafana/dashboards/istio-1.4
+type: json
+min_kubernetes: 1.17.2-0
+conditions:
+- ".Values.customDashboards.istio.enabled"
+---
+source: https://raw.githubusercontent.com/istio/istio/release-1.4/install/kubernetes/helm/istio/charts/grafana/dashboards/mixer-dashboard.json
+destination: ../templates/grafana/dashboards/istio-1.4
+type: json
+min_kubernetes: 1.17.2-0
+conditions:
+  - ".Values.customDashboards.istio.enabled"
+---
+source: https://raw.githubusercontent.com/istio/istio/release-1.4/install/kubernetes/helm/istio/charts/grafana/dashboards/pilot-dashboard.json
+destination: ../templates/grafana/dashboards/istio-1.4
+type: json
+min_kubernetes: 1.17.2-0
+conditions:
+- ".Values.customDashboards.istio.enabled"
+- ".Values.customDashboards.istio.pilot.enabled"
+
+
+# Node exporter dashboard (requires node-exporter 0.18+)
+---
+source: https://raw.githubusercontent.com/rfrail3/grafana-dashboards/master/prometheus/node-exporter-full.json
+destination: ../templates/grafana/dashboards/node-exporter
+type: json
+min_kubernetes: 1.17.2-0
+conditions:
+- ".Values.customDashboards.nodeExporter.enabled"
+
+
+### CEPH dashboards have been fixed manually because the queries were broken.
+
+# # Ceph dashboards (for nautilus)
+# ---
+# source: https://raw.githubusercontent.com/ceph/ceph/nautilus/monitoring/grafana/dashboards/ceph-cluster.json
+# destination: ../templates/grafana/dashboards/ceph-nautilus
+# type: json
+# min_kubernetes: 1.10.0-0
+# conditions:
+# - ".Values.customDashboards.ceph.enabled"
+# ---
+# source: https://raw.githubusercontent.com/ceph/ceph/nautilus/monitoring/grafana/dashboards/cephfs-overview.json
+# destination: ../templates/grafana/dashboards/ceph-nautilus
+# type: json
+# min_kubernetes: 1.10.0-0
+# conditions:
+# - ".Values.customDashboards.ceph.enabled"
+# ---
+# source: https://raw.githubusercontent.com/ceph/ceph/nautilus/monitoring/grafana/dashboards/host-details.json
+# destination: ../templates/grafana/dashboards/ceph-nautilus
+# type: json
+# min_kubernetes: 1.10.0-0
+# conditions:
+# - ".Values.customDashboards.ceph.enabled"
+# ---
+# source: https://raw.githubusercontent.com/ceph/ceph/nautilus/monitoring/grafana/dashboards/hosts-overview.json
+# destination: ../templates/grafana/dashboards/ceph-nautilus
+# type: json
+# min_kubernetes: 1.10.0-0
+# conditions:
+# - ".Values.customDashboards.ceph.enabled"
+# ---
+# source: https://raw.githubusercontent.com/ceph/ceph/nautilus/monitoring/grafana/dashboards/osd-device-details.json
+# destination: ../templates/grafana/dashboards/ceph-nautilus
+# type: json
+# min_kubernetes: 1.10.0-0
+# conditions:
+# - ".Values.customDashboards.ceph.enabled"
+# ---
+# source: https://raw.githubusercontent.com/ceph/ceph/nautilus/monitoring/grafana/dashboards/osds-overview.json
+# destination: ../templates/grafana/dashboards/ceph-nautilus
+# type: json
+# min_kubernetes: 1.10.0-0
+# conditions:
+# - ".Values.customDashboards.ceph.enabled"
+# ---
+# source: https://raw.githubusercontent.com/ceph/ceph/nautilus/monitoring/grafana/dashboards/pool-detail.json
+# destination: ../templates/grafana/dashboards/ceph-nautilus
+# type: json
+# min_kubernetes: 1.10.0-0
+# conditions:
+# - ".Values.customDashboards.ceph.enabled"
+# ---
+# source: https://raw.githubusercontent.com/ceph/ceph/nautilus/monitoring/grafana/dashboards/pool-overview.json
+# destination: ../templates/grafana/dashboards/ceph-nautilus
+# type: json
+# min_kubernetes: 1.10.0-0
+# conditions:
+# - ".Values.customDashboards.ceph.enabled"
+# ---
+# source: https://raw.githubusercontent.com/ceph/ceph/nautilus/monitoring/grafana/dashboards/radosgw-detail.json
+# destination: ../templates/grafana/dashboards/ceph-nautilus
+# type: json
+# min_kubernetes: 1.10.0-0
+# conditions:
+# - ".Values.customDashboards.ceph.enabled"
+# ---
+# source: https://raw.githubusercontent.com/ceph/ceph/nautilus/monitoring/grafana/dashboards/radosgw-overview.json
+# destination: ../templates/grafana/dashboards/ceph-nautilus
+# type: json
+# min_kubernetes: 1.10.0-0
+# conditions:
+# - ".Values.customDashboards.ceph.enabled"
+# ---
+# source: https://raw.githubusercontent.com/ceph/ceph/nautilus/monitoring/grafana/dashboards/rbd-overview.json
+# destination: ../templates/grafana/dashboards/ceph-nautilus
+# type: json
+# min_kubernetes: 1.10.0-0
+# conditions:
+# - ".Values.customDashboards.ceph.enabled"

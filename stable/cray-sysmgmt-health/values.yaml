@@ -1,0 +1,706 @@
+#
+# Copyright 2020 Hewlett Packard Enterprise Development LP
+#
+global:
+  authGateway: services/services-gateway
+  rbac:
+    create: true
+    pspEnabled: true
+
+# Enable/Disable subcharts
+# grafana:
+#   enabled: true
+# kubeStateMetrics:
+#   enabled: false
+# nodeExporter:
+#   enabled: true
+
+prometheus-operator:
+
+  prometheusOperator:
+    admissionWebhooks:
+      patch:
+        enabled: true
+        image:
+          repository: jettech/kube-webhook-certgen
+          tag: v1.2.1
+          pullPolicy: IfNotPresent
+
+    image:
+      repository: quay.io/coreos/prometheus-operator
+      tag: v0.38.1
+      pullPolicy: IfNotPresent
+
+    prometheusConfigReloaderImage:
+      repository: quay.io/coreos/prometheus-config-reloader
+      tag: v0.38.1
+
+    hyperkubeImage:
+      # Base chart defaults to v1.12.1, but prefer to match the k8s release
+      tag: v1.17.2
+
+    # Resources for config-reloader side car, these are the same for requests and limits.
+    # configReloaderCpu: 100m (default)
+    # configReloaderMemory: 100m (default)
+    configReloaderCpu: 300m
+
+
+  prometheus:
+    prometheusSpec:
+
+      image:
+        repository: quay.io/prometheus/prometheus
+        tag: v2.18.1
+
+      # Enable administrative HTTP API, 'cause why not?
+      enableAdminAPI: true
+
+      # Configure external hostname for Istio ingress
+      # externalAuthority: prometheus-kube.local
+      # externalUrl: https://prometheus-kube.local/
+
+      secrets:
+        # Client certificate in order to scrape Etcd (see kubeEtcd below)
+        - etcd-client-cert
+
+      # Adjust retention period consistent with provisioned storage (see next)
+      retention: 48h
+
+      # Configure persistent storage for Prometheus instances.
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 200Gi
+
+      # Managed as per environment basis
+      # resources:
+      #   limits:
+      #     cpu: '3'
+      #     memory: 12Gi
+      #   requests:
+      #     cpu: '1'
+      #     memory: 9Gi
+
+      ruleSelector:
+        matchLabels:
+          release: cray-sysmgmt-health
+
+      additionalScrapeConfigs:
+        # Scrape containerd metrics
+        - job_name: 'containerd'
+          metrics_path: '/v1/metrics'
+          kubernetes_sd_configs:
+          - role: node
+          relabel_configs:
+          # Add node labels
+          - action: labelmap
+            regex: __meta_kubernetes_node_label_(.+)
+          # Set "node" label
+          - source_labels: [__meta_kubernetes_node_name]
+            action: replace
+            target_label: node
+          # Replace the default service port
+          - source_labels: [__address__]
+            action: replace
+            target_label: __address__
+            regex: ^(.+?)(?::\d+)?$
+            replacement: $1:1338
+
+        # Scrape weave metrics
+        - job_name: 'weave'
+          kubernetes_sd_configs:
+          - api_server:
+            role: pod
+          relabel_configs:
+          - source_labels: [__meta_kubernetes_namespace,__meta_kubernetes_pod_label_name]
+            action: keep
+            regex: ^kube-system;weave-net$
+          - source_labels: [__meta_kubernetes_pod_container_name,__address__]
+            action: replace
+            target_label: __address__
+            regex: ^weave;(.+?)(?::\d+)?$
+            replacement: $1:6782
+          - source_labels: [__meta_kubernetes_pod_container_name,__address__]
+            action: replace
+            target_label: __address__
+            regex: ^weave-npc;(.+?)(?::\d+)?$
+            replacement: $1:6781
+          - source_labels: [__meta_kubernetes_pod_container_name]
+            action: replace
+            target_label: job
+
+        # Federate metrics from Istio's Prometheus instance
+        # - job_name: 'federate-istio'
+        #   scrape_timeout: 45s
+        #   scrape_interval: 1m
+        #   honor_labels: true
+        #   metrics_path: '/federate'
+        #   params:
+        #     'match[]':
+        #       - '{__name__=~".+"}'
+        #   static_configs:
+        #     - targets:
+        #       - 'prometheus.istio-system:9090'
+
+        # Federate metrics from Ceph's Prometheus instance
+        # - job_name: 'federate-ceph'
+        #   scrape_timeout: 45s
+        #   scrape_interval: 1m
+        #   honor_labels: true
+        #   metrics_path: '/federate'
+        #   params:
+        #     'match[]':
+        #       - '{__name__=~".+"}'
+        #   static_configs:
+        #     - targets:
+        #       - 'cray-ceph-monitoring-prometheus.ceph-monitoring:9090'
+
+  alertmanager:
+
+    alertmanagerSpec:
+      # Adjust retention period consistent with provisioned storage (see next)
+      retention: 48h
+      # Configure storage for alertmanager instances
+      storage:
+        volumeClaimTemplate:
+          spec:
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 50Gi
+
+      resources:
+        requests:
+          cpu: 100m
+          memory: 64Mi
+        limits:
+          cpu: 500m
+          memory: 128Mi
+
+      # Configure external hostname for Istio ingress
+      # Setup with Ansible
+      #externalAuthority: alertmanager-shs.local
+      #externalUrl: https://alertmanager-shs.local/
+
+  grafana:
+
+    image:
+      repository: grafana/grafana
+      tag: 7.0.3
+
+    # Configure external hostname for Istio ingress
+    # Setup with Ansible
+    #externalAuthority: grafana-shs.local
+
+    # Note: We are using our own templates while OPA-istio-plugin is fixed CASMPET-2788
+    defaultDashboardsEnabled: false
+
+    #persistence:
+    #  enabled: true
+    #  size: 100Gi
+
+    # Change default admin password to be consistent. Although with the
+    # auth.proxy configured below, this won't normally matter.
+    adminUser: admin
+    adminPassword: admin
+
+    # Grafana's primary configuration
+    grafana.ini:
+      analytics:
+        check_for_updates: false
+      # External authentication provided by Keycloak Gatekeeper and
+      # external authorization by OPA (enforced by Istio).
+      auth.proxy:
+        enabled: true
+        header_name: X-WEBAUTH-USER
+        header_property: username
+        auto_sign_up: true
+
+    sidecar:
+      image:
+        repository: kiwigrid/k8s-sidecar
+        tag: 0.1.151
+      dashboards:
+        enabled: true
+      datasources:
+        enabled: true
+        defaultDatasourceEnabled: true
+
+    # vonage-status-panel in upstream is broken and we need to install latest stable version from fork until is merged
+    plugins:
+    - grafana-piechart-panel
+    - https://github.com/MefhigosetH/Grafana_Status_panel/archive/hotfix/issue-159.zip;vonage-status-panel
+
+    datasources:
+      datasources.yaml:
+        apiVersion: 1
+        datasources:
+        - name: istio-monitoring
+          type: prometheus
+          url: http://prometheus.istio-system:9090
+          access: proxy
+
+
+  # Exporters
+  kubelet:
+    enabled: true
+    serviceMonitor:
+      https: true
+      cAdvisor: true
+      probes: true
+      resource: true
+      resourcePath: "/metrics/resource"
+
+
+  kubeEtcd:
+    # Configure secure access to the etcd cluster via the key and certs
+    # defined in the `etcd-client-cert` secret (see below).
+    serviceMonitor:
+      interval: ""
+      scheme: https
+      insecureSkipVerify: false
+      serverName: ""
+      caFile: "/etc/prometheus/secrets/etcd-client-cert/etcd-ca"
+      certFile: "/etc/prometheus/secrets/etcd-client-cert/etcd-client"
+      keyFile: "/etc/prometheus/secrets/etcd-client-cert/etcd-client-key"
+
+  prometheus-node-exporter:
+
+    image:
+      repository: quay.io/prometheus/node-exporter
+      tag: v1.0.0
+
+    extraArgs:
+      # Default extra args
+      - --collector.filesystem.ignored-mount-points=^/(dev|proc|sys|var/lib/docker/.+)($|/)
+      - --collector.filesystem.ignored-fs-types=^(autofs|binfmt_misc|cgroup|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|mqueue|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|sysfs|tracefs)$
+      # Extra goodness
+      - --collector.buddyinfo
+      - --collector.drbd
+      - --collector.interrupts
+      - --collector.ksmd
+      - --collector.logind
+      - --collector.meminfo_numa
+      - --collector.mountstats
+      - --collector.ntp
+      - --collector.processes
+      - --collector.qdisc
+      - --collector.systemd
+      # tcpstat has potential performance impact
+      - --collector.tcpstat
+
+
+  # Compatibility with dashboards and rules templates
+  kube-state-metrics:
+    image:
+      repository: quay.io/coreos/kube-state-metrics
+      tag: v1.9.6
+
+  kubeStateMetrics:
+    enabled: true
+
+
+customRules:
+  create: true
+  rules:
+    ceph: true
+    postgresql: true
+    mdraid: true
+  labels:
+    release: cray-sysmgmt-health
+  ## Annotations for default rules
+  annotations: {}
+
+
+customDashboards:
+  ceph:
+    enabled: true
+  postgresql:
+    enabled: true
+  istio:
+    enabled: true
+    galley:
+      enabled: true
+    pilot:
+      enabled: true
+  nodeExporter:
+    enabled: true
+  # Note: We are using our own templates while OPA-istio-plugin is fixed CASMPET-2788
+  prometheusOperator:
+    enabled: true
+# coreDns:
+#   enabled: true
+# kubeApiServer:
+#   enabled: true
+# kubeControllerManager:
+#   enabled: true
+# kubeDns:
+#   enabled: true
+# kubeEtcd:
+#   enabled: true
+# kubeProxy:
+#   enabled: true
+# kubeScheduler:
+#   enabled: true
+# kubeStateMetrics:
+#   enabled: true
+# kubelet:
+#   enabled: true
+
+# prometheusOperator:
+#   enabled: true
+#   kubeletService:
+#     enabled: true
+
+cephExporter:
+  enabled: true
+  endpoints: []
+  service:
+    port: 9283
+    targetPort: 9283
+  serviceMonitor:
+    interval: 30s
+    scheme: http
+    #honor_labels: true
+    #serverName: ""
+    #caFile: ""
+    #certFile: ""
+    #keyFile: ""
+    insecureSkipVerify: false
+    metricsRelabelings: {}
+    relabelings: {}
+
+cephNodeExporter:
+  enabled: true
+  endpoints: []
+  service:
+    port: 9100
+    targetPort: 9100
+  serviceMonitor:
+    interval: 30s
+    scheme: http
+    #honor_labels: false
+    #serverName: ""
+    #caFile: ""
+    #certFile: ""
+    #keyFile: ""
+    insecureSkipVerify: false
+    metricsRelabelings: {}
+    relabelings: {}
+
+vaultEtcdExporter:
+  enabled: true
+  serviceMonitor:
+    namespace: vault
+    port: https-client
+    matchNamespace:
+    - vault
+    matchLabels:
+      etcd_cluster: cray-vault-etcd
+    interval: 30s
+    scheme: https
+    ca:
+      key: etcd-client-ca.crt
+      name: cray-vault-etcd-tls
+    cert:
+      key: etcd-client.crt
+      name: cray-vault-etcd-tls
+    keySecret:
+      key: etcd-client.key
+      name: cray-vault-etcd-tls
+    #caFile: ""
+    #certFile: ""
+    #keyFile: ""
+    #honor_labels: false
+    #serverName: ""
+    insecureSkipVerify: true
+    metricsRelabelings: {}
+    relabelings: {}
+
+rmPalsPostgresExporter:
+  enabled: true
+  service:
+    namespace: services
+    port: 9187
+    targetPort: 9187
+    selector:
+      cluster-name: cray-rm-pals-postgres
+  serviceMonitor:
+    namespace: sysmgmt-health
+    matchNamespace:
+    - services
+    interval: 30s
+    scheme: http
+    port: exporter
+    metricsRelabelings: {}
+    relabelings: {}
+
+slsPostgresExporter:
+  enabled: true
+  service:
+    namespace: services
+    port: 9187
+    targetPort: 9187
+    selector:
+      cluster-name: cray-sls-postgres
+  serviceMonitor:
+    namespace: sysmgmt-health
+    matchNamespace:
+    - services
+    interval: 30s
+    scheme: http
+    port: exporter
+    metricsRelabelings: {}
+    relabelings: {}
+
+smdPostgresExporter:
+  enabled: true
+  service:
+    namespace: services
+    port: 9187
+    targetPort: 9187
+    selector:
+      cluster-name: cray-smd-postgres
+  serviceMonitor:
+    namespace: sysmgmt-health
+    matchNamespace:
+    - services
+    interval: 30s
+    scheme: http
+    port: exporter
+    metricsRelabelings: {}
+    relabelings: {}
+
+giteaVcsPostgresExporter:
+  enabled: true
+  service:
+    namespace: services
+    port: 9187
+    targetPort: 9187
+    selector:
+      cluster-name: gitea-vcs-postgres
+  serviceMonitor:
+    namespace: sysmgmt-health
+    matchNamespace:
+    - services
+    interval: 30s
+    scheme: http
+    port: exporter
+    metricsRelabelings: {}
+    relabelings: {}
+
+keycloakPostgresExporter:
+  enabled: true
+  service:
+    namespace: services
+    port: 9187
+    targetPort: 9187
+    selector:
+      cluster-name: keycloak-postgres
+  serviceMonitor:
+    namespace: sysmgmt-health
+    matchNamespace:
+    - services
+    interval: 30s
+    scheme: http
+    port: exporter
+    metricsRelabelings: {}
+    relabelings: {}
+
+smaPostgresExporter:
+  enabled: true
+  service:
+    namespace: sma
+    port: 9187
+    targetPort: 9187
+    selector:
+      cluster-name: sma-postgres-cluster
+  serviceMonitor:
+    namespace: sysmgmt-health
+    matchNamespace:
+    - sma
+    interval: 30s
+    scheme: http
+    port: exporter
+    metricsRelabelings: {}
+    relabelings: {}
+
+servicemonitors:
+  bosEtcdExporter:
+    enabled: true
+    servicename: bos
+    cluster: etcd
+    serviceMonitor:
+      namespace: sysmgmt-health
+      port: http-client
+      matchNamespace:
+      - services
+      matchLabels:
+        etcd_cluster: cray-bos-etcd
+      interval: 30s
+      scheme: http
+      metricsRelabelings: {}
+      relabelings: {}
+
+  bssEtcdExporter:
+    enabled: true
+    servicename: bss
+    cluster: etcd
+    serviceMonitor:
+      namespace: sysmgmt-health
+      port: http-client
+      matchNamespace:
+      - services
+      matchLabels:
+        etcd_cluster: cray-bss-etcd
+      interval: 30s
+      scheme: http
+      metricsRelabelings: {}
+      relabelings: {}
+
+  cpsEtcdExporter:
+    enabled: true
+    servicename: cps
+    cluster: etcd
+    serviceMonitor:
+      namespace: sysmgmt-health
+      port: http-client
+      matchNamespace:
+      - services
+      matchLabels:
+        etcd_cluster: cray-cps-etcd
+      interval: 30s
+      scheme: http
+      metricsRelabelings: {}
+      relabelings: {}
+
+  crusEtcdExporter:
+    enabled: true
+    servicename: crus
+    cluster: etcd
+    serviceMonitor:
+      namespace: sysmgmt-health
+      port: http-client
+      matchNamespace:
+      - services
+      matchLabels:
+        etcd_cluster: cray-crus-etcd
+      interval: 30s
+      scheme: http
+      metricsRelabelings: {}
+      relabelings: {}
+
+  externaldnsEtcdExporter:
+    enabled: true
+    servicename: externaldns
+    cluster: etcd
+    serviceMonitor:
+      namespace: sysmgmt-health
+      port: http-client
+      matchNamespace:
+      - services
+      matchLabels:
+        etcd_cluster: cray-externaldns-etcd
+      interval: 30s
+      scheme: http
+      metricsRelabelings: {}
+      relabelings: {}
+
+  fasEtcdExporter:
+    enabled: true
+    servicename: fas
+    cluster: etcd
+    serviceMonitor:
+      namespace: sysmgmt-health
+      port: http-client
+      matchNamespace:
+      - services
+      matchLabels:
+        etcd_cluster: cray-fas-etcd
+      interval: 30s
+      scheme: http
+      metricsRelabelings: {}
+      relabelings: {}
+
+  hbtdEtcdExporter:
+    enabled: true
+    servicename: hbtd
+    cluster: etcd
+    serviceMonitor:
+      namespace: sysmgmt-health
+      port: http-client
+      matchNamespace:
+      - services
+      matchLabels:
+        etcd_cluster: cray-hbtd-etcd
+      interval: 30s
+      scheme: http
+      metricsRelabelings: {}
+      relabelings: {}
+
+  redsEtcdExporter:
+    enabled: true
+    servicename: reds
+    cluster: etcd
+    serviceMonitor:
+      namespace: sysmgmt-health
+      matchNamespace:
+      - services
+      matchLabels:
+        etcd_cluster: cray-reds-etcd
+      interval: 30s
+      scheme: http
+      port: http-client
+      metricsRelabelings: {}
+      relabelings: {}
+
+  hmnfdEtcdExporter:
+    enabled: true
+    servicename: hmnfd
+    cluster: etcd
+    serviceMonitor:
+      namespace: sysmgmt-health
+      port: http-client
+      matchNamespace:
+      - services
+      matchLabels:
+        etcd_cluster: cray-hmnfd-etcd
+      interval: 30s
+      scheme: http
+      metricsRelabelings: {}
+      relabelings: {}
+
+  uasMgrEtcdExporter:
+    enabled: true
+    servicename: uas-mgr
+    cluster: etcd
+    serviceMonitor:
+      namespace: sysmgmt-health
+      port: http-client
+      matchNamespace:
+      - services
+      matchLabels:
+        etcd_cluster: cray-uas-mgr-etcd
+      interval: 30s
+      scheme: http
+      metricsRelabelings: {}
+      relabelings: {}
+
+  slingshotControllersEtcdExporter:
+    enabled: true
+    servicename: slingshot-controllers
+    cluster: etcd
+    serviceMonitor:
+      namespace: sysmgmt-health
+      port: http-client
+      matchNamespace:
+      - services
+      matchLabels:
+        etcd_cluster: slingshot-controllers-etcd
+      interval: 30s
+      scheme: http
+      metricsRelabelings: {}
+      relabelings: {}

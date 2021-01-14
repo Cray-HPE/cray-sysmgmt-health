@@ -1,0 +1,37 @@
+{{- /*
+Copyright 2020 Hewlett Packard Enterprise Development LP
+*/ -}}
+kind: ServiceMonitor
+apiVersion: monitoring.coreos.com/v1
+metadata:
+  name: {{ template "cray-sysmgmt-health.fullname" . }}-smd-postgres-exporter
+  namespace: {{ .Values.smdPostgresExporter.serviceMonitor.namespace }}
+  labels:
+    app: {{ template "cray-sysmgmt-health.name" . }}-smd-postgres-exporter
+    release: {{ template "cray-sysmgmt-health.name" . }}
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+      service: {{ template "cray-sysmgmt-health.name" . }}-smd-postgres-exporter
+  namespaceSelector:
+    matchNames:
+      {{- range .Values.smdPostgresExporter.serviceMonitor.matchNamespace }}
+      - {{ . }}
+      {{- end }}
+  endpoints:
+  - port: {{ .Values.smdPostgresExporter.serviceMonitor.port }}
+    {{- if .Values.smdPostgresExporter.serviceMonitor.interval }}
+    interval: {{ .Values.smdPostgresExporter.serviceMonitor.interval }}
+    {{- end }}
+    {{- if .Values.smdPostgresExporter.serviceMonitor.scheme }}
+    scheme: {{ .Values.smdPostgresExporter.serviceMonitor.scheme }}
+    {{- end }}
+{{- if .Values.smdPostgresExporter.serviceMonitor.metricRelabelings }}
+    metricRelabelings:
+{{ tpl (toYaml .Values.smdPostgresExporter.serviceMonitor.metricRelabelings | indent 4) . }}
+{{- end }}
+{{- if .Values.smdPostgresExporter.serviceMonitor.relabelings }}
+    relabelings:
+{{ toYaml .Values.smdPostgresExporter.serviceMonitor.relabelings | indent 4 }}
+{{- end }}

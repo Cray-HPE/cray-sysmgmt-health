@@ -1,0 +1,97 @@
+{{- /*
+Copyright 2020 Hewlett Packard Enterprise Development LP
+*/ -}}
+{{- if and (index .Values "customRules" "create") (index .Values "customRules" "rules" "postgresql") }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ printf "%s-%s" (include "cray-sysmgmt-health.fullname" .) "postgresql-prometheus-alert.rules" | trunc 63 | trimSuffix "-" }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "cray-sysmgmt-health.name" . }}
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+{{- if (index .Values "customRules" "labels") }}
+{{ toYaml (index .Values "customRules" "labels") | indent 4 }}
+{{- end }}
+{{- if (index .Values "customRules" "annotations") }}
+  annotations:
+{{ toYaml (index .Values "customRules" "annotations") | indent 4 }}
+{{- end }}
+spec:
+  groups:
+  - name: PostgreSQL-status
+    rules:
+    - alert: PostgresqlDown
+      expr: pg_up == 0
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: 'Postgresql down (instance "{{`{{ $labels.instance }}`}}")'
+        description: 'Postgresql instance is down  VALUE = "{{`{{ $value }}`}}"  LABELS: "{{`{{ $labels }}`}}"'
+    - alert: PostgresqlExporterError
+      expr: pg_exporter_last_scrape_error > 0
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: 'Postgresql exporter error (instance "{{`{{ $labels.instance }}`}}")'
+        description: 'Postgresql exporter is showing errors. A query may be buggy in query.yaml  VALUE = "{{`{{ $value }}`}}"  LABELS: "{{`{{ $labels }}`}}"'
+    - alert: PostgresqlTooManyConnections
+      expr: sum by (datname) (pg_stat_activity_count{datname!~'template.*|postgres'}) > pg_settings_max_connections * 0.9
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: 'Postgresql too many connections (instance "{{`{{ $labels.instance }}`}}")'
+        description: 'PostgreSQL instance has too many connections  VALUE = "{{`{{ $value }}`}}"  LABELS: "{{`{{ $labels }}`}}"'
+    - alert: PostgresqlNotEnoughConnections
+      expr: sum by (datname) (pg_stat_activity_count{datname!~'template.*|postgres'}) < 5
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: 'Postgresql not enough connections (instance "{{`{{ $labels.instance }}`}}")'
+        description: 'PostgreSQL instance should have more connections (> 5)  VALUE = "{{`{{ $value }}`}}"  LABELS: "{{`{{ $labels }}`}}"'
+    - alert: PostgresqlDeadLocks
+      expr: rate(pg_stat_database_deadlocks{datname!~'template.*|postgres'}[1m]) > 0
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: 'Postgresql dead locks (instance "{{`{{ $labels.instance }}`}}")'
+        description: 'PostgreSQL has dead-locks  VALUE = "{{`{{ $value }}`}}"  LABELS: "{{`{{ $labels }}`}}"'
+    - alert: PostgresqlHighRollbackRate
+      expr: rate(pg_stat_database_xact_rollback{datname!~'template.*'}[3m]) / rate(pg_stat_database_xact_commit{datname!~'template.*'}[3m]) > 0.02
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: 'Postgresql high rollback rate (instance "{{`{{ $labels.instance }}`}}")'
+        description: 'Ratio of transactions being aborted compared to committed is > 2 %  VALUE = "{{`{{ $value }}`}}"  LABELS: "{{`{{ $labels }}`}}"'
+    - alert: PostgresqlCommitRateLow
+      expr: rate(pg_stat_database_xact_commit[1m]) < 10
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: 'Postgresql commit rate low (instance "{{`{{ $labels.instance }}`}}")'
+        description: 'Postgres seems to be processing very few transactions  VALUE = "{{`{{ $value }}`}}"  LABELS: "{{`{{ $labels }}`}}"'
+    - alert: PostgresqlConfigurationChanged
+      expr: |-
+        {__name__=~"pg_settings_.*"} != ON(__name__) {__name__=~"pg_settings_([^t]|t[^r]|tr[^a]|tra[^n]|tran[^s]|trans[^a]|transa[^c]|transac[^t]|transact[^i]|transacti[^o]|transactio[^n]|transaction[^_]|transaction_[^r]|transaction_r[^e]|transaction_re[^a]|transaction_rea[^d]|transaction_read[^_]|transaction_read_[^o]|transaction_read_o[^n]|transaction_read_on[^l]|transaction_read_onl[^y]).*"} OFFSET 5m
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: 'Postgresql configuration changed (instance "{{`{{ $labels.instance }}`}}")'
+        description: 'Postgres Database configuration change has occurred  VALUE = "{{`{{ $value }}`}}"  LABELS: "{{`{{ $labels }}`}}"'
+    - alert: PostgresqlTooManyLocksAcquired
+      expr: ((sum (pg_locks_count)) / (pg_settings_max_locks_per_transaction * pg_settings_max_connections)) > 0.20
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: 'Postgresql too many locks acquired (instance "{{`{{ $labels.instance }}`}}")'
+        description: 'Too many locks acquired on the database. If this alert happens frequently, we may need to increase the postgres setting max_locks_per_transaction.  VALUE = "{{`{{ $value }}`}}"  LABELS: "{{`{{ $labels }}`}}"'
+{{- end }}

@@ -1,0 +1,37 @@
+{{- /*
+Copyright 2020 Hewlett Packard Enterprise Development LP
+*/ -}}
+kind: ServiceMonitor
+apiVersion: monitoring.coreos.com/v1
+metadata:
+  name: {{ template "cray-sysmgmt-health.fullname" . }}-keycloak-postgres-exporter
+  namespace: {{ .Values.keycloakPostgresExporter.serviceMonitor.namespace }}
+  labels:
+    app: {{ template "cray-sysmgmt-health.name" . }}-keycloak-postgres-exporter
+    release: {{ template "cray-sysmgmt-health.name" . }}
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+      service: {{ template "cray-sysmgmt-health.name" . }}-keycloak-postgres-exporter
+  namespaceSelector:
+    matchNames:
+      {{- range .Values.keycloakPostgresExporter.serviceMonitor.matchNamespace }}
+      - {{ . }}
+      {{- end }}
+  endpoints:
+  - port: {{ .Values.keycloakPostgresExporter.serviceMonitor.port }}
+    {{- if .Values.keycloakPostgresExporter.serviceMonitor.interval }}
+    interval: {{ .Values.keycloakPostgresExporter.serviceMonitor.interval }}
+    {{- end }}
+    {{- if .Values.keycloakPostgresExporter.serviceMonitor.scheme }}
+    scheme: {{ .Values.keycloakPostgresExporter.serviceMonitor.scheme }}
+    {{- end }}
+{{- if .Values.keycloakPostgresExporter.serviceMonitor.metricRelabelings }}
+    metricRelabelings:
+{{ tpl (toYaml .Values.keycloakPostgresExporter.serviceMonitor.metricRelabelings | indent 4) . }}
+{{- end }}
+{{- if .Values.keycloakPostgresExporter.serviceMonitor.relabelings }}
+    relabelings:
+{{ toYaml .Values.keycloakPostgresExporter.serviceMonitor.relabelings | indent 4 }}
+{{- end }}

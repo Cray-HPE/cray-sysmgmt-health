@@ -1,0 +1,52 @@
+{{- if .Values.cephNodeExporter.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ template "cray-sysmgmt-health.fullname" . }}-ceph-node-exporter
+  labels:
+    app: {{ template "cray-sysmgmt-health.name" . }}-ceph-node-exporter
+    release: {{ template "cray-sysmgmt-health.name" . }}
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "cray-sysmgmt-health.name" . }}-ceph-node-exporter
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace | quote }}
+  endpoints:
+  - port: http-metrics
+    {{- if .Values.cephNodeExporter.serviceMonitor.interval }}
+    interval: {{ .Values.cephNodeExporter.serviceMonitor.interval }}
+    {{- end }}
+    {{- if .Values.cephNodeExporter.serviceMonitor.honor_labels }}
+    honorLabels: {{ .Values.cephNodeExporter.serviceMonitor.honor_labels }}
+    {{- end }}
+    bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+    {{- if eq .Values.cephNodeExporter.serviceMonitor.scheme "https" }}
+    scheme: https
+    tlsConfig:
+      {{- if .Values.cephNodeExporter.serviceMonitor.serverName }}
+      serverName: {{ .Values.cephNodeExporter.serviceMonitor.serverName }}
+      {{- end }}
+      {{- if .Values.cephNodeExporter.serviceMonitor.caFile }}
+      caFile: {{ .Values.cephNodeExporter.serviceMonitor.caFile }}
+      {{- end }}
+      {{- if  .Values.cephNodeExporter.serviceMonitor.certFile }}
+      certFile: {{ .Values.cephNodeExporter.serviceMonitor.certFile }}
+      {{- end }}
+      {{- if .Values.cephNodeExporter.serviceMonitor.keyFile }}
+      keyFile: {{ .Values.cephNodeExporter.serviceMonitor.keyFile }}
+      {{- end}}
+      insecureSkipVerify: {{ .Values.cephNodeExporter.serviceMonitor.insecureSkipVerify }}
+    {{- end }}
+{{- if .Values.cephNodeExporter.serviceMonitor.metricRelabelings }}
+    metricRelabelings:
+{{ tpl (toYaml .Values.cephNodeExporter.serviceMonitor.metricRelabelings | indent 4) . }}
+{{- end }}
+{{- if .Values.cephNodeExporter.serviceMonitor.relabelings }}
+    relabelings:
+{{ toYaml .Values.cephNodeExporter.serviceMonitor.relabelings | indent 4 }}
+{{- end }}
+{{- end }}

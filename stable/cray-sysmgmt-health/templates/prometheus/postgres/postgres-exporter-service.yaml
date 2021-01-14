@@ -1,0 +1,133 @@
+{{- /*
+Copyright 2020 Hewlett Packard Enterprise Development LP
+*/ -}}
+{{- if .Values.rmPalsPostgresExporter.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "cray-sysmgmt-health.fullname" . }}-rm-pals-postgres-exporter
+  namespace: {{ .Values.rmPalsPostgresExporter.service.namespace }}
+  labels:
+    service: {{ template "cray-sysmgmt-health.name" . }}-rm-pals-postgres-exporter
+    release: {{ template "cray-sysmgmt-health.name" . }}
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - name: exporter
+      port: {{ .Values.rmPalsPostgresExporter.service.port }}
+      protocol: TCP
+      targetPort: {{ .Values.rmPalsPostgresExporter.service.targetPort }}
+  selector:
+{{ toYaml .Values.rmPalsPostgresExporter.service.selector | indent 6 }}
+{{- end }}
+
+---
+{{- if .Values.slsPostgresExporter.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "cray-sysmgmt-health.fullname" . }}-sls-postgres-exporter
+  namespace: {{ .Values.slsPostgresExporter.service.namespace }}
+  labels:
+    service: {{ template "cray-sysmgmt-health.name" . }}-sls-postgres-exporter
+    release: {{ template "cray-sysmgmt-health.name" . }}
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - name: exporter
+      port: {{ .Values.slsPostgresExporter.service.port }}
+      protocol: TCP
+      targetPort: {{ .Values.slsPostgresExporter.service.targetPort }}
+  selector:
+{{ toYaml .Values.slsPostgresExporter.service.selector | indent 6 }}
+{{- end }}
+
+---
+{{- if .Values.smdPostgresExporter.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "cray-sysmgmt-health.fullname" . }}-smd-postgres-exporter
+  namespace: {{ .Values.smdPostgresExporter.service.namespace }}
+  labels:
+    service: {{ template "cray-sysmgmt-health.name" . }}-smd-postgres-exporter
+    release: {{ template "cray-sysmgmt-health.name" . }}
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - name: exporter
+      port: {{ .Values.smdPostgresExporter.service.port }}
+      protocol: TCP
+      targetPort: {{ .Values.smdPostgresExporter.service.targetPort }}
+  selector:
+{{ toYaml .Values.smdPostgresExporter.service.selector | indent 6 }}
+{{- end }}
+
+---
+{{- if .Values.giteaVcsPostgresExporter.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "cray-sysmgmt-health.fullname" . }}-gitea-vcs-postgres-exporter
+  namespace: {{ .Values.giteaVcsPostgresExporter.service.namespace }}
+  labels:
+    service: {{ template "cray-sysmgmt-health.name" . }}-gitea-vcs-postgres-exporter
+    release: {{ template "cray-sysmgmt-health.name" . }}
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - name: exporter
+      port: {{ .Values.giteaVcsPostgresExporter.service.port }}
+      protocol: TCP
+      targetPort: {{ .Values.giteaVcsPostgresExporter.service.targetPort }}
+  selector:
+{{ toYaml .Values.giteaVcsPostgresExporter.service.selector | indent 6 }}
+{{- end }}
+
+---
+{{- if .Values.keycloakPostgresExporter.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "cray-sysmgmt-health.fullname" . }}-keycloak-postgres-exporter
+  namespace: {{ .Values.keycloakPostgresExporter.service.namespace }}
+  labels:
+    service: {{ template "cray-sysmgmt-health.name" . }}-keycloak-postgres-exporter
+    release: {{ template "cray-sysmgmt-health.name" . }}
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - name: exporter
+      port: {{ .Values.keycloakPostgresExporter.service.port }}
+      protocol: TCP
+      targetPort: {{ .Values.keycloakPostgresExporter.service.targetPort }}
+  selector:
+{{ toYaml .Values.keycloakPostgresExporter.service.selector | indent 6 }}
+{{- end }}
+
+---
+{{- if .Values.smaPostgresExporter.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "cray-sysmgmt-health.fullname" . }}-sma-postgres-exporter
+  namespace: {{ .Values.smaPostgresExporter.service.namespace }}
+  labels:
+    service: {{ template "cray-sysmgmt-health.name" . }}-sma-postgres-exporter
+    release: {{ template "cray-sysmgmt-health.name" . }}
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - name: exporter
+      port: {{ .Values.smaPostgresExporter.service.port }}
+      protocol: TCP
+      targetPort: {{ .Values.smaPostgresExporter.service.targetPort }}
+  selector:
+{{ toYaml .Values.smaPostgresExporter.service.selector | indent 6 }}
+{{- end }}

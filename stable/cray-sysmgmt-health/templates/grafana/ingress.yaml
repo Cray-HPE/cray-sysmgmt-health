@@ -1,0 +1,47 @@
+{{- if (index .Values "prometheus-operator" "grafana" "enabled") }}
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ template "cray-sysmgmt-health.fullname" . }}-grafana
+  labels:
+    app: {{ template "cray-sysmgmt-health.name" . }}-grafana
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+spec:
+  gateways:
+  - {{ .Values.global.authGateway }}
+  hosts:
+  - {{ (index .Values "prometheus-operator" "grafana" "externalAuthority") }}
+  http:
+  - match:
+    - authority:
+        exact: {{ (index .Values "prometheus-operator" "grafana" "externalAuthority") }}
+    route:
+    - destination:
+        host: {{ template "cray-sysmgmt-health.prometheus-operator.grafana.fullname" . }}
+        port:
+          number: 80
+      headers:
+        request:
+          add:
+            # Sets the externally authenticated and authorized user to "admin"
+            # such that all valid users have admin access to Grafana.
+            X-WEBAUTH-USER: admin
+          remove:
+          # Remove "Authorization" header otherwise Grafana expects a valid
+          # API key.
+          - Authorization
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: {{ template "cray-sysmgmt-health.fullname" . }}-grafana
+  labels:
+    app: {{ template "cray-sysmgmt-health.name" . }}-grafana
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+spec:
+  host: {{ template "cray-sysmgmt-health.prometheus-operator.grafana.fullname" . }}
+  trafficPolicy:
+    tls:
+      mode: DISABLE
+{{- end }}

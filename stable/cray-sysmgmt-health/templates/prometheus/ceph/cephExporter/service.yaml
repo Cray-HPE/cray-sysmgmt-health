@@ -1,0 +1,19 @@
+{{- if .Values.cephExporter.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "cray-sysmgmt-health.fullname" . }}-ceph-exporter
+  labels:
+    app: {{ template "cray-sysmgmt-health.name" . }}-ceph-exporter
+    release: {{ template "cray-sysmgmt-health.name" . }}
+    jobLabel: ceph
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: http-metrics
+      port: {{ .Values.cephExporter.service.port }}
+      protocol: TCP
+      targetPort: {{ .Values.cephExporter.service.targetPort }}
+{{- end }}

@@ -1,0 +1,409 @@
+{{- /*
+Copyright 2020 Hewlett Packard Enterprise Development LP
+*/ -}}
+{{- if and (index .Values "customRules" "create") (index .Values "customRules" "rules" "ceph") }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ printf "%s-%s" (include "cray-sysmgmt-health.fullname" .) "ceph-prometheus-alert.rules" | trunc 63 | trimSuffix "-" }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "cray-sysmgmt-health.name" . }}
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+{{- if (index .Values "customRules" "labels") }}
+{{ toYaml (index .Values "customRules" "labels") | indent 4 }}
+{{- end }}
+{{- if (index .Values "customRules" "annotations") }}
+  annotations:
+{{ toYaml (index .Values "customRules" "annotations") | indent 4 }}
+{{- end }}
+spec:
+  groups:
+  - name: ceph-mgr-status
+    rules:
+    - alert: CephMgrIsAbsent
+      annotations:
+        description: Ceph Manager has disappeared from Prometheus target discovery.
+        message: Storage metrics collector service not available anymore.
+        severity_level: critical
+        storage_type: ceph
+      expr: |
+        absent(up{job="ceph"} == 1)
+      for: 5m
+      labels:
+        severity: critical
+    - alert: CephMgrIsMissingReplicas
+      annotations:
+        description: Ceph Manager is missing replicas.
+        message: Storage metrics collector service doesn't have required no of replicas.
+        severity_level: warning
+        storage_type: ceph
+      expr: |
+        sum(up{job="ceph"}) < 1
+      for: 5m
+      labels:
+        severity: warning
+  - name: ceph-mds-status
+    rules:
+    - alert: CephMdsMissingReplicas
+      annotations:
+        description: Minimum required replicas for storage metadata service not available.
+          Might affect the working of storage cluster.
+        message: Insufficient replicas for storage metadata service.
+        severity_level: warning
+        storage_type: ceph
+      expr: |
+        sum(ceph_mds_metadata{job="ceph"} == 1) < 1
+      for: 5m
+      labels:
+        severity: warning
+  - name: quorum-alert.rules
+    rules:
+    - alert: CephMonQuorumAtRisk
+      annotations:
+        description: Storage cluster quorum is low. Contact Support.
+        message: Storage quorum at risk
+        severity_level: error
+        storage_type: ceph
+      expr: |
+        count(ceph_mon_quorum_status{job="ceph"} == 1) <= ((count(ceph_mon_metadata{job="ceph"}) % 2) + 1)
+      for: 15m
+      labels:
+        severity: critical
+    - alert: CephMonHighNumberOfLeaderChanges
+      annotations:
+        description: 'Ceph Monitor "{{`{{ $labels.ceph_daemon }}`}}" on host "{{`{{ $labels.hostname }}`}}" has seen "{{`{{ $value | printf "%.2f" }}`}}" leader changes per minute recently.'
+        message: Storage Cluster has seen many leader changes recently.
+        severity_level: warning
+        storage_type: ceph
+      expr: |
+        (ceph_mon_metadata{job="ceph"} * on (ceph_daemon) group_left() (rate(ceph_mon_num_elections{job="ceph"}[5m]) * 60)) > 0.95
+      for: 5m
+      labels:
+        severity: warning
+  - name: ceph-node-alert.rules
+    rules:
+    - alert: CephNodeDown
+      annotations:
+        description: 'Storage node "{{`{{ $labels.node }}`}}" went down. Please check the node immediately.'
+        message: 'Storage node "{{`{{ $labels.node }}`}}" went down'
+        severity_level: error
+        storage_type: ceph
+      expr: |
+        cluster:ceph_node_down:join_kube == 0
+      for: 30s
+      labels:
+        severity: critical
+  - name: osd-alert.rules
+    rules:
+    - alert: CephOSDCriticallyFull
+      annotations:
+        description: 'Utilization of back-end storage device "{{`{{ $labels.ceph_daemon }}`}}" has crossed 85% on host "{{`{{ $labels.hostname }}`}}" Immediately free up some space or expand the storage cluster or contact support.'
+        message: Back-end storage device is critically full.
+        severity_level: error
+        storage_type: ceph
+      expr: |
+        (ceph_osd_metadata * on (ceph_daemon) group_left() (ceph_osd_stat_bytes_used / ceph_osd_stat_bytes)) >= 0.85
+      for: 40s
+      labels:
+        severity: critical
+    - alert: CephOSDNearFull
+      annotations:
+        description: 'Utilization of back-end storage device "{{`{{ $labels.ceph_daemon }}`}}" has crossed 75% on host "{{`{{ $labels.hostname }}`}}" Free up some space or expand the storage cluster or contact support.'
+        message: Back-end storage device is nearing full.
+        severity_level: warning
+        storage_type: ceph
+      expr: |
+        (ceph_osd_metadata * on (ceph_daemon) group_left() (ceph_osd_stat_bytes_used / ceph_osd_stat_bytes)) >= 0.75
+      for: 40s
+      labels:
+        severity: warning
+    - alert: CephOSDDiskNotResponding
+      annotations:
+        description: 'Disk device "{{`{{ $labels.device }}`}}" not responding, on host "{{`{{ $labels.host }}`}}"'
+        message: Disk not responding
+        severity_level: error
+        storage_type: ceph
+      expr: |
+        label_replace((ceph_osd_in == 1 and ceph_osd_up == 0),"disk","$1","ceph_daemon","osd.(.*)") + on(ceph_daemon) group_left(host, device) label_replace(ceph_disk_occupation,"host","$1","exported_instance","(.*)")
+      for: 1m
+      labels:
+        severity: critical
+    - alert: CephOSDDiskUnavailable
+      annotations:
+        description: 'Disk device "{{`{{ $labels.device }}`}}" not accessible on host "{{`{{ $labels.host }}`}}"'
+        message: Disk not accessible
+        severity_level: error
+        storage_type: ceph
+      expr: |
+        label_replace((ceph_osd_in == 0 and ceph_osd_up == 0),"disk","$1","ceph_daemon","osd.(.*)") + on(ceph_daemon) group_left(host, device) label_replace(ceph_disk_occupation,"host","$1","exported_instance","(.*)")
+      for: 1m
+      labels:
+        severity: critical
+    - alert: CephDataRecoveryTakingTooLong
+      annotations:
+        description: Data recovery has been active for too long. Contact Support.
+        message: Data recovery is slow
+        severity_level: warning
+        storage_type: ceph
+      expr: |
+        ceph_pg_undersized > 0
+      for: 2h
+      labels:
+        severity: warning
+    - alert: CephPGRepairTakingTooLong
+      annotations:
+        description: Self heal operations taking too long. Contact Support.
+        message: Self heal problems detected
+        severity_level: warning
+        storage_type: ceph
+      expr: |
+        ceph_pg_inconsistent > 0
+      for: 1h
+      labels:
+        severity: warning
+  - name: cluster-state-alert.rules
+    rules:
+    - alert: CephClusterErrorState
+      annotations:
+        description: Storage cluster is in error state for more than 10m.
+        message: Storage cluster is in error state
+        severity_level: error
+        storage_type: ceph
+      expr: |
+        ceph_health_status{job="ceph"} > 1
+      for: 10m
+      labels:
+        severity: critical
+    - alert: CephClusterWarningState
+      annotations:
+        description: Storage cluster is in warning state for more than 10m.
+        message: Storage cluster is in degraded state
+        severity_level: warning
+        storage_type: ceph
+      expr: |
+        ceph_health_status{job="ceph"} == 1
+      for: 10m
+      labels:
+        severity: warning
+    - alert: CephOSDVersionMismatch
+      annotations:
+        description: 'There are "{{`{{ $value }}`}}" different versions of Ceph OSD components running.'
+        message: There are multiple versions of storage services running.
+        severity_level: warning
+        storage_type: ceph
+      expr: |
+        count(count(ceph_osd_metadata{job="ceph"}) by (ceph_version)) > 1
+      for: 10m
+      labels:
+        severity: warning
+    - alert: CephMonVersionMismatch
+      annotations:
+        description: There are "{{`{{ $value }}`}}" different versions of Ceph Mon components
+          running.
+        message: There are multiple versions of storage services running.
+        severity_level: warning
+        storage_type: ceph
+      expr: |
+        count(count(ceph_mon_metadata{job="ceph"}) by (ceph_version)) > 1
+      for: 10m
+      labels:
+        severity: warning
+  - name: cluster-utilization-alert.rules
+    rules:
+    - alert: CephClusterNearFull
+      annotations:
+        description: Storage cluster utilization has crossed 75%. Free up some space
+          or expand the storage cluster.
+        message: Storage cluster is nearing full. Data deletion or cluster expansion
+          is required.
+        severity_level: warning
+        storage_type: ceph
+      expr: |
+        sum(ceph_osd_stat_bytes_used) / sum(ceph_osd_stat_bytes) > 0.75
+      for: 30s
+      labels:
+        severity: warning
+    - alert: CephClusterCriticallyFull
+      annotations:
+        description: Storage cluster utilization has crossed 85%. Free up some space
+          or expand the storage cluster immediately.
+        message: Storage cluster is critically full and needs immediate data deletion
+          or cluster expansion.
+        severity_level: error
+        storage_type: ceph
+      expr: |
+        sum(ceph_osd_stat_bytes_used) / sum(ceph_osd_stat_bytes) > 0.85
+      for: 30s
+      labels:
+        severity: critical
+  - name: cluster health
+    rules:
+      - alert: CephHealthError
+        expr: ceph_health_status == 2
+        for: 5m
+        labels:
+          severity: critical
+          type: ceph_default
+          oid: 1.3.6.1.4.1.50495.15.1.2.2.1
+        annotations:
+          description: Ceph in health_error state for more than 5m.
+      - alert: CephHealthDown
+        expr: ceph_health_status == 1
+        for: 15m
+        labels:
+          severity: warning
+          type: ceph_default
+          oid: 1.3.6.1.4.1.50495.15.1.2.2.2
+        annotations:
+          description: Ceph in health_warn for more than 15m.
+  - name: mon
+    rules:
+      - alert: CephLowMonitorQuorumCount
+        expr: sum(ceph_mon_quorum_status) < 3
+        labels:
+          severity: critical
+          type: ceph_default
+          oid: 1.3.6.1.4.1.50495.15.1.2.3.1
+        annotations:
+          description: Monitor count in quorum is low.
+  - name: osd
+    rules:
+      - alert: CephOsds10PercentDown
+        expr: sum(ceph_osd_up) / count(ceph_osd_in) <= 0.9
+        labels:
+          severity: critical
+          type: ceph_default
+          oid: 1.3.6.1.4.1.50495.15.1.2.4.1
+        annotations:
+          description: More than 10% of OSDs are down.
+      - alert: CephOsdDown
+        expr: count(ceph_osd_up == 0) > 0
+        for: 15m
+        labels:
+          severity: warning
+          type: ceph_default
+          oid: 1.3.6.1.4.1.50495.15.1.2.4.2
+        annotations:
+          description: One or more OSDs down for more than 15 minutes.
+      - alert: CephOsdsNearFull
+        expr: ((ceph_osd_stat_bytes_used / ceph_osd_stat_bytes) and on(ceph_daemon) ceph_osd_up == 1) > 0.8
+        labels:
+          severity: critical
+          type: ceph_default
+          oid: 1.3.6.1.4.1.50495.15.1.2.4.3
+        annotations:
+          description: OSD {{`{{ $labels.ceph_daemon }}`}} is dangerously full, over 80%.
+      # alert on single OSDs flapping
+      - alert: CephOsdFlap
+        expr: rate(ceph_osd_up[5m])*60 > 1
+        labels:
+          severity: warning
+          type: ceph_default
+          oid: 1.3.6.1.4.1.50495.15.1.2.4.4
+        annotations:
+          description: >
+              OSD {{`{{ $labels.ceph_daemon }}`}} was marked down and back up at least once a
+              minute for 5 minutes.
+      # alert on high deviation from average PG count
+      - alert: CephHighPgCountDeviation
+        expr: abs(((ceph_osd_numpg > 0) - on (job) group_left avg(ceph_osd_numpg > 0) by (job)) / on (job) group_left avg(ceph_osd_numpg > 0) by (job)) > 0.35
+        for: 5m
+        labels:
+          severity: warning
+          type: ceph_default
+          oid: 1.3.6.1.4.1.50495.15.1.2.4.5
+        annotations:
+          description: >
+              OSD {{`{{ $labels.ceph_daemon }}`}} deviates by more than 30% from
+              average PG count.
+      # alert on high commit latency...but how high is too high
+  - name: mds
+    rules: []
+    # no mds metrics are exported yet
+  - name: mgr
+    rules: []
+    # no mgr metrics are exported yet
+  - name: pgs
+    rules:
+      - alert: CephPgsInactive
+        expr: ceph_pg_total - ceph_pg_active > 0
+        for: 5m
+        labels:
+          severity: critical
+          type: ceph_default
+          oid: 1.3.6.1.4.1.50495.15.1.2.7.1
+        annotations:
+          description: One or more PGs are inactive for more than 5 minutes.
+      - alert: CephPgsUnclean
+        expr: ceph_pg_total - ceph_pg_clean > 0
+        for: 15m
+        labels:
+          severity: warning
+          type: ceph_default
+          oid: 1.3.6.1.4.1.50495.15.1.2.7.2
+        annotations:
+          description: One or more PGs are not clean for more than 15 minutes.
+  - name: nodes
+    rules:
+      - alert: CephRootVolumeFull
+        expr: node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"} < 0.05
+        labels:
+          severity: critical
+          type: ceph_default
+          oid: 1.3.6.1.4.1.50495.15.1.2.8.1
+        annotations:
+          description: Root volume (OSD and MON store) is dangerously full (< 5% free).
+      # alert on nic packet errors and drops rates > 1 packet/s
+      - alert: CephNetworkPacketsDropped
+        expr: irate(node_network_receive_drop_total{device!="lo"}[5m]) + irate(node_network_transmit_drop_total{device!="lo"}[5m]) > 1
+        labels:
+          severity: warning
+          type: ceph_default
+          oid: 1.3.6.1.4.1.50495.15.1.2.8.2
+        annotations:
+          description: >
+            Node {{`{{ $labels.instance }}`}} experiences packet drop > 1
+            packet/s on interface {{`{{ $labels.device }}`}}.
+      - alert: CephNetworkPacketErrors
+        expr: irate(node_network_receive_errs_total{device!="lo"}[5m]) + irate(node_network_transmit_errs_total{device!="lo"}[5m]) > 1
+        labels:
+          severity: warning
+          type: ceph_default
+          oid: 1.3.6.1.4.1.50495.15.1.2.8.3
+        annotations:
+          description: >
+            Node {{`{{ $labels.instance }}`}} experiences packet errors > 1
+            packet/s on interface {{`{{ $labels.device }}`}}.
+      # predict fs fillup times
+      - alert: CephStorageFilling
+        expr: ((node_filesystem_free_bytes) / deriv(node_filesystem_free_bytes[2d]) <= 5) > 0
+        labels:
+          severity: warning
+          type: ceph_default
+          oid: 1.3.6.1.4.1.50495.15.1.2.8.4
+        annotations:
+          description: >
+            Mountpoint {{`{{ $labels.mountpoint }}`}} will be full in less than 5 days
+            assuming the average fillup rate of the past 48 hours.
+  - name: pools
+    rules:
+      - alert: CephPoolFull
+        expr: ceph_pool_stored / ceph_pool_max_avail * on(pool_id) group_right ceph_pool_metadata > 0.9
+        labels:
+          severity: critical
+          type: ceph_default
+          oid: 1.3.6.1.4.1.50495.15.1.2.9.1
+        annotations:
+          description: Pool {{`{{ $labels.name }}`}} at 90% capacity or over.
+      - alert: CephPoolFillingUp
+        expr: (((ceph_pool_max_avail - ceph_pool_stored) / deriv(ceph_pool_max_avail[2d])) * on(pool_id) group_right ceph_pool_metadata <=5) > 0
+        labels:
+          severity: warning
+          type: ceph_default
+          oid: 1.3.6.1.4.1.50495.15.1.2.9.2
+        annotations:
+          description: >
+            Pool {{`{{ $labels.name }}`}} will be full in less than 5 days
+            assuming the average fillup rate of the past 48 hours.
+{{- end }}

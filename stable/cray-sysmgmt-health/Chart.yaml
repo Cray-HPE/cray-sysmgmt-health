@@ -1,0 +1,9 @@
+#
+# Copyright 2020 Hewlett Packard Enterprise Development LP
+#
+apiVersion: v1
+appVersion: 8.15.4
+description: An extension of the official prometheus-operator helm chart for monitoring system health.
+name: cray-sysmgmt-health
+home: "cloud/cray-charts"
+version: 0.8.0

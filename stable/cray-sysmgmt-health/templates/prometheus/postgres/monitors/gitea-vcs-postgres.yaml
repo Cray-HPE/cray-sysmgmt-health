@@ -1,0 +1,37 @@
+{{- /*
+Copyright 2020 Hewlett Packard Enterprise Development LP
+*/ -}}
+kind: ServiceMonitor
+apiVersion: monitoring.coreos.com/v1
+metadata:
+  name: {{ template "cray-sysmgmt-health.fullname" . }}-gitea-vcs-postgres-exporter
+  namespace: {{ .Values.giteaVcsPostgresExporter.serviceMonitor.namespace }}
+  labels:
+    app: {{ template "cray-sysmgmt-health.name" . }}-gitea-vcs-postgres-exporter
+    release: {{ template "cray-sysmgmt-health.name" . }}
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+      service: {{ template "cray-sysmgmt-health.name" . }}-gitea-vcs-postgres-exporter
+  namespaceSelector:
+    matchNames:
+      {{- range .Values.giteaVcsPostgresExporter.serviceMonitor.matchNamespace }}
+      - {{ . }}
+      {{- end }}
+  endpoints:
+  - port: {{ .Values.giteaVcsPostgresExporter.serviceMonitor.port }}
+    {{- if .Values.giteaVcsPostgresExporter.serviceMonitor.interval }}
+    interval: {{ .Values.giteaVcsPostgresExporter.serviceMonitor.interval }}
+    {{- end }}
+    {{- if .Values.giteaVcsPostgresExporter.serviceMonitor.scheme }}
+    scheme: {{ .Values.giteaVcsPostgresExporter.serviceMonitor.scheme }}
+    {{- end }}
+{{- if .Values.giteaVcsPostgresExporter.serviceMonitor.metricRelabelings }}
+    metricRelabelings:
+{{ tpl (toYaml .Values.giteaVcsPostgresExporter.serviceMonitor.metricRelabelings | indent 4) . }}
+{{- end }}
+{{- if .Values.giteaVcsPostgresExporter.serviceMonitor.relabelings }}
+    relabelings:
+{{ toYaml .Values.giteaVcsPostgresExporter.serviceMonitor.relabelings | indent 4 }}
+{{- end }}
