@@ -528,6 +528,24 @@ smaPostgresExporter:
     metricsRelabelings: {}
     relabelings: {}
 
+spirePostgresExporter:
+  enabled: true
+  service:
+    namespace: spire
+    port: 9187
+    targetPort: 9187
+    selector:
+      cluster-name: spire-postgres
+  serviceMonitor:
+    namespace: sysmgmt-health
+    matchNamespace:
+    - spire
+    interval: 30s
+    scheme: http
+    port: exporter
+    metricsRelabelings: {}
+    relabelings: {}
+
 servicemonitors:
   bosEtcdExporter:
     enabled: true

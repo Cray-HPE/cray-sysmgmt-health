@@ -131,3 +131,25 @@ spec:
   selector:
 {{ toYaml .Values.smaPostgresExporter.service.selector | indent 6 }}
 {{- end }}
+
+---
+{{- if .Values.spirePostgresExporter.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "cray-sysmgmt-health.fullname" . }}-spire-postgres-exporter
+  namespace: {{ .Values.spirePostgresExporter.service.namespace }}
+  labels:
+    service: {{ template "cray-sysmgmt-health.name" . }}-spire-postgres-exporter
+    release: {{ template "cray-sysmgmt-health.name" . }}
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - name: exporter
+      port: {{ .Values.spirePostgresExporter.service.port }}
+      protocol: TCP
+      targetPort: {{ .Values.spirePostgresExporter.service.targetPort }}
+  selector:
+{{ toYaml .Values.spirePostgresExporter.service.selector | indent 6 }}
+{{- end }}
