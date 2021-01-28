@@ -391,35 +391,6 @@ cephNodeExporter:
     metricsRelabelings: {}
     relabelings: {}
 
-vaultEtcdExporter:
-  enabled: true
-  serviceMonitor:
-    namespace: vault
-    port: https-client
-    matchNamespace:
-    - vault
-    matchLabels:
-      etcd_cluster: cray-vault-etcd
-    interval: 30s
-    scheme: https
-    ca:
-      key: etcd-client-ca.crt
-      name: cray-vault-etcd-tls
-    cert:
-      key: etcd-client.crt
-      name: cray-vault-etcd-tls
-    keySecret:
-      key: etcd-client.key
-      name: cray-vault-etcd-tls
-    #caFile: ""
-    #certFile: ""
-    #keyFile: ""
-    #honor_labels: false
-    #serverName: ""
-    insecureSkipVerify: true
-    metricsRelabelings: {}
-    relabelings: {}
-
 rmPalsPostgresExporter:
   enabled: true
   service:
