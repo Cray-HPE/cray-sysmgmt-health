@@ -706,19 +706,3 @@ servicemonitors:
       scheme: http
       metricsRelabelings: {}
       relabelings: {}
-
-  slingshotControllersEtcdExporter:
-    enabled: true
-    servicename: slingshot-controllers
-    cluster: etcd
-    serviceMonitor:
-      namespace: sysmgmt-health
-      port: http-client
-      matchNamespace:
-      - services
-      matchLabels:
-        etcd_cluster: slingshot-controllers-etcd
-      interval: 30s
-      scheme: http
-      metricsRelabelings: {}
-      relabelings: {}
