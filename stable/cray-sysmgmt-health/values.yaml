@@ -272,7 +272,13 @@ prometheus-operator:
     image:
       repository: quay.io/prometheus/node-exporter
       tag: v1.0.0
-
+    resources:
+      limits:
+        cpu: "4"
+        memory: 2Gi
+      requests:
+        cpu: "1"
+        memory: 1Gi
     extraArgs:
       # Default extra args
       - --collector.filesystem.ignored-mount-points=^/(dev|proc|sys|var/lib/docker/.+)($|/)
