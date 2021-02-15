@@ -1,0 +1,72 @@
+{{- /*
+Copyright 2020 Hewlett Packard Enterprise Development LP
+*/ -}}
+{{- if and (index .Values "customRules" "create") (index .Values "customRules" "rules" "kea-dhcp-alerts") }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ printf "%s-%s" (include "cray-sysmgmt-health.fullname" .) "kea-dhcp-alerts.rules" | trunc 63 | trimSuffix "-" }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "cray-sysmgmt-health.name" . }}
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+{{- if (index .Values "customRules" "labels") }}
+{{ toYaml (index .Values "customRules" "labels") | indent 4 }}
+{{- end }}
+{{- if (index .Values "customRules" "annotations") }}
+  annotations:
+{{ toYaml (index .Values "customRules" "annotations") | indent 4 }}
+{{- end }}
+spec:
+  groups:
+  - name: PostgreSQL-status
+    rules:
+    - alert: DHCPPacketsDeclines
+      annotations:
+        message: |
+          DHCP declines more than 5% of the total received packets.
+      expr: increase(kea_dhcp4_packets_received_total{operation="decline"}[5m]) > 0.05      
+      for: 5m
+      labels:
+        severity: warning
+    - alert: DHCPNAKRate
+      annotations:
+        message: |
+          Rate of increase in NAKs by DHCP server is more than 10% in last 5 minutes.
+      expr: rate(kea_dhcp4_packets_sent_total{operation="nak"}[5m]) > 0.01      
+      for: 1m
+      labels:
+        severity: warning
+    - alert: DHCPOutOfLease
+      annotations:
+        message: |
+          DHCP pool per subnet is out of addresses to lease.
+      expr: sum by(subnet) (kea_dhcp4_addresses_assigned_total) == sum by(subnet) (kea_dhcp4_addresses_total)
+      for: 1m
+      labels:
+        severity: warning
+    - alert: DHCPSuddenChangeOfLeases
+      annotations:
+        message: |
+          A sudden disappearance of leases is happening.
+      expr: kea_dhcp4_addresses_assigned_total < 0.8 * avg_over_time(kea_dhcp4_addresses_assigned_total [1m])
+      for: 1m
+      labels:
+        severity: warning
+   - alert: PodReadinessProbeFailure
+      annotations:
+        message: |
+          Readiness probe for the container {{ $labels.container }} in pod {{ $labels.namespace }}/{{ $labels.pod}} failed for continuous 1 hour.
+      expr: (prober_probe_total{probe_type="Readiness",result="failed"} offset 5m) != prober_probe_total{probe_type="Readiness",result="failed"}
+      for: 10m
+      labels:
+        severity: warning
+   - alert: PodLivenessProbeFailure
+      annotations:
+        message: |
+          Liveness probe for the container {{ $labels.container }} in pod {{ $labels.namespace }}/{{ $labels.pod}} failed for continuous 1 hour.
+      expr: (prober_probe_total{probe_type="Liveness",result="failed"} offset 5m) != prober_probe_total{probe_type="Liveness",result="failed"}
+      for: 10m
+      labels:
+        severity: warning
+{{- end }}		
