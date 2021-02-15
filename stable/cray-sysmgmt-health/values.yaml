@@ -321,6 +321,7 @@ customRules:
     ceph: true
     postgresql: true
     mdraid: true
+    kea-dhcp-alerts: true
   labels:
     release: cray-sysmgmt-health
   ## Annotations for default rules
