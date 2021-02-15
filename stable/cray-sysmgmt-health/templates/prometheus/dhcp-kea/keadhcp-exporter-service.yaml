@@ -1,0 +1,22 @@
+{{- if .Values.dhcpKeaExporter.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "cray-sysmgmt-health.fullname" . }}-dhcp-kea-exporter
+  namespace: {{ .Values.dhcpKeaExporter.service.namespace }}
+  labels:
+    service: {{ template "cray-sysmgmt-health.name" . }}-dhcp-kea-exporter
+    release: {{ template "cray-sysmgmt-health.name" . }}
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - name: exporter
+      port: {{ .Values.dhcpKeaExporter.service.port }}
+      protocol: TCP
+      targetPort: {{ .Values.dhcpKeaExporter.service.targetPort }}
+  selector:
+{{ toYaml .Values.dhcpKeaExporter.service.selector | indent 6 }}          
+{{- end }}
+
+---

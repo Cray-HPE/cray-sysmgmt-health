@@ -1,0 +1,37 @@
+{{- /*
+Copyright 2020 Hewlett Packard Enterprise Development LP
+*/ -}}
+kind: ServiceMonitor
+apiVersion: monitoring.coreos.com/v1
+metadata:
+  name: {{ template "cray-sysmgmt-health.fullname" . }}-dhcp-kea-exporter
+  namespace: {{ .Values.dhcpKeaExporter.serviceMonitor.namespace }}
+  labels:
+    app: {{ template "cray-sysmgmt-health.name" . }}-dhcp-kea-exporter
+    release: {{ template "cray-sysmgmt-health.name" . }}
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+      service: {{ template "cray-sysmgmt-health.name" . }}-dhcp-kea-exporter
+  namespaceSelector:
+    matchNames:
+      {{- range .Values.dhcpKeaExporter.serviceMonitor.matchNamespace }}
+      - {{ . }}
+      {{- end }}
+  endpoints:
+  - port: {{ .Values.dhcpKeaExporter.serviceMonitor.port }}
+    {{- if .Values.dhcpKeaExporter.serviceMonitor.interval }}
+    interval: {{ .Values.dhcpKeaExporter.serviceMonitor.interval }}
+    {{- end }}
+    {{- if .Values.dhcpKeaExporter.serviceMonitor.scheme }}
+    scheme: {{ .Values.dhcpKeaExporter.serviceMonitor.scheme }}
+    {{- end }}
+{{- if .Values.dhcpKeaExporter.serviceMonitor.metricRelabelings }}
+    metricRelabelings:
+{{ tpl (toYaml .Values.dhcpKeaExporter.serviceMonitor.metricRelabelings | indent 4) . }}
+{{- end }}
+{{- if .Values.dhcpKeaExporter.serviceMonitor.relabelings }}
+    relabelings:
+{{ toYaml .Values.dhcpKeaExporter.serviceMonitor.relabelings | indent 4 }}
+{{- end }}

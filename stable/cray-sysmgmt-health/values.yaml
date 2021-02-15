@@ -321,7 +321,6 @@ customRules:
     ceph: true
     postgresql: true
     mdraid: true
-    kea-dhcp-alerts: true
   labels:
     release: cray-sysmgmt-health
   ## Annotations for default rules
@@ -340,6 +339,8 @@ customDashboards:
     pilot:
       enabled: true
   nodeExporter:
+    enabled: true
+  dhcp_kea:
     enabled: true
   # Note: We are using our own templates while OPA-istio-plugin is fixed CASMPET-2788
   prometheusOperator:
@@ -688,5 +689,38 @@ servicemonitors:
         etcd_cluster: cray-uas-mgr-etcd
       interval: 30s
       scheme: http
+      metricsRelabelings: {}
+      relabelings: {}
+
+  slingshotControllersEtcdExporter:
+    enabled: true
+    servicename: slingshot-controllers
+    cluster: etcd
+    serviceMonitor:
+      namespace: sysmgmt-health
+      port: http-client
+      matchNamespace:
+      - services
+      matchLabels:
+        etcd_cluster: slingshot-controllers-etcd
+      interval: 30s
+      scheme: http
+      metricsRelabelings: {}
+      relabelings: {}
+  dhcpKeaExporter:
+    enabled: true
+    service:
+      namespace: services
+      port: 8080
+      targetPort: 8080
+      selector:
+        app.kubernetes.io/name: cray-dhcp-kea
+    serviceMonitor:
+      namespace: sysmgmt-health
+      matchNamespace:
+      - services
+      interval: 30s
+      scheme: http
+      port: exporter
       metricsRelabelings: {}
       relabelings: {}
