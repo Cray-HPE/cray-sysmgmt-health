@@ -69,23 +69,6 @@ spec:
       annotations:
         summary: 'Postgresql high rollback rate (instance "{{`{{ $labels.instance }}`}}")'
         description: 'Ratio of transactions being aborted compared to committed is > 2 %  VALUE = "{{`{{ $value }}`}}"  LABELS: "{{`{{ $labels }}`}}"'
-    - alert: PostgresqlCommitRateLow
-      expr: rate(pg_stat_database_xact_commit[1m]) < 10
-      for: 5m
-      labels:
-        severity: critical
-      annotations:
-        summary: 'Postgresql commit rate low (instance "{{`{{ $labels.instance }}`}}")'
-        description: 'Postgres seems to be processing very few transactions  VALUE = "{{`{{ $value }}`}}"  LABELS: "{{`{{ $labels }}`}}"'
-    - alert: PostgresqlConfigurationChanged
-      expr: |-
-        {__name__=~"pg_settings_.*"} != ON(__name__) {__name__=~"pg_settings_([^t]|t[^r]|tr[^a]|tra[^n]|tran[^s]|trans[^a]|transa[^c]|transac[^t]|transact[^i]|transacti[^o]|transactio[^n]|transaction[^_]|transaction_[^r]|transaction_r[^e]|transaction_re[^a]|transaction_rea[^d]|transaction_read[^_]|transaction_read_[^o]|transaction_read_o[^n]|transaction_read_on[^l]|transaction_read_onl[^y]).*"} OFFSET 5m
-      for: 5m
-      labels:
-        severity: warning
-      annotations:
-        summary: 'Postgresql configuration changed (instance "{{`{{ $labels.instance }}`}}")'
-        description: 'Postgres Database configuration change has occurred  VALUE = "{{`{{ $value }}`}}"  LABELS: "{{`{{ $labels }}`}}"'
     - alert: PostgresqlTooManyLocksAcquired
       expr: ((sum (pg_locks_count)) / (pg_settings_max_locks_per_transaction * pg_settings_max_connections)) > 0.20
       for: 5m
