@@ -1,5 +1,5 @@
 {{- /*
-Copyright 2020 Hewlett Packard Enterprise Development LP
+Copyright 2021 Hewlett Packard Enterprise Development LP
 */ -}}
 {{- if and (index .Values "customRules" "create") (index .Values "customRules" "rules" "kea-dhcp-alerts") }}
 apiVersion: monitoring.coreos.com/v1
