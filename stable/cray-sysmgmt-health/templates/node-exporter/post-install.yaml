@@ -1,0 +1,46 @@
+{{- /*
+Copyright 2021 Hewlett Packard Enterprise Development LP
+
+This sets the GOMAXPROCS env var on the prometheus-node-exporter pods. By
+default the Go procs matches the number of CPUs, which doesn't work well when
+you have 64 CPUs.
+
+We may be able to remove this in the future. There's a PR up to the node
+exporter to default to 1 proc, see
+https://github.com/prometheus/node_exporter/issues/1880
+
+This is a Helm hook because the prometheus-operator chart doesn't support
+adding extra environment variables.
+
+*/ -}}
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "cray-sysmgmt-health.fullname" . }}-node-exporter-hook
+  labels:
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
+spec:
+  template:
+    metadata:
+      name: {{ template "cray-sysmgmt-health.fullname" . }}-node-exporter-hook
+      labels:
+{{ include "cray-sysmgmt-health.labels" . | indent 8 }}
+    spec:
+      serviceAccountName: {{ template "cray-sysmgmt-health.fullname" . }}-node-exporter-hook
+      restartPolicy: Never
+      containers:
+        - name: post-install-job
+          image: {{ .Values.kubectl.repository }}:{{ .Values.kubectl.tag }}
+          command:
+            - kubectl
+            - set
+            - env
+            - daemonset
+            - -n
+            - sysmgmt-health
+            - {{ template "cray-sysmgmt-health.fullname" . }}-prometheus-node-exporter
+            - GOMAXPROCS=1
