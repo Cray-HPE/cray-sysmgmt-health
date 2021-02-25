@@ -123,6 +123,9 @@ prometheus-operator:
             target_label: __address__
             regex: ^weave;(.+?)(?::\d+)?$
             replacement: $1:6782
+          - source_labels: [__meta_kubernetes_pod_container_name]
+            action: drop
+            regex: ^weave-init$
           - source_labels: [__meta_kubernetes_pod_container_name,__address__]
             action: replace
             target_label: __address__
