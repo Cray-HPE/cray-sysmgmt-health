@@ -281,7 +281,7 @@ prometheus-operator:
       tag: v1.0.0
     resources:
       limits:
-        cpu: "4"
+        cpu: "6"
         memory: 2Gi
       requests:
         cpu: "1"
