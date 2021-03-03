@@ -1,9 +1,5 @@
 #
-<<<<<<< HEAD
 # Copyright 2020, 2021 Hewlett Packard Enterprise Development LP
-=======
-# Copyright 2021 Hewlett Packard Enterprise Development LP
->>>>>>> 8b43933... updated copyright year to 2021
 #
 global:
   authGateway: services/services-gateway
@@ -536,6 +532,24 @@ spirePostgresExporter:
     metricsRelabelings: {}
     relabelings: {}
 
+dhcpKeaExporter:
+  enabled: true
+  service:
+    namespace: services
+    port: 8080
+    targetPort: 8080
+    selector:
+      app.kubernetes.io/name: cray-dhcp-kea
+  serviceMonitor:
+    namespace: sysmgmt-health
+    matchNamespace:
+    - services
+    interval: 30s
+    scheme: http
+    port: exporter
+    metricsRelabelings: {}
+    relabelings: {}
+
 servicemonitors:
   bosEtcdExporter:
     enabled: true
@@ -694,38 +708,5 @@ servicemonitors:
         etcd_cluster: cray-uas-mgr-etcd
       interval: 30s
       scheme: http
-      metricsRelabelings: {}
-      relabelings: {}
-
-  slingshotControllersEtcdExporter:
-    enabled: true
-    servicename: slingshot-controllers
-    cluster: etcd
-    serviceMonitor:
-      namespace: sysmgmt-health
-      port: http-client
-      matchNamespace:
-      - services
-      matchLabels:
-        etcd_cluster: slingshot-controllers-etcd
-      interval: 30s
-      scheme: http
-      metricsRelabelings: {}
-      relabelings: {}
-  dhcpKeaExporter:
-    enabled: true
-    service:
-      namespace: services
-      port: 8080
-      targetPort: 8080
-      selector:
-        app.kubernetes.io/name: cray-dhcp-kea
-    serviceMonitor:
-      namespace: sysmgmt-health
-      matchNamespace:
-      - services
-      interval: 30s
-      scheme: http
-      port: exporter
       metricsRelabelings: {}
       relabelings: {}
