@@ -53,18 +53,18 @@ spec:
       for: 1m
       labels:
         severity: warning
-   - alert: PodReadinessProbeFailure
-      annotations:
-        message: 'Readiness probe for the container "{{`{{ $labels.container }}`}}" in pod "{{`{{ $labels.namespace }}/{{ $labels.pod }}`}}" failed.'
-      expr: (prober_probe_total{probe_type="Readiness",result="failed"} offset 5m) != prober_probe_total{probe_type="Readiness",result="failed"}
-      for: 10m
-      labels:
-        severity: warning
-   - alert: PodLivenessProbeFailure
+    - alert: PodLivenessProbeFailure
       annotations:
         message: 'Liveness probe for the container "{{`{{ $labels.container }}`}}" in pod "{{`{{ $labels.namespace }}/{{ $labels.pod }}`}}" failed.'
       expr: (prober_probe_total{probe_type="Liveness",result="failed"} offset 5m) != prober_probe_total{probe_type="Liveness",result="failed"}
       for: 10m
       labels:
         severity: warning
-{{- end }}		
+    - alert: PodReadinessProbeFailure
+      annotations:
+        message: 'Readiness probe for the container "{{`{{ $labels.container }}`}}" in pod "{{`{{ $labels.namespace }}/{{ $labels.pod }}`}}" failed.'
+      expr: (prober_probe_total{probe_type="Readiness",result="failed"} offset 5m) != prober_probe_total{probe_type="Readiness",result="failed"}
+      for: 10m
+      labels:
+        severity: warning        
+{{- end }}
