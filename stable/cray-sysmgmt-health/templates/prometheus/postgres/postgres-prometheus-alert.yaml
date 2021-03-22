@@ -85,8 +85,16 @@ spec:
       annotations:
         description: 'Replication Slot "{{`{{ $labels.slot_name }}`}}" is not active which may cause this replica to be out of sync with master.'
         summary: 'Postgresql replication slot is inactive.'
-    - alert: PostgresqlReplicationLag
-      expr: pg_stat_replication_pg_wal_lsn_diff > 3.2e+07
+    - alert: PostgresqlReplicationLagSMA
+      expr: pg_stat_replication_pg_wal_lsn_diff{namespace='sma'} > 1e+9
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        description: 'Replica "{{`{{ $labels.application_name }}`}}" is lagging behind master "{{`{{ $labels.pod }}`}}" by "{{`{{ $value }}`}}" bytes.'
+        summary: 'Postgresql replication lag on replica "{{`{{ $labels.application_name }}`}}"'
+    - alert: PostgresqlReplicationLagServices
+      expr: pg_stat_replication_pg_wal_lsn_diff{namespace!='sma'} > 3e+8
       for: 5m
       labels:
         severity: warning
