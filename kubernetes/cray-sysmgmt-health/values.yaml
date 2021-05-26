@@ -414,6 +414,7 @@ rmPalsPostgresExporter:
     targetPort: 9187
     selector:
       cluster-name: cray-rm-pals-postgres
+      application: spilo
   serviceMonitor:
     namespace: sysmgmt-health
     matchNamespace:
@@ -432,6 +433,7 @@ slsPostgresExporter:
     targetPort: 9187
     selector:
       cluster-name: cray-sls-postgres
+      application: spilo
   serviceMonitor:
     namespace: sysmgmt-health
     matchNamespace:
@@ -450,6 +452,7 @@ smdPostgresExporter:
     targetPort: 9187
     selector:
       cluster-name: cray-smd-postgres
+      application: spilo
   serviceMonitor:
     namespace: sysmgmt-health
     matchNamespace:
@@ -468,6 +471,7 @@ giteaVcsPostgresExporter:
     targetPort: 9187
     selector:
       cluster-name: gitea-vcs-postgres
+      application: spilo
   serviceMonitor:
     namespace: sysmgmt-health
     matchNamespace:
@@ -486,6 +490,7 @@ keycloakPostgresExporter:
     targetPort: 9187
     selector:
       cluster-name: keycloak-postgres
+      application: spilo
   serviceMonitor:
     namespace: sysmgmt-health
     matchNamespace:
@@ -504,6 +509,7 @@ smaPostgresExporter:
     targetPort: 9187
     selector:
       cluster-name: sma-postgres-cluster
+      application: spilo
   serviceMonitor:
     namespace: sysmgmt-health
     matchNamespace:
@@ -522,6 +528,7 @@ spirePostgresExporter:
     targetPort: 9187
     selector:
       cluster-name: spire-postgres
+      application: spilo
   serviceMonitor:
     namespace: sysmgmt-health
     matchNamespace:
