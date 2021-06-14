@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: patch-service-monitors
+data:
+  fix-kubelet-target-down-alert.sh: |-
+    #!/bin/sh
+
+    echo "Reconfiguring cray-sysmgmt-health-promet-kubelet servicemonitor"
+    mfile=/tmp/cray-sysmgmt-health-promet-kubelet.yaml
+    kubectl get servicemonitors.monitoring.coreos.com -n sysmgmt-health cray-sysmgmt-health-promet-kubelet -o yaml > $mfile
+    sed -i '/\/metrics\/resource/{N;s/https-metrics/"10255"/;}' $mfile
+    sed -i '/\/metrics\/resource/{N;N;N;N;N;N;s/scheme: https/scheme: http/;}' $mfile
+    kubectl -n sysmgmt-health apply -f $mfile
+
+  fix-kube-proxy-target-down-alert.sh: |-
+    #!/bin/sh
+
+    echo "Setting the metricsBindAddress in kube-proxy configmap"
+    kubectl get cm/kube-proxy -n kube-system -o yaml | sed 's/metricsBindAddress.*/metricsBindAddress: 0.0.0.0:10249/' > /tmp/kube-proxy.yaml
+    kubectl apply -f /tmp/kube-proxy.yaml
+
+    echo "Restarting kube-proxy pods in kube-system namespace"
+    for pod in $(kubectl get po -n kube-system | grep kube-proxy | awk '{print $1}'); do
+      echo "Restarting $pod"
+      kubectl -n kube-system delete pod $pod
+      sleep 5
+    done
