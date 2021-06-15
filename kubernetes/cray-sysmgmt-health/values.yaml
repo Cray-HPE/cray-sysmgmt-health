@@ -262,6 +262,16 @@ prometheus-operator:
       resourcePath: "/metrics/resource"
 
 
+  kubeControllerManager:
+    serviceMonitor:
+      https: true
+      insecureSkipVerify: false
+
+  kubeScheduler:
+    serviceMonitor:
+      https: true
+      insecureSkipVerify: false
+
   kubeEtcd:
     # Configure secure access to the etcd cluster via the key and certs
     # defined in the `etcd-client-cert` secret (see below).
