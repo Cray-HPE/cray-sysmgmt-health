@@ -309,7 +309,7 @@ prometheus-operator:
   kube-state-metrics:
     image:
       repository: quay.io/coreos/kube-state-metrics
-      tag: v1.9.6
+      tag: v1.9.7
 
   kubeStateMetrics:
     enabled: true
