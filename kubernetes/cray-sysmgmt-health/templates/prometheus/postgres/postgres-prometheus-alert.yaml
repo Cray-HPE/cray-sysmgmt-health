@@ -101,4 +101,20 @@ spec:
       annotations:
         description: 'Replica "{{`{{ $labels.application_name }}`}}" is lagging behind master "{{`{{ $labels.pod }}`}}" by "{{`{{ $value }}`}}" bytes.'
         summary: 'Postgresql replication lag on replica "{{`{{ $labels.application_name }}`}}"'
+    - alert: PostgresqlFollowerReplicationLagSMA
+      expr: pg_replication_slots_pg_wal_lsn_diff{namespace='sma'} > 1e+9
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        description: 'Replica from follower "{{`{{ $labels.application_name }}`}}" is lagging behind master "{{`{{ $labels.pod }}`}}" by "{{`{{ $value }}`}}" bytes.'
+        summary: 'Postgresql replication lag from follower on replica "{{`{{ $labels.application_name }}`}}"'
+    - alert: PostgresqlFollowerReplicationLagServices
+      expr: pg_replication_slots_pg_wal_lsn_diff{namespace!='sma'} > 3e+8
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        description: 'Replica from follower "{{`{{ $labels.application_name }}`}}" is lagging behind master "{{`{{ $labels.pod }}`}}" by "{{`{{ $value }}`}}" bytes.'
+        summary: 'Postgresql replication lag from follower on replica "{{`{{ $labels.application_name }}`}}"'
 {{- end }}
