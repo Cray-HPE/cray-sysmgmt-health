@@ -1,0 +1,39 @@
+@Library('csm-shared-library') _
+
+pipeline {
+    agent {
+        label "metal-gcp-builder"
+    }
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: "10"))
+        timestamps()
+    }
+
+    environment {
+        NAME = "cray-sysmgmt-health"
+        DESCRIPTION = "An extension of the official prometheus-operator helm chart for monitoring system health."
+        IS_STABLE = getBuildIsStable()
+        CHART_VERSION = getChartVersion(name: env.NAME, isStable: env.IS_STABLE)
+    }
+
+    stages {
+        stage("Build") {
+            parallel {
+                stage('Chart') {
+                    steps {
+                        sh "make chart"
+                    }
+                }
+            }
+        }
+
+        stage('Publish ') {
+            steps {
+                script {
+                    publishCsmHelmCharts(component: env.NAME, chartsPath: "${WORKSPACE}/kubernetes/.packaged", isStable: env.IS_STABLE)
+                }
+            }
+        }
+    }
+}
