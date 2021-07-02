@@ -48,6 +48,11 @@ prometheus-operator:
     # configReloaderMemory: 100m (default)
     configReloaderCpu: 300m
 
+    tlsProxy:
+      image:
+        repository: docker.io/ghostunnel/ghostunnel
+        tag: v1.6.0-rc.3
+
 
   prometheus:
     prometheusSpec:
