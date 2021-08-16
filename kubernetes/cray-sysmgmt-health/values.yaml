@@ -358,6 +358,8 @@ customDashboards:
     enabled: true
   dhcp_kea:
     enabled: true
+  unbounddns:
+    enabled: true
   # Note: We are using our own templates while OPA-istio-plugin is fixed CASMPET-2788
   prometheusOperator:
     enabled: true
