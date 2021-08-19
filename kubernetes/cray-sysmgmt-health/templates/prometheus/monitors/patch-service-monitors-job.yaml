@@ -19,7 +19,7 @@ spec:
             - '/bin/sh'
           args:
             - '-c'
-            - 'until kubectl get servicemonitor -n sysmgmt-health cray-sysmgmt-health-promet-kubelet > /dev/null 2>&1; do echo "Waiting for cray-sysmgmt-health-promet-kubelet service monitor to be created"; sleep 5; done; /usr/local/sbin/fix-kube-proxy-target-down-alert.sh; /usr/local/sbin/fix-kubelet-target-down-alert.sh; fix-kube-controller-manager-target-down-alert.sh; fix-kube-scheduler-target-down-alert.sh'
+            - 'until kubectl get servicemonitor -n sysmgmt-health cray-sysmgmt-health-promet-kubelet > /dev/null 2>&1; do echo "Waiting for cray-sysmgmt-health-promet-kubelet service monitor to be created"; sleep 5; done; /usr/local/sbin/fix-kube-proxy-target-down-alert.sh; /usr/local/sbin/fix-kubelet-target-down-alert.sh'
           volumeMounts:
           - mountPath: /usr/local/sbin
             name: patch-service-monitors
