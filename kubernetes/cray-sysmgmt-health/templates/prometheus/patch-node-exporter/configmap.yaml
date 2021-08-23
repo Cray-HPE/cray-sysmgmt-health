@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: patch-nodeexporter-alerts
+data:
+  fix-NodeClockSkewDetected-alert.sh: |-
+    #!/bin/sh
+
+    echo "Reconfiguring cray-sysmgmt-health-promet-node-exporter prometheus NodeClockSkewDetected alert rule"
+    mfile=/tmp/cray-sysmgmt-health-NodeClockSkewDetected.yaml
+    kubectl get  -n sysmgmt-health   prometheusrules cray-sysmgmt-health-promet-node-exporter -o yaml > $mfile
+    sed -i 's/node_timex_offset_seconds\s>\s0.05/node_timex_offset_seconds\ >\ 0.000166/' $mfile
+    sed -i 's/node_timex_offset_seconds\s<\s-0.05/node_timex_offset_seconds\ <\ -0.000166/' $mfile
+    sed -i 's/300s/1s/' $mfile
+    kubectl -n sysmgmt-health apply -f $mfile

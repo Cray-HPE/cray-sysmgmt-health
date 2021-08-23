@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ include "cray-sysmgmt-health.fullname" . }}-patch-nodeexporter-alerts-{{ .Release.Revision }}"
+  labels:
+    app.kubernetes.io/name: {{ include "cray-sysmgmt-health.fullname" . }}-patch-nodeexporter-alerts
+spec:
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
+    spec:
+      restartPolicy: Never
+      serviceAccountName: "patch-nodeexporter-alerts"
+      containers:
+        - name: "patch-nodeexporter-alerts"
+          image: "{{ .Values.kubectl.repository }}:{{ .Values.kubectl.tag }}"
+          command:
+            - '/bin/sh'
+          args:
+            - '-c'
+            - 'until kubectl get  -n sysmgmt-health   prometheusrules cray-sysmgmt-health-promet-node-exporter > /dev/null 2>&1; do echo "Waiting for cray-sysmgmt-health-promet-node-exporter alerts to be created"; sleep 5; done; /usr/local/sbin/fix-NodeClockSkewDetected-alert.sh'
+          volumeMounts:
+          - mountPath: /usr/local/sbin
+            name: patch-nodeexporter-alerts
+      volumes:
+      - name: patch-nodeexporter-alerts
+        configMap:
+          name: patch-nodeexporter-alerts
+          defaultMode: 0755
