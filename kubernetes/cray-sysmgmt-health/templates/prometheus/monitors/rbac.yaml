@@ -11,7 +11,7 @@ rules:
     resources: [pods]
     verbs: [list, get, delete]
   - apiGroups: ["monitoring.coreos.com"]
-    resources: [servicemonitors]
+    resources: [servicemonitors, prometheusrules]
     verbs: [get, patch]
 ---
 kind: ClusterRoleBinding
