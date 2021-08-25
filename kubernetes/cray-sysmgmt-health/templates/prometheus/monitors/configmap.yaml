@@ -26,3 +26,12 @@ data:
       kubectl -n kube-system delete pod $pod
       sleep 5
     done
+
+  disable-alerts.sh: |-
+    #!/bin/sh
+
+    echo "Disabling etcdHighNumberOfFailedGRPCRequests alert"
+    mfile=/tmp/cray-sysmgmt-health-promet-etcd.yaml
+    kubectl get prometheusrules.monitoring.coreos.com -n sysmgmt-health cray-sysmgmt-health-promet-etcd -o yaml > $mfile
+    sed -i '/- alert: etcdHighNumberOfFailedGRPCRequests/,/severity: critical/d' $mfile
+    kubectl -n sysmgmt-health apply -f $mfile
