@@ -295,7 +295,7 @@ prometheus-operator:
 
     image:
       repository: quay.io/prometheus/node-exporter
-      tag: v1.0.0
+      tag: v1.2.2
     resources:
       limits:
         cpu: "6"
@@ -305,8 +305,8 @@ prometheus-operator:
         memory: 1Gi
     extraArgs:
       # Default extra args
-      - --collector.filesystem.ignored-mount-points=^/(dev|proc|sys|var/lib/docker/.+)($|/)
-      - --collector.filesystem.ignored-fs-types=^(autofs|binfmt_misc|cgroup|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|mqueue|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|sysfs|tracefs)$
+      - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|run|var\/lib\/kubelet|var\/lib\/containerd.+)($|/)
+      - --collector.filesystem.fs-types-exclude=^(autofs|binfmt_misc|cgroup|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|mqueue|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|sysfs|tracefs)$
       # Extra goodness
       - --no-collector.netclass
       - --collector.buddyinfo
@@ -320,7 +320,11 @@ prometheus-operator:
       - --collector.systemd
       # tcpstat has potential performance impact
       - --collector.tcpstat
-
+    extraHostVolumeMounts:
+      - mountPath: /var/run/dbus/system_bus_socket
+        name: system-dbus-socket
+        readOnly: true
+        hostPath: /var/run/dbus/system_bus_socket
 
   # Compatibility with dashboards and rules templates
   kube-state-metrics:
