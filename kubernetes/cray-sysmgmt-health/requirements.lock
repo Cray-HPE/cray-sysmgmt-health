@@ -1,6 +1,9 @@
 dependencies:
 - name: prometheus-operator
-  repository: https://kubernetes-charts.storage.googleapis.com/
+  repository: https://charts.helm.sh/stable
   version: 8.15.4
-digest: sha256:7f11eca258b07e3c785bc74d7baae815f6ebac073a84c5d9a51e722e9bba7768
-generated: "2020-09-10T22:15:24.4825522Z"
+- name: prometheus-snmp-exporter
+  repository: https://prometheus-community.github.io/helm-charts
+  version: 0.1.4
+digest: sha256:40afa3a73bd2cb11e8c9f431ed2a0f510c0d2886d91dba9061a3d532b6bf2678
+generated: "2021-08-20T13:05:20.792041337Z"
