@@ -18,8 +18,25 @@ kubectl:
 #   enabled: false
 # nodeExporter:
 #   enabled: true
+prometheus-snmp-exporter:
 
+  serviceMonitor:
+    enabled: true
+    namespace: sysmgmt-health
+    selector:
+      prometheus: cray-sysmgmt-health-promet-prometheus
+      release: cray-sysmgmt-health
+
+    params:
+      enabled: false
+      conf:
+        module:
+        - if_mib
+        target:
+        - 127.0.0.1
+ 
 prometheus-operator:
+ 
 
   prometheusOperator:
     admissionWebhooks:
