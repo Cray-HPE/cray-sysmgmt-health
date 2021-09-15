@@ -1,0 +1,31 @@
+{{- /*
+Copyright 2021 Hewlett Packard Enterprise Development LP
+*/ -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ include "cray-sysmgmt-health.fullname" . }}-grafterm"
+  labels:
+    app: grafterm
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafterm
+  template:
+    metadata:
+      labels:
+        app: grafterm
+    spec:
+      containers:
+      - name: grafterm
+        image: {{ .Values.grafterm.image.repository }}:{{ .Values.grafterm.image.tag }}
+        volumeMounts:
+        - name: {{ include "cray-sysmgmt-health.fullname" . }}-grafterm
+          mountPath: /grafterm
+      volumes:
+      - name: {{ include "cray-sysmgmt-health.fullname" . }}-grafterm
+        configMap:
+          name: {{ include "cray-sysmgmt-health.fullname" . }}-grafterm-config
+          defaultMode: 0755
