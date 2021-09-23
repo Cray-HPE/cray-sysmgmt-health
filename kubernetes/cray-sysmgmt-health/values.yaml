@@ -18,8 +18,25 @@ kubectl:
 #   enabled: false
 # nodeExporter:
 #   enabled: true
+prometheus-snmp-exporter:
 
+  serviceMonitor:
+    enabled: true
+    namespace: sysmgmt-health
+    selector:
+      prometheus: cray-sysmgmt-health-promet-prometheus
+      release: cray-sysmgmt-health
+
+    params:
+      enabled: false
+      conf:
+        module:
+        - if_mib
+        target:
+        - 127.0.0.1
+ 
 prometheus-operator:
+ 
 
   prometheusOperator:
     admissionWebhooks:
@@ -266,16 +283,23 @@ prometheus-operator:
       resource: true
       resourcePath: "/metrics/resource"
 
-
   kubeControllerManager:
+    service:
+      https: true
+      port: 10257
+      targetPort: 10257
     serviceMonitor:
       https: true
-      insecureSkipVerify: false
+      insecureSkipVerify: true
 
   kubeScheduler:
+    service:
+      https: true
+      port: 10259
+      targetPort: 10259
     serviceMonitor:
       https: true
-      insecureSkipVerify: false
+      insecureSkipVerify: true
 
   kubeEtcd:
     # Configure secure access to the etcd cluster via the key and certs
@@ -293,7 +317,7 @@ prometheus-operator:
 
     image:
       repository: quay.io/prometheus/node-exporter
-      tag: v1.0.0
+      tag: v1.2.2
     resources:
       limits:
         cpu: "6"
@@ -303,8 +327,8 @@ prometheus-operator:
         memory: 1Gi
     extraArgs:
       # Default extra args
-      - --collector.filesystem.ignored-mount-points=^/(dev|proc|sys|var/lib/docker/.+)($|/)
-      - --collector.filesystem.ignored-fs-types=^(autofs|binfmt_misc|cgroup|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|mqueue|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|sysfs|tracefs)$
+      - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|run|var\/lib\/kubelet|var\/lib\/containerd.+)($|/)
+      - --collector.filesystem.fs-types-exclude=^(autofs|binfmt_misc|cgroup|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|mqueue|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|sysfs|tracefs)$
       # Extra goodness
       - --no-collector.netclass
       - --collector.buddyinfo
@@ -318,7 +342,11 @@ prometheus-operator:
       - --collector.systemd
       # tcpstat has potential performance impact
       - --collector.tcpstat
-
+    extraHostVolumeMounts:
+      - mountPath: /var/run/dbus/system_bus_socket
+        name: system-dbus-socket
+        readOnly: true
+        hostPath: /var/run/dbus/system_bus_socket
 
   # Compatibility with dashboards and rules templates
   kube-state-metrics:
@@ -357,6 +385,8 @@ customDashboards:
   nodeExporter:
     enabled: true
   dhcp_kea:
+    enabled: true
+  unbounddns:
     enabled: true
   # Note: We are using our own templates while OPA-istio-plugin is fixed CASMPET-2788
   prometheusOperator:

@@ -1,5 +1,8 @@
 ---
 dependencies:
   - name: prometheus-operator
-    version: 8.15.4
+    version: 9.3.1
     repository: "@stable"
+  - name: prometheus-snmp-exporter
+    repository: https://prometheus-community.github.io/helm-charts
+    version: 0.1.4
