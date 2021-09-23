@@ -1,0 +1,14 @@
+{{- /*
+Copyright 2021 Hewlett Packard Enterprise Development LP
+*/ -}}
+{{- if .Values.grafterm.dashboards.enabled }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "cray-sysmgmt-health.fullname" . }}-grafterm-config
+  namespace: {{ .Release.Namespace }}
+data:
+  critical_services_dashboard.json: |-
+    {{- .Files.Get "grafterm_dashboards/critical_services_dashboard.json" | nindent 4 }}
+{{- end }}

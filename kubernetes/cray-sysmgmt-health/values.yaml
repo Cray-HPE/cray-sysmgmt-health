@@ -762,3 +762,10 @@ servicemonitors:
       scheme: http
       metricsRelabelings: {}
       relabelings: {}
+
+grafterm:
+  image:
+    repository: cray-grafterm
+    tag: 1.0.0
+  dashboards:
+    enabled: true
