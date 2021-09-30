@@ -19,7 +19,7 @@ spec:
             - '/bin/sh'
           args:
             - '-c'
-            - 'until kubectl get  -n sysmgmt-health   prometheusrules cray-sysmgmt-health-promet-node-exporter > /dev/null 2>&1; do echo "Waiting for cray-sysmgmt-health-promet-node-exporter alerts to be created"; sleep 5; done; /usr/local/sbin/fix-NodeClockSkewDetected-alert.sh'
+            - 'until kubectl get  -n sysmgmt-health   prometheusrules cray-sysmgmt-health-promet-node-exporter > /dev/null 2>&1; do echo "Waiting for cray-sysmgmt-health-promet-node-exporter alerts to be created"; sleep 5; done; /usr/local/sbin/fix-NodeClockSkewDetected-alert.sh; /usr/local/sbin/fix-CephNetworkPacketsDropped-alert.sh'
           volumeMounts:
           - mountPath: /usr/local/sbin
             name: patch-nodeexporter-alerts

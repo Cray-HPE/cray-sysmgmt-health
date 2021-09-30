@@ -13,3 +13,12 @@ data:
     sed -i 's/node_timex_offset_seconds\s<\s-0.05/node_timex_offset_seconds\ <\ -0.000166/' $mfile
     sed -i 's/300s/1s/' $mfile
     kubectl -n sysmgmt-health apply -f $mfile
+  
+  fix-CephNetworkPacketsDropped-alert.sh: |-
+    #!/bin/sh
+  
+    echo "Renaming cray-sysmgmt-health-ceph-prometheus-alert.rules prometheus CephNetworkPacketsDropped to NetworkPacketsDropped alert rule"
+    mfile=/tmp/cray-sysmgmt-health-NetworkPacketsDropped.yaml
+    kubectl get -n sysmgmt-health prometheusrules cray-sysmgmt-health-ceph-prometheus-alert.rules -o yaml > $mfile
+    sed -i 's/CephNetworkPacketsDropped/NetworkPacketsDropped/' $mfile
+    kubectl -n sysmgmt-health apply -f $mfile
