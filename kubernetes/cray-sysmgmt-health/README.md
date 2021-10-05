@@ -19,3 +19,42 @@ bash ./fix_datasources.sh
 
 Note: current version of Istio dashboards is from Istio release-1.5.7-patch branch.
 https://github.com/istio/istio/tree/release-1.5.7-patch/manifests/istio-telemetry/grafana/dashboards
+
+
+## Prometheus
+
+### References
+
+* API: https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md
+* Documentation: https://github.com/prometheus-operator/prometheus-operator/tree/master/Documentation
+
+### Automatic discovery of Pods and Services
+
+The `kubernetes-pods` PodMonitor looks for Pods with annotations and monitors
+those Pods automatically.
+
+The annotations are:
+
+* `prometheus.io/scrape`: Tells this PodMonitor to include this Pod. Set it to
+  `true` to enable scraping.
+* `prometheus.io/path`: Sets the metrics path to use. Defaults to `/metrics`
+* `prometheus.io/port`: Sets the port to use. If not set then the scrape
+  endpoint won't have a port.
+
+The Istio sidecar injector sets these annotations on the Pods that this monitor
+looks for so that each Pod's istio-proxy sidecar will be scraped.
+
+The annotations could be used by other Pods, too, but it's more likely
+monitoring of other services would be done using annotations on the Service.
+
+The `kubernetes-service-endpoints` ServiceMonitor looks for Services with
+annotations and monitors those Services automatically.
+
+The annotations are:
+
+* `prometheus.io/scrape`: Tells this PodMonitor to include this Pod. Set it to
+  `true` to enable scraping.
+* `prometheus.io/scheme`: Either `http` or `https`.
+* `prometheus.io/path`: Sets the metrics path to use. Defaults to `/metrics`
+* `prometheus.io/port`: Sets the port to use. If not set then the scrape
+  endpoint won't have a port.

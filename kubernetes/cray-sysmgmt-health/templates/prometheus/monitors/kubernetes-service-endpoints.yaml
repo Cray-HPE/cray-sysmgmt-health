@@ -1,0 +1,40 @@
+
+# See the chart README.md for some docs on this ServiceMonitor.
+
+---
+
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ template "cray-sysmgmt-health.fullname" . }}-kubernetes-service-endpoints
+  labels:
+    app: {{ template "cray-sysmgmt-health.name" . }}-kubernetes-service-endpoints
+    release: {{ template "cray-sysmgmt-health.name" . }}
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+spec:
+  namespaceSelector:
+    any: true
+  selector: {}
+  endpoints:
+  - relabelings:
+    - sourceLabels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
+      action: keep
+      regex: "true"
+    - sourceLabels: [__meta_kubernetes_service_annotation_prometheus_io_scheme]
+      action: replace
+      targetLabel: __scheme__
+      regex: (https?)
+    - sourceLabels: [__meta_kubernetes_service_annotation_prometheus_io_path]
+      action: replace
+      targetLabel: __metrics_path__
+      regex: (.+)
+    - sourceLabels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]
+      action: replace
+      targetLabel: __address__
+      regex: ([^:]+)(?::\d+)?;(\d+)
+      replacement: "$1:$2"
+    - action: labelmap
+      regex: __meta_kubernetes_service_label_(.+)
+    - sourceLabels: [__meta_kubernetes_service_name]
+      action: replace
+      targetLabel: kubernetes_name
