@@ -1,0 +1,49 @@
+
+# See the README.md for docs about using this monitor.
+
+---
+
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: {{ template "cray-sysmgmt-health.fullname" . }}-kubernetes-pods
+  labels:
+    app: {{ template "cray-sysmgmt-health.name" . }}-kubernetes-pods
+    release: {{ template "cray-sysmgmt-health.name" . }}
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+spec:
+  namespaceSelector:
+    any: true
+  selector: {}
+  podMetricsEndpoints:
+  - relabelings:
+
+    # This relabeling is needed because the operator adds the following
+    # relabeling automatically and can't be told to not add it:
+    #   - source_labels:
+    #     - __meta_kubernetes_pod_container_name
+    #     target_label: container
+    # The automatic relabeling causes there to be a metric for each container
+    # in the pod, but the annotation is for the whole pod and only targets one
+    # container (it's typically the istio-proxy sidecar but could be a different
+    # container).
+    - action: labeldrop
+      regex: container
+
+    - sourceLabels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+      action: keep
+      regex: "true"
+    - sourceLabels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+      action: replace
+      targetLabel: __metrics_path__
+      regex: (.+)
+    - sourceLabels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+      action: replace
+      regex: ([^:]+)(?::\d+)?;(\d+)
+      replacement: "$1:$2"
+      targetLabel: __address__
+    - action: labelmap
+      regex: __meta_kubernetes_pod_label_(.+)
+    - sourceLabels: [__meta_kubernetes_pod_name]
+      action: replace
+      targetLabel: pod_name
