@@ -18,7 +18,12 @@ kubectl:
 #   enabled: false
 # nodeExporter:
 #   enabled: true
+
 prometheus-snmp-exporter:
+  image:
+    repository: artifactory.algol60.net/csm-docker/stable/docker.io/prom/snmp-exporter
+    tag: v0.20.0
+    pullPolicy: IfNotPresent
 
   serviceMonitor:
     enabled: true
