@@ -354,6 +354,19 @@ spec:
           oid: 1.3.6.1.4.1.50495.15.1.2.8.1
         annotations:
           description: Root volume (OSD and MON store) is dangerously full (< 5% free).
+      # alert on nic packet errors and drops rates > 1 packet/s for ceph nodes
+      - alert: CephNodeNetworkPacketsDropped
+        expr: irate(node_network_receive_drop_total{device!="lo",job="cray-sysmgmt-health-ceph-node-exporter"}[5m])
+          + irate(node_network_transmit_drop_total{device!="lo",job="cray-sysmgmt-health-ceph-node-exporter"}[5m])
+          > 1
+        labels:
+          severity: warning
+          type: ceph_default
+          oid: 1.3.6.1.4.1.50495.15.1.2.8.2
+        annotations:
+          description: >
+            Ceph Node {{`{{ $labels.instance }}`}} experiences packet drop > 1
+            packet/s on interface {{`{{ $labels.device }}`}}.
       # alert on nic packet errors and drops rates > 1 packet/s
       - alert: CephNetworkPacketsDropped
         expr: irate(node_network_receive_drop_total{device!="lo"}[5m]) + irate(node_network_transmit_drop_total{device!="lo"}[5m]) > 1
@@ -364,6 +377,17 @@ spec:
         annotations:
           description: >
             Node {{`{{ $labels.instance }}`}} experiences packet drop > 1
+            packet/s on interface {{`{{ $labels.device }}`}}.
+      - alert: CephNodeNetworkPacketErrors
+        expr: irate(node_network_receive_errs_total{device!="lo",job="cray-sysmgmt-health-ceph-node-exporter"}[5m])
+          + irate(node_network_transmit_errs_total{device!="lo",job="cray-sysmgmt-health-ceph-node-exporter"}[5m]) > 1
+        labels:
+          severity: warning
+          type: ceph_default
+          oid: 1.3.6.1.4.1.50495.15.1.2.8.3
+        annotations:
+          description: >
+            Ceph Node {{`{{ $labels.instance }}`}} experiences packet errors > 1
             packet/s on interface {{`{{ $labels.device }}`}}.
       - alert: CephNetworkPacketErrors
         expr: irate(node_network_receive_errs_total{device!="lo"}[5m]) + irate(node_network_transmit_errs_total{device!="lo"}[5m]) > 1
