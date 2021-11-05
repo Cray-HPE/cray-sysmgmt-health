@@ -347,7 +347,7 @@ spec:
   - name: nodes
     rules:
       - alert: CephRootVolumeFull
-        expr: node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"} < 0.05
+        expr: node_filesystem_avail_bytes{mountpoint=~".*/overlayfs",job="cray-sysmgmt-health-ceph-node-exporter"} / node_filesystem_size_bytes{mountpoint=~".*/overlayfs",job="cray-sysmgmt-health-ceph-node-exporter"} < 0.05
         labels:
           severity: critical
           type: ceph_default
