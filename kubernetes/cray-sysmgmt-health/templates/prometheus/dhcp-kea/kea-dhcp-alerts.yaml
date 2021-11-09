@@ -19,7 +19,7 @@ metadata:
 {{- end }}
 spec:
   groups:
-  - name: PostgreSQL-status
+  - name: Kea DHCP status
     rules:
     - alert: DHCPPacketsDeclines
       annotations:

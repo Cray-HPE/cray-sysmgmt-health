@@ -1,0 +1,31 @@
+{{- /*
+Copyright 2021 Hewlett Packard Enterprise Development LP
+*/ -}}
+{{- if and (index .Values "customRules" "create") (index .Values "customRules" "rules" "smartmon-alerts") }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ printf "%s-%s" (include "cray-sysmgmt-health.fullname" .) "smartmon-alerts.rules" | trunc 63 | trimSuffix "-" }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "cray-sysmgmt-health.name" . }}
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+{{- if (index .Values "customRules" "labels") }}
+{{ toYaml (index .Values "customRules" "labels") | indent 4 }}
+{{- end }}
+{{- if (index .Values "customRules" "annotations") }}
+  annotations:
+{{ toYaml (index .Values "customRules" "annotations") | indent 4 }}
+{{- end }}
+spec:
+  groups:
+  - name: SMART status
+    rules:
+    - alert: SmartUnhealthy
+      annotations:
+        message: 'Disk "{{`{{ $labels.disk }}`}}" on host "{{`{{ $labels.instance }}`}}" is unhealthy according to SMART'
+      expr: smartmon_device_smart_healthy != 1    
+      for: 5m
+      labels:
+        severity: critical
+{{- end }}
