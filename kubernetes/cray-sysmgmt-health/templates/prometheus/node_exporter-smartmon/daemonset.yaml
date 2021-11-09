@@ -28,7 +28,7 @@ spec:
           operator: "Exists"
       terminationGracePeriodSeconds: 5
       containers:
-      - image: image: {{ .Values.smartmetrics.image.repository }}:{{ .Values.smartmetrics.image.tag }}
+      - image: {{ .Values.smartmetrics.image.repository }}:{{ .Values.smartmetrics.image.tag }}
         name: smartmon
         env:
         - name: INTERVAL
