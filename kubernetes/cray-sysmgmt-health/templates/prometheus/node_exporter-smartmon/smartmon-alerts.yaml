@@ -28,4 +28,124 @@ spec:
       for: 5m
       labels:
         severity: critical
+    - alert: SmartDisabled
+      annotations:
+        message: 'SMART disabled on "{{`{{ $labels.type }}`}}"  "{{`{{ $labels.disk }}`}}" '
+      expr: smartmon_device_smart_available == 1 and smartmon_device_smart_enabled == 0
+      for: 5m
+      labels:
+        severity: critical
+    - alert: SmartHealth
+      annotations:
+        message: 'SMART unhealthy on "{{`{{ $labels.type }}`}}"  "{{`{{ $labels.disk }}`}}" '
+      expr: smartmon_device_smart_healthy != 1 and smartmon_device_smart_enabled == 1
+      for: 5m
+      labels:
+        severity: informational
+    - alert: SmartDefects
+      annotations:
+        message: 'SMART defects grow "{{`{{ $labels.type }}`}}"  "{{`{{ $labels.disk }}`}}" '
+      expr: increase(smartmon_grown_defects_count_raw_value[1d]) > 0
+      for: 5m
+      labels:
+        severity: informational
+    - alert: SmartPowerCycles
+      annotations:
+        message: 'Disk "{{`{{ $labels.type }}`}}" "{{`{{ $labels.disk }}`}}" power cycles "{{`{{ printf "%.0f" $value }}`}}"/day '
+      expr: increase(smartmon_power_cycle_count_raw_value[1d]) > 10
+      for: 5m
+      labels:
+        severity: informational
+    - alert: SmartExpired
+      annotations:
+        message: '"{{`{{ $labels.type }}`}}" "{{`{{ $labels.disk }}`}}" no data for "{{`{{ printf "%.0f" $value }}`}}"min '
+      expr: (time() - smartmon_smartctl_run) / 60 > 30
+      for: 5m
+      labels:
+        severity: informational
+    - alert: SmartTemp
+      annotations:
+        message: '"{{`{{ $labels.type }}`}}" "{{`{{ $labels.disk }}`}}" temperature: "{{`{{ printf "%.0f" $value }}`}}"C '
+      expr: smartmon_airflow_temperature_cel_raw_value > 40 or smartmon_temperature_celsius_raw_value > 40
+      for: 5m
+      labels:
+        severity: informational
+    - alert: SmartTemp
+      annotations:
+        message: '"{{`{{ $labels.type }}`}}" "{{`{{ $labels.disk }}`}}" temperature: "{{`{{ printf "%.0f" $value }}`}}"C '
+      expr: smartmon_airflow_temperature_cel_raw_value > 60 or smartmon_temperature_celsius_raw_value > 60
+      for: 5m
+      labels:
+        severity: warning
+    - alert: SmartE2E
+      annotations:
+        message: 'SMART "{{`{{ $labels.type }}`}}" "{{`{{ $labels.disk }}`}}" e2e fails'
+      expr: smartmon_end_to_end_error_value <= smartmon_end_to_end_error_threshold 
+      for: 5m
+      labels:
+        severity: informational
+    - alert: SmartReallocated
+      annotations:
+        message: 'SMART "{{`{{ $labels.type }}`}}" "{{`{{ $labels.disk }}`}}" reallocated sectors '
+      expr: smartmon_reallocated_sector_ct_value <= smartmon_reallocated_sector_ct_threshold
+      for: 1m
+      labels:
+        severity: informational 
+    - alert: SmartProgramFailCountTotal
+      annotations:
+        message: '"{{`{{ $labels.instance }}`}}" of job "{{`{{ $labels.job }}`}}" has less than 10% SMART Program Fail Count Total '
+      expr: smartmon_program_fail_cnt_total_value < smartmon_program_fail_cnt_total_threshold
+      for: 3m
+      labels:
+        severity: critical
+    - alert: SmartECC
+      annotations:
+        message: 'SMART "{{`{{ $labels.type }}`}}" "{{`{{ $labels.disk }}`}}" ecc recovered "{{`{{ printf "%.0f" $value }}`}}"/day '
+      expr: increase(smartmon_hardware_ecc_recovered_raw_value[1d]) > 0
+      for: 1m
+      labels:
+        severity: informational
+    - alert: SmartCRC
+      annotations:
+        message: 'SMART "{{`{{ $labels.type }}`}}" "{{`{{ $labels.disk }}`}}" cable crc errors '
+      expr: smartmon_udma_crc_error_count_raw_value > 0
+      for: 1m
+      labels:
+        severity: informational
+    - alert: SmartPending
+      annotations:
+        message: 'SMART "{{`{{ $labels.type }}`}}" "{{`{{ $labels.disk }}`}}" pending sectors "{{`{{printf "%.0f" $value}}`}}" '
+      expr: smartmon_current_pending_sector_raw_value > 1
+      for: 1m
+      labels:
+        severity: informational
+    - alert: SmartErase
+      annotations:
+        message: 'SMART "{{`{{ $labels.type }}`}}" "{{`{{ $labels.disk }}`}}" erase fail count "{{`{{printf "%.0f" $value}}`}}"/day '
+      expr: increase(smartmon_erase_fail_count_total_raw_value[1d]) > 0
+      for: 1m
+      labels:
+        severity: informational
+    - alert: SMARTReallocatedSectors
+      annotations:
+        message: ' Disk has reallocated sectors '
+      expr: smartmon_reallocated_sector_ct_raw_value > 0
+      for: 1m
+      labels:
+        severity: warning
+    - alert: SMARTMonitorNotRunning
+      annotations:
+        message: ' Periodic SMART monitoring not running (timer/service disabled?) '
+      expr: time() - node_textfile_mtime_seconds{file="smartmon.prom"} > 3600
+      for: 1h
+      labels:
+        severity: info
+    - alert: SmartMonDeviceLifeLeftLow
+      annotations:
+        message: ' "{{`{{ $labels.instance }}`}}" of job "{{`{{ $labels.job }}`}}" is reporting that a physical hard disk has less than 50% expected life left '
+      expr: smartmon_wear_leveling_count_value < smartmon_wear_leveling_count_threshold
+      for: 3m
+      labels:
+        severity: critical
+
 {{- end }}
