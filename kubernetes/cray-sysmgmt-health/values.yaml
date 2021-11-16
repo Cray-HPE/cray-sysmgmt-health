@@ -345,11 +345,18 @@ prometheus-operator:
       - --collector.systemd
       # tcpstat has potential performance impact
       - --collector.tcpstat
+      - --collector.textfile.directory=/var/lib/node_exporter
     extraHostVolumeMounts:
       - mountPath: /var/run/dbus/system_bus_socket
         name: system-dbus-socket
         readOnly: true
         hostPath: /var/run/dbus/system_bus_socket
+      - name: text-file-collector
+        hostPath: /var/lib/node_exporter
+        mountPath: /var/lib/node_exporter
+        readOnly: true
+        mountPropagation: HostToContainer
+
 
   # Compatibility with dashboards and rules templates
   kube-state-metrics:
@@ -368,6 +375,7 @@ customRules:
     postgresql: true
     mdraid: true
     kea-dhcp-alerts: true
+    smartmon-alerts: true
   labels:
     release: cray-sysmgmt-health
   ## Annotations for default rules
@@ -772,3 +780,9 @@ grafterm:
     tag: 1.0.0
   dashboards:
     enabled: true
+
+smartmetrics:
+  enabled: true
+  image:
+    repository: artifactory.algol60.net/csm-docker/stable/docker.io/prom/node-exporter-smartmon
+    tag: v0.1.0

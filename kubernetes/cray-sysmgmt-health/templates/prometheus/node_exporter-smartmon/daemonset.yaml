@@ -1,0 +1,59 @@
+{{- if .Values.smartmetrics.enabled }}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: "{{ include "cray-sysmgmt-health.fullname" . }}-node-exporter-smartmon"
+  labels:
+    app.kubernetes.io/name: node-exporter-smartmon
+  namespace: {{ .Release.Namespace }}
+spec:
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 5
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: node-exporter-smartmon
+  template:
+    metadata:
+      name: node-exporter-smartmon
+      labels:
+        app.kubernetes.io/name: node-exporter-smartmon
+    spec:
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          operator: Exists
+          effect: "NoSchedule"
+        - key: "CriticalAddonsOnly"
+          operator: "Exists"
+      terminationGracePeriodSeconds: 5
+      containers:
+      - image: {{ .Values.smartmetrics.image.repository }}:{{ .Values.smartmetrics.image.tag }}
+        name: smartmon
+        env:
+        - name: INTERVAL
+          value: "900"
+        securityContext:
+          privileged: true
+        resources:
+          requests:
+            cpu: 25m
+            memory: 50Mi
+          limits:
+            cpu: 80m
+            memory: 75Mi
+        volumeMounts:
+        - mountPath: /usr/local/sbin
+          name: host-dev
+          readOnly: true
+        - mountPath: /var/lib/node_exporter
+          name: host-textfile
+          readOnly: false
+      volumes:
+      - hostPath:
+          path: /dev
+        name: host-dev
+      - hostPath:
+          path: /var/lib/node_exporter
+        name: host-textfile
+{{- end }}
