@@ -22,3 +22,15 @@ data:
     kubectl get -n sysmgmt-health prometheusrules cray-sysmgmt-health-ceph-prometheus-alert.rules -o yaml > $mfile
     sed -i 's/CephNetworkPacketsDropped/NetworkPacketsDropped/' $mfile
     kubectl -n sysmgmt-health apply -f $mfile
+
+  fix-NodeFilesystemAlmostOutOfSpace-alert.sh: |-
+    #!/bin/sh
+
+    echo "Reconfiguring cray-sysmgmt-health-promet-node-exporter prometheus NodeFilesystemAlmostOutOfSpace alert rule""
+    mfile=/tmp/cray-sysmgmt-health-NodeFilesystemAlmostOutOfSpace.yaml
+    kubectl get  -n sysmgmt-health   prometheusrules cray-sysmgmt-health-promet-node-exporter -o yaml > $mfile
+    sed -i '/alert: NodeFilesystemAlmostOutOfSpace/{N;N;N;N;N;N;s/Filesystem has less than 5% space left/Filesystem has less than 17% space left/}' $mfile
+    sed -i '/alert: NodeFilesystemAlmostOutOfSpace/{N;N;N;N;N;N;N;N;N;s/100 < 5/100 < 17/}' $mfile
+    sed -i '/alert: NodeFilesystemAlmostOutOfSpace/{N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;s/Filesystem has less than 3% space left/Filesystem has less than 15% space left/}' $mfile
+    sed -i '/alert: NodeFilesystemAlmostOutOfSpace/{N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;s/100 < 3/100 < 15/}' $mfile
+    kubectl -n sysmgmt-health apply -f $mfile
