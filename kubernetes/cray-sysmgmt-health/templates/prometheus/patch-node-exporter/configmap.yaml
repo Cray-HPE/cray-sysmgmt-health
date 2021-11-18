@@ -26,7 +26,7 @@ data:
   fix-NodeFilesystemAlmostOutOfSpace-alert.sh: |-
     #!/bin/sh
 
-    echo "Reconfiguring cray-sysmgmt-health-promet-node-exporter prometheus NodeFilesystemAlmostOutOfSpace alert rule""
+    echo "Reconfiguring cray-sysmgmt-health-promet-node-exporter prometheus NodeFilesystemAlmostOutOfSpace alert rule"
     mfile=/tmp/cray-sysmgmt-health-NodeFilesystemAlmostOutOfSpace.yaml
     kubectl get  -n sysmgmt-health   prometheusrules cray-sysmgmt-health-promet-node-exporter -o yaml > $mfile
     sed -i '/alert: NodeFilesystemAlmostOutOfSpace/{N;N;N;N;N;N;s/Filesystem has less than 5% space left/Filesystem has less than 17% space left/}' $mfile
