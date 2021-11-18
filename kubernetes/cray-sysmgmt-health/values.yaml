@@ -376,6 +376,7 @@ customRules:
     mdraid: true
     kea-dhcp-alerts: true
     smartmon-alerts: true
+    istio-alerts: true
   labels:
     release: cray-sysmgmt-health
   ## Annotations for default rules

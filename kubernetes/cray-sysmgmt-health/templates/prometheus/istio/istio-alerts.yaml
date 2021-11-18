@@ -1,0 +1,31 @@
+{{- /*
+Copyright 2021 Hewlett Packard Enterprise Development LP
+*/ -}}
+{{- if and (index .Values "customRules" "create") (index .Values "customRules" "rules" "istio-alerts") }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ printf "%s-%s" (include "cray-sysmgmt-health.fullname" .) "istio-alerts.rules" | trunc 63 | trimSuffix "-" }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "cray-sysmgmt-health.name" . }}
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+{{- if (index .Values "customRules" "labels") }}
+{{ toYaml (index .Values "customRules" "labels") | indent 4 }}
+{{- end }}
+{{- if (index .Values "customRules" "annotations") }}
+  annotations:
+{{ toYaml (index .Values "customRules" "annotations") | indent 4 }}
+{{- end }}
+spec:
+  groups:
+  - name: Istio-status
+    rules:
+    - alert: IstioHigh5xxErrorRate
+      annotations:
+        message: 'Istio high 5xx error rate (instance "{{`{{ $labels.instance }}`}}")'
+      expr: sum(rate(istio_requests_total{reporter="destination", response_code=~"5.*"}[5m])) / sum(rate(istio_requests_total{reporter="destination"}[5m])) * 100 > 5
+      for: 1m
+      labels:
+        severity: warning
+{{- end }}
