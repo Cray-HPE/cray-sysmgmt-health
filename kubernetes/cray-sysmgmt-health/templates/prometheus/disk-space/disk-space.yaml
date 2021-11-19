@@ -38,7 +38,7 @@ spec:
     rules:
     - alert: RootVolumeFull
       annotations:
-        message: ' Avalible Space on mountpoint / is less than "{{`{{ $value | printf "%.2f" }}`}}" % '
+        message: ' Available space on mountpoint / is less than "{{`{{ $value | printf "%.2f" }}`}}" % '
       expr: node_filesystem_avail_bytes{mountpoint="/",job="node-exporter"} / node_filesystem_size_bytes{mountpoint="/",job="node-exporter"} < 0.05
       for: 1h
       labels:
