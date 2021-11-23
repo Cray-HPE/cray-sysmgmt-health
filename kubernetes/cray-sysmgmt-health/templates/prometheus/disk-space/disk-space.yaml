@@ -43,3 +43,10 @@ spec:
       for: 1h
       labels:
         severity: critical
+    - alert: ContainerdVolumeFull
+      annotations:
+        message: ' Available space on mountpoint /var/lib/containerd is less than "{{`{{ $value | printf "%.2f" }}`}}" % '
+      expr: node_filesystem_avail_bytes{mountpoint="/var/lib/containerd",job="node-exporter"} / node_filesystem_size_bytes{mountpoint="/var/lib/containerd",job="node-exporter"} < 0.05
+      for: 1h
+      labels:
+        severity: critical
