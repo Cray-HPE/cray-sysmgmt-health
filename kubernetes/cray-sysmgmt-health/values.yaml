@@ -1,5 +1,21 @@
 #
-# Copyright 2020, 2021 Hewlett Packard Enterprise Development LP
+# MIT License
+# (C) Copyright [2020-2021] Hewlett Packard Enterprise Development LP
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
 #
 global:
   authGateway: services/services-gateway
@@ -8,8 +24,10 @@ global:
     pspEnabled: true
 
 kubectl:
-  repository: dtr.dev.cray.com/loftsman/docker-kubectl
-  tag: 0.2.0
+  image:
+    repository: artifactory.algol60.net/csm-docker/stable/docker-kubectl
+    tag: 1.19.15
+    pullPolicy: IfNotPresent
 
 # Enable/Disable subcharts
 # grafana:
@@ -39,31 +57,27 @@ prometheus-snmp-exporter:
         - if_mib
         target:
         - 127.0.0.1
- 
+
 prometheus-operator:
- 
+
 
   prometheusOperator:
     admissionWebhooks:
       patch:
         enabled: true
         image:
-          repository: jettech/kube-webhook-certgen
+          repository: artifactory.algol60.net/csm-docker/stable/docker.io/jettech/kube-webhook-certgen
           tag: v1.2.1
           pullPolicy: IfNotPresent
 
     image:
-      repository: quay.io/coreos/prometheus-operator
+      repository: artifactory.algol60.net/csm-docker/stable/quay.io/coreos/prometheus-operator
       tag: v0.38.1
       pullPolicy: IfNotPresent
 
     prometheusConfigReloaderImage:
-      repository: quay.io/coreos/prometheus-config-reloader
+      repository: artifactory.algol60.net/csm-docker/stable/quay.io/coreos/prometheus-config-reloader
       tag: v0.38.1
-
-    hyperkubeImage:
-      # Base chart defaults to v1.12.1, but prefer to match the k8s release
-      tag: v1.17.2
 
     # Resources for config-reloader side car, these are the same for requests and limits.
     # configReloaderCpu: 100m (default)
@@ -72,15 +86,17 @@ prometheus-operator:
 
     tlsProxy:
       image:
-        repository: docker.io/ghostunnel/ghostunnel
-        tag: v1.6.0-rc.3
+        repository: artifactory.algol60.net/csm-docker/stable/docker.io/squareup/ghostunnel
+        tag: v1.5.2
 
+    configmapReloadImage:
+      repository: artifactory.algol60.net/csm-docker/stable/docker.io/jimmidyson/configmap-reload
 
   prometheus:
     prometheusSpec:
 
       image:
-        repository: quay.io/prometheus/prometheus
+        repository: artifactory.algol60.net/csm-docker/stable/quay.io/prometheus/prometheus
         tag: v2.18.1
 
       # Enable administrative HTTP API, 'cause why not?
@@ -146,10 +162,10 @@ prometheus-operator:
           - api_server:
             role: pod
           relabel_configs:
-          - source_labels: [__meta_kubernetes_namespace,__meta_kubernetes_pod_label_name]
+          - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_pod_label_name]
             action: keep
             regex: ^kube-system;weave-net$
-          - source_labels: [__meta_kubernetes_pod_container_name,__address__]
+          - source_labels: [__meta_kubernetes_pod_container_name, __address__]
             action: replace
             target_label: __address__
             regex: ^weave;(.+?)(?::\d+)?$
@@ -157,7 +173,7 @@ prometheus-operator:
           - source_labels: [__meta_kubernetes_pod_container_name]
             action: drop
             regex: ^weave-init$
-          - source_labels: [__meta_kubernetes_pod_container_name,__address__]
+          - source_labels: [__meta_kubernetes_pod_container_name, __address__]
             action: replace
             target_label: __address__
             regex: ^weave-npc;(.+?)(?::\d+)?$
@@ -195,6 +211,9 @@ prometheus-operator:
   alertmanager:
 
     alertmanagerSpec:
+      image:
+        repository: artifactory.algol60.net/csm-docker/stable/quay.io/prometheus/alertmanager
+
       # Adjust retention period consistent with provisioned storage (see next)
       retention: 48h
       # Configure storage for alertmanager instances
@@ -216,23 +235,23 @@ prometheus-operator:
 
       # Configure external hostname for Istio ingress
       # Setup with Ansible
-      #externalAuthority: alertmanager-shs.local
-      #externalUrl: https://alertmanager-shs.local/
+      # externalAuthority: alertmanager-shs.local
+      # externalUrl: https://alertmanager-shs.local/
 
   grafana:
 
     image:
-      repository: grafana/grafana
+      repository: artifactory.algol60.net/csm-docker/stable/docker.io/grafana/grafana
       tag: 7.0.3
 
     # Configure external hostname for Istio ingress
     # Setup with Ansible
-    #externalAuthority: grafana-shs.local
+    # externalAuthority: grafana-shs.local
 
     # Note: We are using our own templates while OPA-istio-plugin is fixed CASMPET-2788
     defaultDashboardsEnabled: false
 
-    #persistence:
+    # persistence:
     #  enabled: true
     #  size: 100Gi
 
@@ -255,7 +274,7 @@ prometheus-operator:
 
     sidecar:
       image:
-        repository: kiwigrid/k8s-sidecar
+        repository: artifactory.algol60.net/csm-docker/stable/docker.io/kiwigrid/k8s-sidecar
         tag: 0.1.151
       dashboards:
         enabled: true
@@ -277,6 +296,8 @@ prometheus-operator:
           url: http://cray-sysmgmt-health-promet-prometheus:9090
           access: proxy
 
+    testFramework:
+      image: artifactory.algol60.net/csm-docker/stable/docker.io/bats/bats
 
   # Exporters
   kubelet:
@@ -321,7 +342,7 @@ prometheus-operator:
   prometheus-node-exporter:
 
     image:
-      repository: quay.io/prometheus/node-exporter
+      repository: artifactory.algol60.net/csm-docker/stable/quay.io/prometheus/node-exporter
       tag: v1.2.2
     resources:
       limits:
@@ -365,7 +386,7 @@ prometheus-operator:
   # Compatibility with dashboards and rules templates
   kube-state-metrics:
     image:
-      repository: quay.io/coreos/kube-state-metrics
+      repository: artifactory.algol60.net/csm-docker/stable/quay.io/coreos/kube-state-metrics
       tag: v1.9.7
 
   kubeStateMetrics:
@@ -440,11 +461,11 @@ cephExporter:
   serviceMonitor:
     interval: 30s
     scheme: http
-    #honor_labels: true
-    #serverName: ""
-    #caFile: ""
-    #certFile: ""
-    #keyFile: ""
+    # honor_labels: true
+    # serverName: ""
+    # caFile: ""
+    # certFile: ""
+    # keyFile: ""
     insecureSkipVerify: false
     metricsRelabelings: {}
     relabelings: {}
@@ -458,11 +479,11 @@ cephNodeExporter:
   serviceMonitor:
     interval: 30s
     scheme: http
-    #honor_labels: false
-    #serverName: ""
-    #caFile: ""
-    #certFile: ""
-    #keyFile: ""
+    # honor_labels: false
+    # serverName: ""
+    # caFile: ""
+    # certFile: ""
+    # keyFile: ""
     insecureSkipVerify: false
     metricsRelabelings: {}
     relabelings: {}
@@ -783,11 +804,13 @@ grafterm:
   image:
     repository: artifactory.algol60.net/csm-docker/stable/cray-grafterm
     tag: 1.0.0
+    pullPolicy: IfNotPresent
   dashboards:
     enabled: true
 
 smartmetrics:
   enabled: true
   image:
-    repository: artifactory.algol60.net/csm-docker/stable/docker.io/prom/node-exporter-smartmon
-    tag: v0.1.0
+    repository: quay.io/galexrt/node-exporter-smartmon
+    tag: v20211202-125548-659
+    pullPolicy: IfNotPresent
