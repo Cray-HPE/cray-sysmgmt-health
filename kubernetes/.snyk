@@ -1,0 +1,25 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.22.1
+# ignores vulnerabilities until expiry date; change duration by modifying expiry date
+ignore:
+  SNYK-DEBIAN11-LIBGCRYPT20-1297892:
+    - '*':
+        reason: Unfixable vulnerability in base image
+        expires: 2021-12-31T00:00:00.000Z
+        created: 2021-12-02T16:21:50.457Z
+  SNYK-DEBIAN11-CURL-1585138:
+    - '*':
+        reason: Unfixable vulnerability in base image
+        expires: 2021-12-31T00:00:00.000Z
+        created: 2021-12-02T16:22:10.386Z
+  SNYK-DEBIAN11-GLIBC-1296898:
+    - '*':
+        reason: Unfixable vulnerability in base image
+        expires: 2021-12-31T00:00:00.000Z
+        created: 2021-12-02T16:22:20.432Z
+  SNYK-DEBIAN11-CURL-1585150:
+    - '*':
+        reason: Unfixable vulnerability in base image
+        expires: 2021-12-31T00:00:00.000Z
+        created: 2021-12-02T16:22:33.499Z
+patch: {}
