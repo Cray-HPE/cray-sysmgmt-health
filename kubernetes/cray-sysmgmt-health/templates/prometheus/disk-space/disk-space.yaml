@@ -50,3 +50,10 @@ spec:
       for: 1h
       labels:
         severity: critical
+    - alert: DiskWillFillIn30Mins
+      annotations:
+        message: ' Host disk will fill in less than 30 min (instance "{{`{{ $labels.instance }}`}}") '
+      expr: predict_linear(node_filesystem_free_bytes{job="node-exporter"}[5m], 60 * 30) < 0 and on(instance) up{job="node-exporter"}
+      for: 15m
+      labels:
+        severity: critical
