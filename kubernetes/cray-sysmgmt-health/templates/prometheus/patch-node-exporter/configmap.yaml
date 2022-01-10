@@ -34,3 +34,14 @@ data:
     sed -i '/alert: NodeFilesystemAlmostOutOfSpace/{N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;s/Filesystem has less than 3% space left/Filesystem has less than 15% space left/}' $mfile
     sed -i '/alert: NodeFilesystemAlmostOutOfSpace/{N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;s/100 < 3/100 < 15/}' $mfile
     kubectl -n sysmgmt-health apply -f $mfile
+  
+  fix-Nodenumcpu-alert.sh: |-
+    #!/bin/sh
+
+    echo "Reconfiguring cray-sysmgmt-health-promet-node-exporter prometheus NodeFilesystemAlmostOutOfSpace alert rule"
+    mfile=/tmp/cray-sysmgmt-health-Nodenumcpu-delete.yaml
+    mfile1=/tmp/cray-sysmgmt-health-Nodenumcpu.yaml
+    kubectl get  prometheusRules  -n sysmgmt-health cray-sysmgmt-health-promet-node.rules -o yaml > $mfile
+    sed -ine '/count by (cluster, node) (sum by (node, cpu) (/{N;N;N;N;d}' $mfile
+    sed -n '/ record: node:node_num_cpu:sum/{x;s/|-/count without (cpu) (  count without (mode) (node_cpu_seconds_total{job="node-exporter"}))/;x};x;1!p;${x;p}' $mfile > $mfile1
+    kubectl -n sysmgmt-health apply -f $mfile1

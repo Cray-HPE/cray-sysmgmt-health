@@ -17,7 +17,7 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 apiVersion: v2
 name: cray-sysmgmt-health
-version: 0.20.0
+version: 0.20.1
 description: An extension of the official prometheus-operator helm chart for monitoring
   system health.
 keywords:
