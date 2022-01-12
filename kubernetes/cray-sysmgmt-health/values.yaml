@@ -86,8 +86,8 @@ prometheus-operator:
 
     tlsProxy:
       image:
-        repository: artifactory.algol60.net/csm-docker/stable/docker.io/squareup/ghostunnel
-        tag: v1.5.2
+        repository: artifactory.algol60.net/csm-docker/stable/docker.io/ghostunnel/ghostunnel
+        tag: v1.6.0
 
     configmapReloadImage:
       repository: artifactory.algol60.net/csm-docker/stable/docker.io/jimmidyson/configmap-reload
