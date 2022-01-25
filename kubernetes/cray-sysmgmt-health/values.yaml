@@ -815,6 +815,6 @@ grafterm:
 smartmetrics:
   enabled: true
   image:
-    repository: quay.io/galexrt/node-exporter-smartmon
-    tag: v20211202-125548-659
+    repository: artifactory.algol60.net/csm-docker/stable/quay.io/galexrt/node-exporter-smartmon
+    tag: v0.1.1
     pullPolicy: IfNotPresent
