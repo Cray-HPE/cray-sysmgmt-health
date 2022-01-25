@@ -3,7 +3,7 @@
   "datasources": {
     "ds": {
       "prometheus": {
-        "address": "cray-sysmgmt-health-promet-prometheus:9090"
+        "address": "http://cray-sysmgmt-health-promet-prometheus:9090"
       }
     }
   },
