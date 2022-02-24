@@ -68,6 +68,13 @@ spec:
       for: 1h
       labels:
         severity: critical
+    - alert: CephVolumeFull
+      annotations:
+        message: 'Available space on mountpoint /var/lib/ceph is less than "{{`{{ $value | printf "%.2f" }}`}}" % '
+      expr: node_filesystem_avail_bytes{mountpoint="/var/lib/ceph",job="cray-sysmgmt-health-ceph-node-exporter"} / node_filesystem_size_bytes{mountpoint="/var/lib/ceph",job="cray-sysmgmt-health-ceph-node-exporter"} < 0.05
+      for: 1h
+      labels:
+        severity: critical
     - alert: DiskWillFillIn30Mins
       annotations:
         message: ' Host disk will fill in less than 30 min (instance "{{`{{ $labels.instance }}`}}") '
