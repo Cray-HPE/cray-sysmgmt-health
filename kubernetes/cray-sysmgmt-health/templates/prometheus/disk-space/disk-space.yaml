@@ -56,8 +56,8 @@ spec:
         severity: critical
     - alert: ContainersVolumeFull
       annotations:
-        message: 'Available space on mountpoint /rootfs/var/lib/containers is less than "{{`{{ $value | printf "%.2f" }}`}}" % '
-      expr: node_filesystem_avail_bytes{mountpoint="/rootfs/var/lib/containers",job="cray-sysmgmt-health-ceph-node-exporter"} / node_filesystem_size_bytes{mountpoint="/rootfs/var/lib/containers",job="cray-sysmgmt-health-ceph-node-exporter"} < 0.05
+        message: 'Available space on mountpoint /var/lib/containers is less than "{{`{{ $value | printf "%.2f" }}`}}" % '
+      expr: node_filesystem_avail_bytes{mountpoint="/var/lib/containers",job="node-exporter"} / node_filesystem_size_bytes{mountpoint="/var/lib/containers",job="node-exporter"} < 0.05
       for: 1h
       labels:
         severity: critical
