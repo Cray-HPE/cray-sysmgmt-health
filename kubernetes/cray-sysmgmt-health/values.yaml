@@ -356,7 +356,7 @@ prometheus-operator:
         cpu: "1"
         memory: 1Gi
     extraArgs:
-      - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|run|var\/lib\/containerd.+|run/.+)($|/)  # containerd puts container fs's in /run/containerd/
+      - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|run|var\/lib\/kubelet|var\/lib\/containerd.+|run/.+)($|/)  # containerd puts container fs's in /run/containerd/
       - --collector.filesystem.fs-types-exclude=^(autofs|binfmt_misc|cgroup|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|mqueue|proc|procfs|pstore|rpc_pipefs|securityfs|sysfs|tracefs)$
       - --no-collector.netclass
       - --collector.buddyinfo
