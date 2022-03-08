@@ -807,7 +807,7 @@ servicemonitors:
 grafterm:
   image:
     repository: artifactory.algol60.net/csm-docker/stable/cray-grafterm
-    tag: 1.0.1
+    tag: 1.0.2
     pullPolicy: IfNotPresent
   dashboards:
     enabled: true
