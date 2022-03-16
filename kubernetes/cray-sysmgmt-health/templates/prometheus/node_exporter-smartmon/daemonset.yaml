@@ -60,13 +60,6 @@ spec:
           value: "900"
         securityContext:
           privileged: true
-        resources:
-          requests:
-            cpu: 25m
-            memory: 50Mi
-          limits:
-            cpu: 80m
-            memory: 75Mi
         volumeMounts:
         - mountPath: /usr/local/sbin
           name: host-dev
