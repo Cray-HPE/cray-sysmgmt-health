@@ -44,7 +44,7 @@ spec:
     - alert: IstioHigh5xxErrorRate
       annotations:
         message: 'Istio high 5xx error rate (instance "{{`{{ $labels.instance }}`}}")'
-      expr: sum(rate(istio_requests_total{reporter="destination", response_code=~"5.."}[5m])) / sum(rate(istio_requests_total{reporter="destination"}[5m])) * 100 > 5
+      expr: sum(rate(istio_requests_total{reporter="destination", response_code=~"5.."}[5m])) / sum(rate(istio_requests_total{reporter="destination"}[5m])) * 100 > 10
       for: 1m
       labels:
         severity: warning
@@ -63,21 +63,21 @@ spec:
       annotations:
         message: 'Istio high total request rate (instance "{{`{{ $labels.instance }}`}}")'
     - alert: IstioLowTotalRequestRate
-      expr: sum(rate(istio_requests_total{reporter="destination"}[5m])) < 100
+      expr: sum(rate(istio_requests_total{reporter="destination"}[15m])) < 5
       for: 2m
       labels:
         severity: warning
       annotations:
         message: 'Istio low total request rate (instance "{{`{{ $labels.instance }}`}}")'
     - alert: IstioHighRequestLatency
-      expr: rate(istio_request_duration_milliseconds_sum[1m]) / rate(istio_request_duration_milliseconds_count[1m]) > 0.1
+      expr: rate(istio_request_duration_milliseconds_sum{reporter="destination"}[1m]) / rate(istio_request_duration_milliseconds_count{reporter="destination"}[1m]) > 100
       for: 1m
       labels:
         severity: warning
       annotations:
         message: 'Istio high request latency (instance "{{`{{ $labels.instance }}`}}")'
     - alert: IstioLatency99Percentile
-      expr: histogram_quantile(0.99, rate(istio_request_duration_milliseconds_bucket[1m])) > 1
+      expr: histogram_quantile(0.99, rate(istio_request_duration_milliseconds_bucket[1m])) > 1000
       for: 1m
       labels:
         severity: warning
