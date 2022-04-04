@@ -1,26 +1,26 @@
-#
-# MIT License
-#
-# (C) Copyright 2021-2022 Hewlett Packard Enterprise Development LP
-#
-# Permission is hereby granted, free of charge, to any person obtaining a
-# copy of this software and associated documentation files (the "Software"),
-# to deal in the Software without restriction, including without limitation
-# the rights to use, copy, modify, merge, publish, distribute, sublicense,
-# and/or sell copies of the Software, and to permit persons to whom the
-# Software is furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included
-# in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
-# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-# OTHER DEALINGS IN THE SOFTWARE.
-#
+{{/*
+MIT License
+
+(C) Copyright 2021-2022 Hewlett Packard Enterprise Development LP
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+*/}}
 {{- /*
 Generated from 'rbd-overview' from https://raw.githubusercontent.com/ceph/ceph/nautilus/monitoring/grafana/dashboards/rbd-overview.json
 Do not change in-place! In order to change this file review the scripts in:
@@ -125,14 +125,14 @@ data:
                 "steppedLine": false,
                 "targets": [
                     {
-                        "expr": "round(sum(irate(ceph_rbd_write_ops[30s])))",
+                        "expr": "round(sum(irate(ceph_rbd_write_ops[1m])))",
                         "format": "time_series",
                         "intervalFactor": 1,
                         "legendFormat": "Writes",
                         "refId": "A"
                     },
                     {
-                        "expr": "round(sum(irate(ceph_rbd_read_ops[30s])))",
+                        "expr": "round(sum(irate(ceph_rbd_read_ops[1m])))",
                         "format": "time_series",
                         "interval": "",
                         "intervalFactor": 1,
@@ -218,7 +218,7 @@ data:
                 "steppedLine": false,
                 "targets": [
                     {
-                        "expr": "round(sum(irate(ceph_rbd_write_bytes[30s])))",
+                        "expr": "round(sum(irate(ceph_rbd_write_bytes[1m])))",
                         "format": "time_series",
                         "instant": false,
                         "intervalFactor": 1,
@@ -226,7 +226,7 @@ data:
                         "refId": "A"
                     },
                     {
-                        "expr": "round(sum(irate(ceph_rbd_read_bytes[30s])))",
+                        "expr": "round(sum(irate(ceph_rbd_read_bytes[1m])))",
                         "format": "time_series",
                         "instant": false,
                         "interval": "",
@@ -313,14 +313,14 @@ data:
                 "steppedLine": false,
                 "targets": [
                     {
-                        "expr": "round(sum(irate(ceph_rbd_write_latency_sum[30s])) / sum(irate(ceph_rbd_write_latency_count[30s])))",
+                        "expr": "round(sum(irate(ceph_rbd_write_latency_sum[1m])) / sum(irate(ceph_rbd_write_latency_count[1m])))",
                         "format": "time_series",
                         "intervalFactor": 1,
                         "legendFormat": "Write",
                         "refId": "A"
                     },
                     {
-                        "expr": "round(sum(irate(ceph_rbd_read_latency_sum[30s])) / sum(irate(ceph_rbd_read_latency_count[30s])))",
+                        "expr": "round(sum(irate(ceph_rbd_read_latency_sum[1m])) / sum(irate(ceph_rbd_read_latency_count[1m])))",
                         "format": "time_series",
                         "interval": "",
                         "intervalFactor": 1,
@@ -458,7 +458,7 @@ data:
                 ],
                 "targets": [
                     {
-                        "expr": "topk(10, (sort((irate(ceph_rbd_write_ops[30s]) + on(image, pool, namespace) irate(ceph_rbd_read_ops[30s])))))",
+                        "expr": "topk(10, (sort((irate(ceph_rbd_write_ops[1h]) + on(image, pool, namespace) irate(ceph_rbd_read_ops[1h])))))",
                         "format": "table",
                         "instant": true,
                         "intervalFactor": 1,
@@ -555,7 +555,7 @@ data:
                 ],
                 "targets": [
                     {
-                        "expr": "topk(10, sort(sum(irate(ceph_rbd_read_bytes[30s]) + irate(ceph_rbd_write_bytes[30s])) by (pool, image, namespace)))",
+                        "expr": "topk(10, sort(sum(irate(ceph_rbd_read_bytes[1h]) + irate(ceph_rbd_write_bytes[1h])) by (pool, image, namespace)))",
                         "format": "table",
                         "instant": true,
                         "intervalFactor": 1,
@@ -653,7 +653,7 @@ data:
                 ],
                 "targets": [
                     {
-                        "expr": "topk(10,  sum(    irate(ceph_rbd_write_latency_sum[30s]) / clamp_min(irate(ceph_rbd_write_latency_count[30s]), 1) +    irate(ceph_rbd_read_latency_sum[30s]) / clamp_min(irate(ceph_rbd_read_latency_count[30s]), 1)  ) by (pool, image, namespace))",
+                        "expr": "topk(10,  sum(    irate(ceph_rbd_write_latency_sum[1h]) / clamp_min(irate(ceph_rbd_write_latency_count[1h]), 1) +    irate(ceph_rbd_read_latency_sum[1h]) / clamp_min(irate(ceph_rbd_read_latency_count[1h]), 1)  ) by (pool, image, namespace))",
                         "format": "table",
                         "instant": true,
                         "intervalFactor": 1,
