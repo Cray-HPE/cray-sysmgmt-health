@@ -380,6 +380,10 @@ prometheus-operator:
         name: containerd
         readOnly: true
         hostPath: /var/lib/containerd
+      - mountPath: /var/lib/kubelet
+        name: kubelet
+        readOnly: true
+        hostPath: /var/lib/kubelet
       - name: text-file-collector
         hostPath: /var/lib/node_exporter
         mountPath: /var/lib/node_exporter
