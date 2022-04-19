@@ -430,6 +430,23 @@ spec:
           description: >
             Mountpoint {{`{{ $labels.mountpoint }}`}} will be full in less than 5 days
             assuming the average fillup rate of the past 48 hours.
+      # check /ceph and /containers mountpoints are present or not     
+      - alert: CephMountpointMissing
+        expr: (count ({mountpoint=~".+/ceph.*"}) or vector(0)) <1
+        labels:
+          severity: warning
+          type: ceph_default
+          oid: 1.3.6.1.4.1.50495.15.1.2.8.5
+        annotations:
+          description: "Ceph mountpoints are missing on instance {{`{{ $labels.instance }}`}}"
+      - alert: ContainersMountpointMissing
+        expr: (count ({mountpoint=~".+/containers.*"}) or vector(0)) <1
+        labels:
+          severity: warning
+          type: ceph_default
+          oid: 1.3.6.1.4.1.50495.15.1.2.8.6
+        annotations:
+          description: "Containers mountpoints are missing on instance {{`{{ $labels.instance }}`}}"
   - name: pools
     rules:
       - alert: CephPoolFull
