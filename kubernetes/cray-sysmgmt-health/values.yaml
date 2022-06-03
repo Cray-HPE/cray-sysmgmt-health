@@ -55,12 +55,10 @@ prometheus-snmp-exporter:
       release: cray-sysmgmt-health
 
     params:
-      enabled: false
-      conf:
-        module:
-        - if_mib
-        target:
-        - 127.0.0.1
+      - name: sw-spine-01
+        target: 10.252.0.2
+      - name: sw-spine-02
+        target: 10.252.0.3
 
 prometheus-operator:
 

@@ -16,80 +16,59 @@
   "editable": true,
   "gnetId": 11169,
   "graphTooltip": 1,
-  "id": 49,
-  "iteration": 1631094632705,
+  "id": 45,
+  "iteration": 1653651250751,
   "links": [],
   "panels": [
     {
+      "aliasColors": {},
+      "bars": false,
       "cacheTimeout": null,
-      "colorBackground": false,
-      "colorPostfix": false,
-      "colorPrefix": false,
-      "colorValue": true,
-      "colors": [
-        "#299c46",
-        "#FA6400",
-        "#d44a3a"
-      ],
+      "dashLength": 10,
+      "dashes": false,
       "datasource": "Prometheus",
-      "decimals": 1,
       "fieldConfig": {
         "defaults": {
           "custom": {}
         },
         "overrides": []
       },
-      "format": "ms",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
+      "fill": 1,
+      "fillGradient": 0,
       "gridPos": {
-        "h": 3,
+        "h": 6,
         "w": 8,
         "x": 0,
         "y": 0
       },
+      "hiddenSeries": false,
       "id": 25,
       "interval": null,
-      "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "name": "range to text",
-          "value": 2
-        }
-      ],
-      "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false,
-        "ymax": null,
-        "ymin": null
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
       },
-      "tableColumn": "In",
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "maxDataPoints": 100,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
       "targets": [
         {
           "expr": "sysUpTime{job=\"$Job\"} * 10",
@@ -97,20 +76,46 @@
           "refId": "A"
         }
       ],
-      "thresholds": "",
+      "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Uptime",
-      "type": "singlestat",
-      "valueFontSize": "100%",
-      "valueMaps": [
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
         {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
         }
       ],
-      "valueName": "current"
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "cacheTimeout": null,
@@ -938,7 +943,7 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
+          "selected": false,
           "text": "cray-sysmgmt-health-prometheus-snmp-exporter",
           "value": "cray-sysmgmt-health-prometheus-snmp-exporter"
         },
@@ -992,5 +997,5 @@
   "timezone": "",
   "title": "SNMP Stats",
   "uid": "7qKD6I1Wk",
-  "version": 2
+  "version": 1
 }
