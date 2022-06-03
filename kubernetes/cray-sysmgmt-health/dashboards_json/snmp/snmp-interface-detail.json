@@ -17,596 +17,431 @@
   "editable": true,
   "gnetId": 12492,
   "graphTooltip": 0,
-  "id": 45,
-  "iteration": 1631074192388,
+  "iteration": 1654234440697,
   "links": [],
   "panels": [
     {
       "cacheTimeout": null,
-      "colorBackground": false,
-      "colorValue": true,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
       "datasource": "$source",
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
         },
         "overrides": []
       },
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
       "gridPos": {
         "h": 3,
-        "w": 3,
+        "w": 5,
         "x": 0,
         "y": 0
       },
       "id": 9,
       "interval": null,
       "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "$$hashKey": "object:3239",
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "$$hashKey": "object:3240",
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
         }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false,
-        "ymax": null,
-        "ymin": null
       },
-      "tableColumn": "ifAdminStatus{endpoint=\"http\", ifAlias=\"to:mn01_x3000u01s1-j2:from:sw-25g02_x3000u23R-j1\", ifDescr=\"Eth1/1\", ifIndex=\"89\", ifName=\"Eth1/1\", instance=\"10.42.0.104:9116\", job=\"cray-sysmgmt-health-prometheus-snmp-exporter\", namespace=\"sysmgmt-health\", pod=\"cray-sysmgmt-health-prometheus-snmp-exporter-7cddc6f8b4-rv7pn\", service=\"cray-sysmgmt-health-prometheus-snmp-exporter\"}",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "ifAdminStatus{instance=\"$instance\",ifName=\"$ifName\"}",
-          "instant": true,
+          "instant": false,
           "interval": "",
           "legendFormat": "",
           "refId": "A"
         }
       ],
-      "thresholds": "2",
       "timeFrom": null,
       "timeShift": null,
       "title": "Admin Status",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "$$hashKey": "object:3242",
-          "op": "=",
-          "text": "up",
-          "value": "1"
-        },
-        {
-          "$$hashKey": "object:3294",
-          "op": "=",
-          "text": "down",
-          "value": "2"
-        },
-        {
-          "$$hashKey": "object:3296",
-          "op": "=",
-          "text": "testing",
-          "value": "3"
-        }
-      ],
-      "valueName": "current"
+      "type": "stat"
     },
     {
       "cacheTimeout": null,
-      "colorBackground": false,
-      "colorValue": true,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
       "datasource": "$source",
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "custom": {},
+          "mappings": [
+            {
+              "$$hashKey": "object:3242",
+              "id": 0,
+              "op": "=",
+              "text": "up",
+              "type": 1,
+              "value": "1"
+            },
+            {
+              "$$hashKey": "object:3294",
+              "id": 1,
+              "op": "=",
+              "text": "down",
+              "type": 1,
+              "value": "2"
+            },
+            {
+              "$$hashKey": "object:3296",
+              "id": 2,
+              "op": "=",
+              "text": "testing",
+              "type": 1,
+              "value": "3"
+            },
+            {
+              "$$hashKey": "object:3345",
+              "id": 3,
+              "op": "=",
+              "text": "unknown",
+              "type": 1,
+              "value": "4"
+            },
+            {
+              "$$hashKey": "object:3347",
+              "id": 4,
+              "op": "=",
+              "text": "dormant",
+              "type": 1,
+              "value": "5"
+            },
+            {
+              "$$hashKey": "object:3349",
+              "id": 5,
+              "op": "=",
+              "text": "notPresent",
+              "type": 1,
+              "value": "6"
+            },
+            {
+              "$$hashKey": "object:3351",
+              "id": 6,
+              "op": "=",
+              "text": "lowerLayerDown",
+              "type": 1,
+              "value": "7"
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#299c46",
+                "value": null
+              },
+              {
+                "color": "rgba(237, 129, 40, 0.89)",
+                "value": 2
+              },
+              {
+                "color": "#d44a3a"
+              }
+            ]
+          },
+          "unit": "none"
         },
         "overrides": []
       },
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
       "gridPos": {
         "h": 3,
-        "w": 3,
-        "x": 3,
+        "w": 5,
+        "x": 5,
         "y": 0
       },
       "id": 10,
       "interval": null,
       "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "$$hashKey": "object:3239",
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "$$hashKey": "object:3240",
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
+      "options": {
+        "colorMode": "value",
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
         }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false,
-        "ymax": null,
-        "ymin": null
       },
-      "tableColumn": "ifOperStatus{endpoint=\"http\", ifAlias=\"to:mn01_x3000u01s1-j2:from:sw-25g02_x3000u23R-j1\", ifDescr=\"Eth1/1\", ifIndex=\"89\", ifName=\"Eth1/1\", instance=\"10.42.0.104:9116\", job=\"cray-sysmgmt-health-prometheus-snmp-exporter\", namespace=\"sysmgmt-health\", pod=\"cray-sysmgmt-health-prometheus-snmp-exporter-7cddc6f8b4-rv7pn\", service=\"cray-sysmgmt-health-prometheus-snmp-exporter\"}",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "ifOperStatus{instance=\"$instance\",ifName=\"$ifName\"}",
-          "instant": true,
+          "instant": false,
           "interval": "",
           "legendFormat": "",
           "refId": "A"
         }
       ],
-      "thresholds": "2",
       "timeFrom": null,
       "timeShift": null,
       "title": "Oper Status",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "$$hashKey": "object:3242",
-          "op": "=",
-          "text": "up",
-          "value": "1"
-        },
-        {
-          "$$hashKey": "object:3294",
-          "op": "=",
-          "text": "down",
-          "value": "2"
-        },
-        {
-          "$$hashKey": "object:3296",
-          "op": "=",
-          "text": "testing",
-          "value": "3"
-        },
-        {
-          "$$hashKey": "object:3345",
-          "op": "=",
-          "text": "unknown",
-          "value": "4"
-        },
-        {
-          "$$hashKey": "object:3347",
-          "op": "=",
-          "text": "dormant",
-          "value": "5"
-        },
-        {
-          "$$hashKey": "object:3349",
-          "op": "=",
-          "text": "notPresent",
-          "value": "6"
-        },
-        {
-          "$$hashKey": "object:3351",
-          "op": "=",
-          "text": "lowerLayerDown",
-          "value": "7"
-        }
-      ],
-      "valueName": "current"
+      "type": "stat"
     },
     {
       "cacheTimeout": null,
-      "colorBackground": false,
-      "colorPrefix": false,
-      "colorValue": true,
-      "colors": [
-        "#d44a3a",
-        "rgba(237, 129, 40, 0.89)",
-        "#299c46"
-      ],
       "datasource": "$source",
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "custom": {},
+          "mappings": [],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#d44a3a",
+                "value": null
+              },
+              {
+                "color": "rgba(237, 129, 40, 0.89)",
+                "value": 360000
+              },
+              {
+                "color": "#299c46",
+                "value": 8640000
+              }
+            ]
+          },
+          "unit": "timeticks"
         },
         "overrides": []
       },
-      "format": "timeticks",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
       "gridPos": {
         "h": 3,
-        "w": 3,
-        "x": 6,
+        "w": 4,
+        "x": 10,
         "y": 0
       },
       "id": 15,
       "interval": null,
       "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "$$hashKey": "object:3239",
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "$$hashKey": "object:3240",
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
+      "options": {
+        "colorMode": "value",
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
         }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false,
-        "ymax": null,
-        "ymin": null
       },
-      "tableColumn": "{instance=\"10.42.0.104:9116\"}",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "sysUpTime{instance=\"$instance\"} - on(instance) ifLastChange{instance=\"$instance\",ifName=\"$ifName\"}",
-          "instant": true,
+          "instant": false,
           "interval": "",
           "legendFormat": "",
           "refId": "A"
         }
       ],
-      "thresholds": "360000,8640000",
       "timeFrom": null,
       "timeShift": null,
       "title": "Last Change",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [],
-      "valueName": "current"
+      "type": "stat"
     },
     {
       "cacheTimeout": null,
-      "colorBackground": false,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
       "datasource": "$source",
-      "decimals": null,
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "custom": {},
+          "mappings": [
+            {
+              "$$hashKey": "object:176",
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "0"
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "bps"
         },
         "overrides": []
       },
-      "format": "bps",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
       "gridPos": {
         "h": 3,
-        "w": 2,
-        "x": 9,
+        "w": 5,
+        "x": 14,
         "y": 0
       },
       "id": 13,
       "interval": "",
       "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "$$hashKey": "object:3239",
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "$$hashKey": "object:3240",
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
+      "options": {
+        "colorMode": "value",
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
         }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false,
-        "ymax": null,
-        "ymin": null
       },
-      "tableColumn": "{endpoint=\"http\", ifAlias=\"to:mn01_x3000u01s1-j2:from:sw-25g02_x3000u23R-j1\", ifDescr=\"Eth1/1\", ifIndex=\"89\", ifName=\"Eth1/1\", instance=\"10.42.0.104:9116\", job=\"cray-sysmgmt-health-prometheus-snmp-exporter\", namespace=\"sysmgmt-health\", pod=\"cray-sysmgmt-health-prometheus-snmp-exporter-7cddc6f8b4-rv7pn\", service=\"cray-sysmgmt-health-prometheus-snmp-exporter\"}",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "ifHighSpeed{instance=\"$instance\",ifName=\"$ifName\"}*1000000 or ifSpeed{instance=\"$instance\",ifName=\"$ifName\"}",
-          "instant": true,
+          "instant": false,
           "interval": "",
           "legendFormat": "",
           "refId": "A"
         }
       ],
-      "thresholds": "",
       "timeFrom": null,
       "timeShift": null,
       "title": "Speed",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "$$hashKey": "object:176",
-          "op": "=",
-          "text": "N/A",
-          "value": "0"
-        }
-      ],
-      "valueName": "current"
+      "type": "stat"
     },
     {
       "cacheTimeout": null,
-      "colorBackground": false,
-      "colorValue": false,
-      "colors": [
-        "#299c46",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
-      ],
       "datasource": "$source",
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "custom": {},
+          "mappings": [
+            {
+              "$$hashKey": "object:3242",
+              "id": 0,
+              "op": "=",
+              "text": "true",
+              "type": 1,
+              "value": "1"
+            },
+            {
+              "$$hashKey": "object:3294",
+              "id": 1,
+              "op": "=",
+              "text": "false",
+              "type": 1,
+              "value": "2"
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
         },
         "overrides": []
       },
-      "format": "none",
-      "gauge": {
-        "maxValue": 100,
-        "minValue": 0,
-        "show": false,
-        "thresholdLabels": false,
-        "thresholdMarkers": true
-      },
       "gridPos": {
         "h": 3,
-        "w": 2,
-        "x": 11,
+        "w": 5,
+        "x": 19,
         "y": 0
       },
       "id": 14,
       "interval": "",
       "links": [],
-      "mappingType": 1,
-      "mappingTypes": [
-        {
-          "$$hashKey": "object:3239",
-          "name": "value to text",
-          "value": 1
-        },
-        {
-          "$$hashKey": "object:3240",
-          "name": "range to text",
-          "value": 2
-        }
-      ],
       "maxDataPoints": 100,
-      "nullPointMode": "connected",
-      "nullText": null,
-      "postfix": "",
-      "postfixFontSize": "50%",
-      "prefix": "",
-      "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
+      "options": {
+        "colorMode": "value",
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
         }
-      ],
-      "sparkline": {
-        "fillColor": "rgba(31, 118, 189, 0.18)",
-        "full": false,
-        "lineColor": "rgb(31, 120, 193)",
-        "show": false,
-        "ymax": null,
-        "ymin": null
       },
-      "tableColumn": "ifMtu{endpoint=\"http\", ifAlias=\"to:mn01_x3000u01s1-j2:from:sw-25g02_x3000u23R-j1\", ifDescr=\"Eth1/1\", ifIndex=\"89\", ifName=\"Eth1/1\", instance=\"10.42.0.104:9116\", job=\"cray-sysmgmt-health-prometheus-snmp-exporter\", namespace=\"sysmgmt-health\", pod=\"cray-sysmgmt-health-prometheus-snmp-exporter-7cddc6f8b4-rv7pn\", service=\"cray-sysmgmt-health-prometheus-snmp-exporter\"}",
+      "pluginVersion": "7.0.3",
       "targets": [
         {
           "expr": "ifMtu{instance=\"$instance\",ifName=\"$ifName\"}",
-          "instant": true,
+          "instant": false,
           "interval": "",
           "legendFormat": "",
           "refId": "A"
         }
       ],
-      "thresholds": "",
       "timeFrom": null,
       "timeShift": null,
       "title": "MTU",
-      "type": "singlestat",
-      "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "$$hashKey": "object:3242",
-          "op": "=",
-          "text": "true",
-          "value": "1"
-        },
-        {
-          "$$hashKey": "object:3294",
-          "op": "=",
-          "text": "false",
-          "value": "2"
-        }
-      ],
-      "valueName": "current"
-    },
-    {
-      "cacheTimeout": null,
-      "columns": [],
-      "datasource": "$source",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
-      "fontSize": "100%",
-      "gridPos": {
-        "h": 3,
-        "w": 11,
-        "x": 13,
-        "y": 0
-      },
-      "id": 16,
-      "links": [],
-      "pageSize": null,
-      "pluginVersion": "6.7.4",
-      "showHeader": true,
-      "sort": {
-        "col": 0,
-        "desc": true
-      },
-      "styles": [
-        {
-          "$$hashKey": "object:4175",
-          "alias": "",
-          "align": "auto",
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "pattern": "/ifType|ifAlias|ifDescr/",
-          "type": "string"
-        },
-        {
-          "$$hashKey": "object:4176",
-          "alias": "",
-          "align": "right",
-          "colorMode": null,
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
-          ],
-          "decimals": 2,
-          "pattern": "/.*/",
-          "thresholds": [],
-          "type": "hidden",
-          "unit": "short"
-        }
-      ],
-      "targets": [
-        {
-          "expr": "ifType_info{instance=\"$instance\",ifName=\"$ifName\"}",
-          "format": "table",
-          "instant": true,
-          "interval": "",
-          "legendFormat": "",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "",
-      "transform": "table",
-      "type": "table-old"
+      "type": "stat"
     },
     {
       "aliasColors": {},
@@ -1355,8 +1190,8 @@
         "allValue": null,
         "current": {
           "selected": false,
-          "text": "10.42.0.104:9116",
-          "value": "10.42.0.104:9116"
+          "text": "10.252.0.2",
+          "value": "10.252.0.2"
         },
         "datasource": "$source",
         "definition": "label_values(ifOperStatus, instance)",
@@ -1380,21 +1215,21 @@
       {
         "allValue": null,
         "current": {
-          "selected": false,
-          "text": "Eth1/1",
-          "value": "Eth1/1"
+          "selected": true,
+          "text": "Eth1/14",
+          "value": "Eth1/14"
         },
         "datasource": "$source",
-        "definition": "query_result(ifOperStatus{instance=\"$instance\"})",
+        "definition": "label_values(ifOperStatus, ifName)",
         "hide": 0,
         "includeAll": false,
         "label": null,
         "multi": false,
         "name": "ifName",
         "options": [],
-        "query": "query_result(ifOperStatus{instance=\"$instance\"})",
+        "query": "label_values(ifOperStatus, ifName)",
         "refresh": 1,
-        "regex": "/.*ifName=\"([^\"]+)\".*/",
+        "regex": "",
         "skipUrlSync": false,
         "sort": 1,
         "tagValuesQuery": "",
@@ -1406,7 +1241,7 @@
     ]
   },
   "time": {
-    "from": "now-3h",
+    "from": "now-2d",
     "to": "now"
   },
   "timepicker": {
@@ -1436,5 +1271,5 @@
   "timezone": "",
   "title": "SNMP Interface Detail",
   "uid": "Fi96pMWGk",
-  "version": 3
+  "version": 2
 }
