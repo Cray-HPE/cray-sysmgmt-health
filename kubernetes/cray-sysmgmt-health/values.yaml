@@ -275,6 +275,14 @@ prometheus-operator:
         header_name: X-WEBAUTH-USER
         header_property: username
         auto_sign_up: true
+      auth.generic_oauth:
+        allow_sign_up: true
+        # enabled: true
+        # name: OAuth
+        # Deny user access if no role or an invalid role
+        role_attribute_strict: true
+        role_attribute_path: contains(resource_access.shasta.roles[*], 'admin') && 'Admin' || 'Viewer'
+        # tls_skip_verify_insecure: false
 
     sidecar:
       image:
