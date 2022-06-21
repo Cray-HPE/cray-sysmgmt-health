@@ -278,17 +278,18 @@ prometheus-operator:
       auth.generic_oauth:
         allow_sign_up: true
         enabled: true
-        name: keycloak
+        name: Oauth
         client_id: shasta
-        #client_secret: [keycloak client secret]
-        scopes: profile
+        # client_secret: [keycloak client secret]
+        # scopes: profile
+        scopes: openid
         auth_url: https://api.vshasta.io/keycloak/realms/shasta/protocol/openid-connect/auth
         token_url: https://api.vshasta.io/keycloak/realms/shasta/protocol/openid-connect/token
         api_url: https://api.vshasta.io/keycloak/realms/shasta/protocol/openid-connect/userinfo
         # Deny user access if no role or an invalid role for v8.x or above
-        #role_attribute_strict: true
+        # role_attribute_strict: true
         role_attribute_path: contains(resource_access.shasta.roles[*], 'admin') && 'Admin' || 'Viewer'
-        # tls_skip_verify_insecure: false
+        tls_skip_verify_insecure: true
 
     sidecar:
       image:
