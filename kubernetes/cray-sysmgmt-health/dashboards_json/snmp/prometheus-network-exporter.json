@@ -22,8 +22,8 @@
   "editable": true,
   "gnetId": 15297,
   "graphTooltip": 0,
-  "id": 58,
-  "iteration": 1656869630020,
+  "id": 53,
+  "iteration": 1657775889378,
   "links": [],
   "panels": [
     {
@@ -125,7 +125,8 @@
                 "target",
                 "Value #A",
                 "Value #B",
-                "Value #C"
+                "Value #C",
+                "ifAlias"
               ]
             }
           }
@@ -345,7 +346,26 @@
         {
           "id": "filterFieldsByName",
           "options": {
-            "include": {}
+            "include": {
+              "names": [
+                "Time",
+                "mlag-isl",
+                "to-can",
+                "to:UAN01_x3000u26s2-j2:from:sw-25g02_x3000u23R-j10",
+                "to:mn01_x3000u01s2-j2:from:sw-25g02_x3000u23R-j1",
+                "to:mn02_x3000u03s2-j2:from:sw-25g02_x3000u23R-j2",
+                "to:mn03_x3000u05s2-j2:from:sw-25g02_x3000u23R-j3",
+                "uan02",
+                "to:sn01_x3000u13s2-j2:from:sw-25g02_x3000u23R-j7",
+                "to:sn02_x3000u15s2-j2:from:sw-25g02_x3000u23R-j8",
+                "to:sn03_x3000u17s2-j2:from:sw-25g02_x3000u23R-j9",
+                "to:sw-25g01_x3000u23L-j16:from:sw-25g02_x3000u23R-j16",
+                "to:sw-smn01_x3000u22-j52:from:sw-25g02_x3000u23R-j15",
+                "to:wn01_x3000u07s2-j2:from:sw-25g02_x3000u23R-j4",
+                "to:wn02_x3000u09s2-j2:from:sw-25g02_x3000u23R-j5",
+                "to:wn03_x3000u11s2-j2:from:sw-25g02_x3000u23R-j6"
+              ]
+            }
           }
         }
       ],
@@ -579,20 +599,21 @@
             "include": {
               "names": [
                 "Time",
+                "mlag-isl",
                 "to-can",
-                "to:UAN01_x3000u26s2-j1:from:sw-25g01_x3000u23L-j10",
-                "to:mn01_x3000u01s2-j1:from:sw-25g01_x3000u23L-j1",
-                "to:mn02_x3000u03s2-j1:from:sw-25g01_x3000u23L-j2",
-                "to:mn03_x3000u05s2-j1:from:sw-25g01_x3000u23L-j3",
-                "to:sn01_x3000u13s2-j1:from:sw-25g01_x3000u23L-j7",
-                "to:sn02_x3000u15s2-j1:from:sw-25g01_x3000u23L-j8",
-                "to:sn03_x3000u17s2-j1:from:sw-25g01_x3000u23L-j9",
-                "to:sw-25g02_x3000u23R-j16:from:sw-25g01_x3000u23L-j16",
-                "to:sw-smn01_x3000u22-j51:from:sw-25g01_x3000u23L-j15",
-                "to:wn01_x3000u07s2-j1:from:sw-25g01_x3000u23L-j4",
-                "to:wn02_x3000u09s2-j1:from:sw-25g01_x3000u23L-j5",
+                "to:UAN01_x3000u26s2-j2:from:sw-25g02_x3000u23R-j10",
+                "to:mn01_x3000u01s2-j2:from:sw-25g02_x3000u23R-j1",
+                "to:mn02_x3000u03s2-j2:from:sw-25g02_x3000u23R-j2",
+                "to:mn03_x3000u05s2-j2:from:sw-25g02_x3000u23R-j3",
+                "to:sn01_x3000u13s2-j2:from:sw-25g02_x3000u23R-j7",
+                "to:sn02_x3000u15s2-j2:from:sw-25g02_x3000u23R-j8",
+                "to:sn03_x3000u17s2-j2:from:sw-25g02_x3000u23R-j9",
+                "to:sw-25g01_x3000u23L-j16:from:sw-25g02_x3000u23R-j16",
+                "to:sw-smn01_x3000u22-j52:from:sw-25g02_x3000u23R-j15",
+                "to:wn01_x3000u07s2-j2:from:sw-25g02_x3000u23R-j4",
+                "to:wn02_x3000u09s2-j2:from:sw-25g02_x3000u23R-j5",
                 "uan02",
-                "to:wn03_x3000u11s2-j1:from:sw-25g01_x3000u23L-j6"
+                "to:wn03_x3000u11s2-j2:from:sw-25g02_x3000u23R-j6"
               ]
             }
           }
@@ -825,22 +846,21 @@
             "include": {
               "names": [
                 "Time",
-                " ",
                 "mlag-isl",
                 "to-can",
-                "to:UAN01_x3000u26s2-j1:from:sw-25g01_x3000u23L-j10",
-                "to:mn01_x3000u01s2-j1:from:sw-25g01_x3000u23L-j1",
-                "to:mn02_x3000u03s2-j1:from:sw-25g01_x3000u23L-j2",
-                "to:mn03_x3000u05s2-j1:from:sw-25g01_x3000u23L-j3",
-                "to:sn01_x3000u13s2-j1:from:sw-25g01_x3000u23L-j7",
-                "to:sn02_x3000u15s2-j1:from:sw-25g01_x3000u23L-j8",
-                "to:sn03_x3000u17s2-j1:from:sw-25g01_x3000u23L-j9",
-                "to:sw-25g02_x3000u23R-j16:from:sw-25g01_x3000u23L-j16",
-                "to:sw-smn01_x3000u22-j51:from:sw-25g01_x3000u23L-j15",
-                "to:wn01_x3000u07s2-j1:from:sw-25g01_x3000u23L-j4",
-                "to:wn02_x3000u09s2-j1:from:sw-25g01_x3000u23L-j5",
-                "to:wn03_x3000u11s2-j1:from:sw-25g01_x3000u23L-j6",
-                "uan02"
+                "uan02",
+                "to:UAN01_x3000u26s2-j2:from:sw-25g02_x3000u23R-j10",
+                "to:mn01_x3000u01s2-j2:from:sw-25g02_x3000u23R-j1",
+                "to:mn02_x3000u03s2-j2:from:sw-25g02_x3000u23R-j2",
+                "to:mn03_x3000u05s2-j2:from:sw-25g02_x3000u23R-j3",
+                "to:sn01_x3000u13s2-j2:from:sw-25g02_x3000u23R-j7",
+                "to:sn02_x3000u15s2-j2:from:sw-25g02_x3000u23R-j8",
+                "to:sn03_x3000u17s2-j2:from:sw-25g02_x3000u23R-j9",
+                "to:sw-25g01_x3000u23L-j16:from:sw-25g02_x3000u23R-j16",
+                "to:sw-smn01_x3000u22-j52:from:sw-25g02_x3000u23R-j15",
+                "to:wn01_x3000u07s2-j2:from:sw-25g02_x3000u23R-j4",
+                "to:wn02_x3000u09s2-j2:from:sw-25g02_x3000u23R-j5",
+                "to:wn03_x3000u11s2-j2:from:sw-25g02_x3000u23R-j6"
               ]
             }
           }
@@ -1051,7 +1071,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "irate(ifHCInBroadcastPkts{instance=\"10.252.0.3\"}[$__range])",
+          "expr": "irate(ifHCInBroadcastPkts{instance=\"$switch\"}[$__range])",
           "format": "time_series",
           "instant": false,
           "interval": "",
@@ -1078,6 +1098,7 @@
                 "Time",
                 "mlag-isl",
                 "to-can",
+                "uan02",
                 "to:UAN01_x3000u26s2-j2:from:sw-25g02_x3000u23R-j10",
                 "to:mn01_x3000u01s2-j2:from:sw-25g02_x3000u23R-j1",
                 "to:mn02_x3000u03s2-j2:from:sw-25g02_x3000u23R-j2",
@@ -1299,7 +1320,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "irate(ifHCOutMulticastPkts{instance=\"10.252.0.2\"}[$__range])",
+          "expr": "irate(ifHCOutMulticastPkts{instance=\"$switch\"}[$__range])",
           "instant": false,
           "interval": "",
           "legendFormat": "{{ifAlias}}",
@@ -1323,22 +1344,21 @@
             "include": {
               "names": [
                 "Time",
-                " ",
                 "mlag-isl",
                 "to-can",
-                "to:UAN01_x3000u26s2-j1:from:sw-25g01_x3000u23L-j10",
-                "to:mn01_x3000u01s2-j1:from:sw-25g01_x3000u23L-j1",
-                "to:mn02_x3000u03s2-j1:from:sw-25g01_x3000u23L-j2",
-                "to:mn03_x3000u05s2-j1:from:sw-25g01_x3000u23L-j3",
-                "to:sn01_x3000u13s2-j1:from:sw-25g01_x3000u23L-j7",
-                "to:sn02_x3000u15s2-j1:from:sw-25g01_x3000u23L-j8",
-                "to:sn03_x3000u17s2-j1:from:sw-25g01_x3000u23L-j9",
-                "to:sw-25g02_x3000u23R-j16:from:sw-25g01_x3000u23L-j16",
-                "to:sw-smn01_x3000u22-j51:from:sw-25g01_x3000u23L-j15",
-                "to:wn01_x3000u07s2-j1:from:sw-25g01_x3000u23L-j4",
-                "to:wn02_x3000u09s2-j1:from:sw-25g01_x3000u23L-j5",
-                "to:wn03_x3000u11s2-j1:from:sw-25g01_x3000u23L-j6",
-                "uan02"
+                "to:UAN01_x3000u26s2-j2:from:sw-25g02_x3000u23R-j10",
+                "to:mn01_x3000u01s2-j2:from:sw-25g02_x3000u23R-j1",
+                "uan02",
+                "to:mn02_x3000u03s2-j2:from:sw-25g02_x3000u23R-j2",
+                "to:mn03_x3000u05s2-j2:from:sw-25g02_x3000u23R-j3",
+                "to:sn01_x3000u13s2-j2:from:sw-25g02_x3000u23R-j7",
+                "to:sn02_x3000u15s2-j2:from:sw-25g02_x3000u23R-j8",
+                "to:sn03_x3000u17s2-j2:from:sw-25g02_x3000u23R-j9",
+                "to:sw-25g01_x3000u23L-j16:from:sw-25g02_x3000u23R-j16",
+                "to:sw-smn01_x3000u22-j52:from:sw-25g02_x3000u23R-j15",
+                "to:wn01_x3000u07s2-j2:from:sw-25g02_x3000u23R-j4",
+                "to:wn02_x3000u09s2-j2:from:sw-25g02_x3000u23R-j5",
+                "to:wn03_x3000u11s2-j2:from:sw-25g02_x3000u23R-j6"
               ]
             }
           }
@@ -1572,22 +1592,21 @@
             "include": {
               "names": [
                 "Time",
-                " ",
                 "mlag-isl",
                 "to-can",
-                "to:UAN01_x3000u26s2-j1:from:sw-25g01_x3000u23L-j10",
-                "to:mn01_x3000u01s2-j1:from:sw-25g01_x3000u23L-j1",
-                "to:mn02_x3000u03s2-j1:from:sw-25g01_x3000u23L-j2",
-                "to:mn03_x3000u05s2-j1:from:sw-25g01_x3000u23L-j3",
-                "to:sn01_x3000u13s2-j1:from:sw-25g01_x3000u23L-j7",
-                "to:sn02_x3000u15s2-j1:from:sw-25g01_x3000u23L-j8",
-                "to:sn03_x3000u17s2-j1:from:sw-25g01_x3000u23L-j9",
-                "to:sw-25g02_x3000u23R-j16:from:sw-25g01_x3000u23L-j16",
-                "to:sw-smn01_x3000u22-j51:from:sw-25g01_x3000u23L-j15",
-                "to:wn01_x3000u07s2-j1:from:sw-25g01_x3000u23L-j4",
-                "to:wn02_x3000u09s2-j1:from:sw-25g01_x3000u23L-j5",
-                "to:wn03_x3000u11s2-j1:from:sw-25g01_x3000u23L-j6",
-                "uan02"
+                "to:UAN01_x3000u26s2-j2:from:sw-25g02_x3000u23R-j10",
+                "to:mn01_x3000u01s2-j2:from:sw-25g02_x3000u23R-j1",
+                "to:mn02_x3000u03s2-j2:from:sw-25g02_x3000u23R-j2",
+                "to:mn03_x3000u05s2-j2:from:sw-25g02_x3000u23R-j3",
+                "to:sn01_x3000u13s2-j2:from:sw-25g02_x3000u23R-j7",
+                "to:sn02_x3000u15s2-j2:from:sw-25g02_x3000u23R-j8",
+                "to:sn03_x3000u17s2-j2:from:sw-25g02_x3000u23R-j9",
+                "to:sw-25g01_x3000u23L-j16:from:sw-25g02_x3000u23R-j16",
+                "to:sw-smn01_x3000u22-j52:from:sw-25g02_x3000u23R-j15",
+                "to:wn01_x3000u07s2-j2:from:sw-25g02_x3000u23R-j4",
+                "to:wn02_x3000u09s2-j2:from:sw-25g02_x3000u23R-j5",
+                "uan02",
+                "to:wn03_x3000u11s2-j2:from:sw-25g02_x3000u23R-j6"
               ]
             }
           }
@@ -1820,22 +1839,21 @@
             "include": {
               "names": [
                 "Time",
-                " ",
                 "mlag-isl",
                 "to-can",
-                "to:UAN01_x3000u26s2-j1:from:sw-25g01_x3000u23L-j10",
-                "to:mn01_x3000u01s2-j1:from:sw-25g01_x3000u23L-j1",
-                "to:mn02_x3000u03s2-j1:from:sw-25g01_x3000u23L-j2",
-                "to:mn03_x3000u05s2-j1:from:sw-25g01_x3000u23L-j3",
-                "to:sn01_x3000u13s2-j1:from:sw-25g01_x3000u23L-j7",
-                "to:sn02_x3000u15s2-j1:from:sw-25g01_x3000u23L-j8",
-                "to:sn03_x3000u17s2-j1:from:sw-25g01_x3000u23L-j9",
-                "to:sw-25g02_x3000u23R-j16:from:sw-25g01_x3000u23L-j16",
-                "to:sw-smn01_x3000u22-j51:from:sw-25g01_x3000u23L-j15",
-                "to:wn01_x3000u07s2-j1:from:sw-25g01_x3000u23L-j4",
-                "to:wn02_x3000u09s2-j1:from:sw-25g01_x3000u23L-j5",
-                "to:wn03_x3000u11s2-j1:from:sw-25g01_x3000u23L-j6",
-                "uan02"
+                "to:UAN01_x3000u26s2-j2:from:sw-25g02_x3000u23R-j10",
+                "to:mn01_x3000u01s2-j2:from:sw-25g02_x3000u23R-j1",
+                "to:mn02_x3000u03s2-j2:from:sw-25g02_x3000u23R-j2",
+                "to:mn03_x3000u05s2-j2:from:sw-25g02_x3000u23R-j3",
+                "uan02",
+                "to:sn01_x3000u13s2-j2:from:sw-25g02_x3000u23R-j7",
+                "to:sn02_x3000u15s2-j2:from:sw-25g02_x3000u23R-j8",
+                "to:sn03_x3000u17s2-j2:from:sw-25g02_x3000u23R-j9",
+                "to:sw-25g01_x3000u23L-j16:from:sw-25g02_x3000u23R-j16",
+                "to:sw-smn01_x3000u22-j52:from:sw-25g02_x3000u23R-j15",
+                "to:wn01_x3000u07s2-j2:from:sw-25g02_x3000u23R-j4",
+                "to:wn02_x3000u09s2-j2:from:sw-25g02_x3000u23R-j5",
+                "to:wn03_x3000u11s2-j2:from:sw-25g02_x3000u23R-j6"
               ]
             }
           }
@@ -2069,22 +2087,21 @@
             "include": {
               "names": [
                 "Time",
-                " ",
                 "mlag-isl",
                 "to-can",
-                "to:UAN01_x3000u26s2-j1:from:sw-25g01_x3000u23L-j10",
-                "to:mn01_x3000u01s2-j1:from:sw-25g01_x3000u23L-j1",
-                "to:mn02_x3000u03s2-j1:from:sw-25g01_x3000u23L-j2",
-                "to:mn03_x3000u05s2-j1:from:sw-25g01_x3000u23L-j3",
-                "to:sn01_x3000u13s2-j1:from:sw-25g01_x3000u23L-j7",
-                "to:sn02_x3000u15s2-j1:from:sw-25g01_x3000u23L-j8",
-                "to:sn03_x3000u17s2-j1:from:sw-25g01_x3000u23L-j9",
-                "to:sw-25g02_x3000u23R-j16:from:sw-25g01_x3000u23L-j16",
-                "to:sw-smn01_x3000u22-j51:from:sw-25g01_x3000u23L-j15",
-                "to:wn01_x3000u07s2-j1:from:sw-25g01_x3000u23L-j4",
-                "to:wn02_x3000u09s2-j1:from:sw-25g01_x3000u23L-j5",
-                "to:wn03_x3000u11s2-j1:from:sw-25g01_x3000u23L-j6",
-                "uan02"
+                "to:UAN01_x3000u26s2-j2:from:sw-25g02_x3000u23R-j10",
+                "to:mn01_x3000u01s2-j2:from:sw-25g02_x3000u23R-j1",
+                "to:mn02_x3000u03s2-j2:from:sw-25g02_x3000u23R-j2",
+                "to:mn03_x3000u05s2-j2:from:sw-25g02_x3000u23R-j3",
+                "to:sn01_x3000u13s2-j2:from:sw-25g02_x3000u23R-j7",
+                "to:sn02_x3000u15s2-j2:from:sw-25g02_x3000u23R-j8",
+                "to:sn03_x3000u17s2-j2:from:sw-25g02_x3000u23R-j9",
+                "uan02",
+                "to:sw-25g01_x3000u23L-j16:from:sw-25g02_x3000u23R-j16",
+                "to:sw-smn01_x3000u22-j52:from:sw-25g02_x3000u23R-j15",
+                "to:wn02_x3000u09s2-j2:from:sw-25g02_x3000u23R-j5",
+                "to:wn01_x3000u07s2-j2:from:sw-25g02_x3000u23R-j4",
+                "to:wn03_x3000u11s2-j2:from:sw-25g02_x3000u23R-j6"
               ]
             }
           }
@@ -2317,22 +2334,21 @@
             "include": {
               "names": [
                 "Time",
-                " ",
                 "mlag-isl",
                 "to-can",
-                "to:UAN01_x3000u26s2-j1:from:sw-25g01_x3000u23L-j10",
-                "to:mn01_x3000u01s2-j1:from:sw-25g01_x3000u23L-j1",
-                "to:mn02_x3000u03s2-j1:from:sw-25g01_x3000u23L-j2",
-                "to:mn03_x3000u05s2-j1:from:sw-25g01_x3000u23L-j3",
-                "to:sn01_x3000u13s2-j1:from:sw-25g01_x3000u23L-j7",
-                "to:sn02_x3000u15s2-j1:from:sw-25g01_x3000u23L-j8",
-                "to:sn03_x3000u17s2-j1:from:sw-25g01_x3000u23L-j9",
-                "to:sw-25g02_x3000u23R-j16:from:sw-25g01_x3000u23L-j16",
-                "to:sw-smn01_x3000u22-j51:from:sw-25g01_x3000u23L-j15",
-                "to:wn01_x3000u07s2-j1:from:sw-25g01_x3000u23L-j4",
-                "to:wn02_x3000u09s2-j1:from:sw-25g01_x3000u23L-j5",
-                "to:wn03_x3000u11s2-j1:from:sw-25g01_x3000u23L-j6",
-                "uan02"
+                "uan02",
+                "to:UAN01_x3000u26s2-j2:from:sw-25g02_x3000u23R-j10",
+                "to:mn01_x3000u01s2-j2:from:sw-25g02_x3000u23R-j1",
+                "to:mn02_x3000u03s2-j2:from:sw-25g02_x3000u23R-j2",
+                "to:mn03_x3000u05s2-j2:from:sw-25g02_x3000u23R-j3",
+                "to:sn01_x3000u13s2-j2:from:sw-25g02_x3000u23R-j7",
+                "to:sn02_x3000u15s2-j2:from:sw-25g02_x3000u23R-j8",
+                "to:sn03_x3000u17s2-j2:from:sw-25g02_x3000u23R-j9",
+                "to:sw-25g01_x3000u23L-j16:from:sw-25g02_x3000u23R-j16",
+                "to:sw-smn01_x3000u22-j52:from:sw-25g02_x3000u23R-j15",
+                "to:wn01_x3000u07s2-j2:from:sw-25g02_x3000u23R-j4",
+                "to:wn02_x3000u09s2-j2:from:sw-25g02_x3000u23R-j5",
+                "to:wn03_x3000u11s2-j2:from:sw-25g02_x3000u23R-j6"
               ]
             }
           }
@@ -2565,22 +2581,21 @@
             "include": {
               "names": [
                 "Time",
-                " ",
                 "mlag-isl",
                 "to-can",
-                "to:UAN01_x3000u26s2-j1:from:sw-25g01_x3000u23L-j10",
-                "to:mn01_x3000u01s2-j1:from:sw-25g01_x3000u23L-j1",
-                "to:mn02_x3000u03s2-j1:from:sw-25g01_x3000u23L-j2",
-                "to:mn03_x3000u05s2-j1:from:sw-25g01_x3000u23L-j3",
-                "to:sn01_x3000u13s2-j1:from:sw-25g01_x3000u23L-j7",
-                "to:sn02_x3000u15s2-j1:from:sw-25g01_x3000u23L-j8",
-                "to:sn03_x3000u17s2-j1:from:sw-25g01_x3000u23L-j9",
-                "to:sw-25g02_x3000u23R-j16:from:sw-25g01_x3000u23L-j16",
-                "to:sw-smn01_x3000u22-j51:from:sw-25g01_x3000u23L-j15",
-                "to:wn01_x3000u07s2-j1:from:sw-25g01_x3000u23L-j4",
-                "to:wn02_x3000u09s2-j1:from:sw-25g01_x3000u23L-j5",
-                "to:wn03_x3000u11s2-j1:from:sw-25g01_x3000u23L-j6",
-                "uan02"
+                "uan02",
+                "to:UAN01_x3000u26s2-j2:from:sw-25g02_x3000u23R-j10",
+                "to:mn01_x3000u01s2-j2:from:sw-25g02_x3000u23R-j1",
+                "to:mn02_x3000u03s2-j2:from:sw-25g02_x3000u23R-j2",
+                "to:mn03_x3000u05s2-j2:from:sw-25g02_x3000u23R-j3",
+                "to:sn01_x3000u13s2-j2:from:sw-25g02_x3000u23R-j7",
+                "to:sn02_x3000u15s2-j2:from:sw-25g02_x3000u23R-j8",
+                "to:sn03_x3000u17s2-j2:from:sw-25g02_x3000u23R-j9",
+                "to:sw-25g01_x3000u23L-j16:from:sw-25g02_x3000u23R-j16",
+                "to:sw-smn01_x3000u22-j52:from:sw-25g02_x3000u23R-j15",
+                "to:wn01_x3000u07s2-j2:from:sw-25g02_x3000u23R-j4",
+                "to:wn02_x3000u09s2-j2:from:sw-25g02_x3000u23R-j5",
+                "to:wn03_x3000u11s2-j2:from:sw-25g02_x3000u23R-j6"
               ]
             }
           }
@@ -2813,22 +2828,21 @@
             "include": {
               "names": [
                 "Time",
-                " ",
                 "mlag-isl",
                 "to-can",
-                "to:UAN01_x3000u26s2-j1:from:sw-25g01_x3000u23L-j10",
-                "to:mn01_x3000u01s2-j1:from:sw-25g01_x3000u23L-j1",
-                "to:mn02_x3000u03s2-j1:from:sw-25g01_x3000u23L-j2",
-                "to:mn03_x3000u05s2-j1:from:sw-25g01_x3000u23L-j3",
-                "to:sn01_x3000u13s2-j1:from:sw-25g01_x3000u23L-j7",
-                "to:sn02_x3000u15s2-j1:from:sw-25g01_x3000u23L-j8",
-                "to:sn03_x3000u17s2-j1:from:sw-25g01_x3000u23L-j9",
-                "to:sw-25g02_x3000u23R-j16:from:sw-25g01_x3000u23L-j16",
-                "to:sw-smn01_x3000u22-j51:from:sw-25g01_x3000u23L-j15",
-                "to:wn01_x3000u07s2-j1:from:sw-25g01_x3000u23L-j4",
-                "to:wn02_x3000u09s2-j1:from:sw-25g01_x3000u23L-j5",
-                "to:wn03_x3000u11s2-j1:from:sw-25g01_x3000u23L-j6",
-                "uan02"
+                "to:UAN01_x3000u26s2-j2:from:sw-25g02_x3000u23R-j10",
+                "to:mn01_x3000u01s2-j2:from:sw-25g02_x3000u23R-j1",
+                "to:mn02_x3000u03s2-j2:from:sw-25g02_x3000u23R-j2",
+                "to:mn03_x3000u05s2-j2:from:sw-25g02_x3000u23R-j3",
+                "to:sn01_x3000u13s2-j2:from:sw-25g02_x3000u23R-j7",
+                "uan02",
+                "to:sn02_x3000u15s2-j2:from:sw-25g02_x3000u23R-j8",
+                "to:sn03_x3000u17s2-j2:from:sw-25g02_x3000u23R-j9",
+                "to:sw-25g01_x3000u23L-j16:from:sw-25g02_x3000u23R-j16",
+                "to:sw-smn01_x3000u22-j52:from:sw-25g02_x3000u23R-j15",
+                "to:wn01_x3000u07s2-j2:from:sw-25g02_x3000u23R-j4",
+                "to:wn02_x3000u09s2-j2:from:sw-25g02_x3000u23R-j5",
+                "to:wn03_x3000u11s2-j2:from:sw-25g02_x3000u23R-j6"
               ]
             }
           }
@@ -3062,22 +3076,21 @@
             "include": {
               "names": [
                 "Time",
-                " ",
                 "mlag-isl",
                 "to-can",
-                "to:UAN01_x3000u26s2-j1:from:sw-25g01_x3000u23L-j10",
-                "to:mn01_x3000u01s2-j1:from:sw-25g01_x3000u23L-j1",
-                "to:mn02_x3000u03s2-j1:from:sw-25g01_x3000u23L-j2",
-                "to:mn03_x3000u05s2-j1:from:sw-25g01_x3000u23L-j3",
-                "to:sn01_x3000u13s2-j1:from:sw-25g01_x3000u23L-j7",
-                "to:sn02_x3000u15s2-j1:from:sw-25g01_x3000u23L-j8",
-                "to:sn03_x3000u17s2-j1:from:sw-25g01_x3000u23L-j9",
-                "to:sw-25g02_x3000u23R-j16:from:sw-25g01_x3000u23L-j16",
-                "to:sw-smn01_x3000u22-j51:from:sw-25g01_x3000u23L-j15",
-                "to:wn01_x3000u07s2-j1:from:sw-25g01_x3000u23L-j4",
-                "to:wn02_x3000u09s2-j1:from:sw-25g01_x3000u23L-j5",
-                "to:wn03_x3000u11s2-j1:from:sw-25g01_x3000u23L-j6",
-                "uan02"
+                "to:UAN01_x3000u26s2-j2:from:sw-25g02_x3000u23R-j10",
+                "to:mn01_x3000u01s2-j2:from:sw-25g02_x3000u23R-j1",
+                "to:mn02_x3000u03s2-j2:from:sw-25g02_x3000u23R-j2",
+                "to:mn03_x3000u05s2-j2:from:sw-25g02_x3000u23R-j3",
+                "to:sn01_x3000u13s2-j2:from:sw-25g02_x3000u23R-j7",
+                "to:sn02_x3000u15s2-j2:from:sw-25g02_x3000u23R-j8",
+                "to:sn03_x3000u17s2-j2:from:sw-25g02_x3000u23R-j9",
+                "to:sw-25g01_x3000u23L-j16:from:sw-25g02_x3000u23R-j16",
+                "to:sw-smn01_x3000u22-j52:from:sw-25g02_x3000u23R-j15",
+                "to:wn01_x3000u07s2-j2:from:sw-25g02_x3000u23R-j4",
+                "uan02",
+                "to:wn02_x3000u09s2-j2:from:sw-25g02_x3000u23R-j5",
+                "to:wn03_x3000u11s2-j2:from:sw-25g02_x3000u23R-j6"
               ]
             }
           }
@@ -3126,11 +3139,6 @@
     "list": [
       {
         "allValue": null,
-        "current": {
-          "selected": false,
-          "text": "10.252.0.2",
-          "value": "10.252.0.2"
-        },
         "datasource": "Prometheus",
         "definition": "label_values(ifOperStatus, instance)",
         "hide": 0,
@@ -3144,32 +3152,6 @@
         "regex": "",
         "skipUrlSync": false,
         "sort": 0,
-        "tagValuesQuery": "",
-        "tags": [],
-        "tagsQuery": "",
-        "type": "query",
-        "useTags": false
-      },
-      {
-        "allValue": null,
-        "current": {
-          "selected": false,
-          "text": "Eth1/1",
-          "value": "Eth1/1"
-        },
-        "datasource": "Prometheus",
-        "definition": "label_values(ifOperStatus, ifName)",
-        "hide": 0,
-        "includeAll": false,
-        "label": null,
-        "multi": false,
-        "name": "ifName",
-        "options": [],
-        "query": "label_values(ifOperStatus, ifName)",
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 1,
         "tagValuesQuery": "",
         "tags": [],
         "tagsQuery": "",
@@ -3197,6 +3179,6 @@
   },
   "timezone": "",
   "title": "Prometheus Network Exporter SNMP",
-  "uid": "iOZXe4p7p",
-  "version": 54
+  "uid": "iOZXe4p7hhe",
+  "version": 5
 }
