@@ -16,8 +16,8 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 1,
-  "id": 54,
-  "iteration": 1659414404731,
+  "id": 24,
+  "iteration": 1659508458416,
   "links": [],
   "panels": [
     {
@@ -1073,9 +1073,9 @@
       {
         "allValue": ".+",
         "current": {
-          "selected": true,
-          "text": "10.254.0.3",
-          "value": "10.254.0.3"
+          "selected": false,
+          "text": "10.252.0.2",
+          "value": "10.252.0.2"
         },
         "datasource": "Prometheus",
         "definition": "label_values(ifOperStatus, instance)",
@@ -1101,7 +1101,7 @@
     ]
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-3h",
     "to": "now"
   },
   "timepicker": {
@@ -1120,5 +1120,5 @@
   "timezone": "",
   "title": "SNMP Stats",
   "uid": "snmp",
-  "version": 7
+  "version": 2
 }
