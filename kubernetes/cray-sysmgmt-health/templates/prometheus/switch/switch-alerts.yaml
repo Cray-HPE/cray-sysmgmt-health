@@ -21,11 +21,11 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 #
-{{- if and (index .Values "customRules" "create") (index .Values "customRules" "rules" "smartmon-alerts") }}
+{{- if and (index .Values "customRules" "create") (index .Values "customRules" "rules" "switch-alerts") }}
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: {{ printf "%s-%s" (include "cray-sysmgmt-health.fullname" .) "smartmon-alerts.rules" | trunc 63 | trimSuffix "-" }}
+  name: {{ printf "%s-%s" (include "cray-sysmgmt-health.fullname" .) "switch-alerts.rules" | trunc 63 | trimSuffix "-" }}
   namespace: {{ .Release.Namespace }}
   labels:
     app: {{ template "cray-sysmgmt-health.name" . }}
