@@ -245,7 +245,7 @@ prometheus-operator:
 
     image:
       repository: artifactory.algol60.net/csm-docker/stable/docker.io/grafana/grafana
-      tag: 7.0.3
+      tag: 8.5.9
 
     # Configure external hostname for Istio ingress
     # Setup with Ansible
