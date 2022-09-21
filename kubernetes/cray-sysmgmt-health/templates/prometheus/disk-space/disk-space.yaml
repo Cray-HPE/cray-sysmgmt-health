@@ -82,3 +82,32 @@ spec:
       for: 15m
       labels:
         severity: critical
+    - alert: PodCpuUsageWarning
+      expr: (sum(rate(container_cpu_usage_seconds_total{name!=""}[3m])) BY (instance, namespace, pod) * 100) > 70
+      for: 2m
+      labels:
+        severity: warning
+      annotations:
+        message: ' Pod CPU usage is above 70% (instance "{{`{{ $labels.instance }}`}}") '
+    - alert: PodCpuUsageTooHigh
+      expr: (sum(rate(container_cpu_usage_seconds_total{name!=""}[3m])) BY (instance, namespace, pod) * 100) > 85
+      for: 2m
+      labels:
+        severity: critical
+      annotations:
+        message: ' Pod CPU usage is above 85% (instance "{{`{{ $labels.instance }}`}}") '
+    - alert: PodMemoryUsageWarning
+      expr: (sum(container_memory_working_set_bytes{name!=""}) BY (instance, namespace, pod) / sum(container_spec_memory_limit_bytes > 0) BY (instance, namespace, pod) * 100)  > 70
+      for: 2m
+      labels:
+        severity: warning
+      annotations:
+        message: ' Pod memory usage is above 70% (instance "{{`{{ $labels.instance }}`}}") '
+    - alert: PodMemoryUsageTooHigh
+      expr: (sum(container_memory_working_set_bytes{name!=""}) BY (instance, namespace, pod) / sum(container_spec_memory_limit_bytes > 0) BY (instance, namespace, pod) * 100)  > 85
+      for: 2m
+      labels:
+        severity: critical
+      annotations:
+        message: ' Pod memory usage is above 85% (instance "{{`{{ $labels.instance }}`}}") '
+
