@@ -246,6 +246,8 @@ prometheus-operator:
     image:
       repository: artifactory.algol60.net/csm-docker/stable/docker.io/grafana/grafana
       tag: 8.5.9
+    env:
+      GF_PATHS_PLUGINS: /var/lib/grafana-plugins 
 
     # Configure external hostname for Istio ingress
     # Setup with Ansible
@@ -265,6 +267,8 @@ prometheus-operator:
 
     # Grafana's primary configuration
     grafana.ini:
+      paths:
+        plugins: /var/lib/grafana-plugins
       analytics:
         check_for_updates: false
       # External authentication provided by Keycloak Gatekeeper and
@@ -284,11 +288,6 @@ prometheus-operator:
       datasources:
         enabled: true
         defaultDatasourceEnabled: true
-
-    # vonage-status-panel in upstream is broken and we need to install latest stable version from fork until is merged
-    plugins:
-    - grafana-piechart-panel
-    - https://github.com/MefhigosetH/Grafana_Status_panel/archive/hotfix/issue-159.zip;vonage-status-panel
 
     datasources:
       datasources.yaml:
