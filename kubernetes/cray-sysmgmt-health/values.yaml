@@ -247,7 +247,7 @@ prometheus-operator:
       repository: artifactory.algol60.net/csm-docker/stable/docker.io/grafana/grafana
       tag: 8.5.9
     env:
-      GF_PATHS_PLUGINS: /var/lib/grafana-plugins 
+      GF_PATHS_PLUGINS: /var/lib/grafana-plugins
 
     # Configure external hostname for Istio ingress
     # Setup with Ansible
