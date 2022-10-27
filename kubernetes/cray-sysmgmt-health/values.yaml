@@ -817,7 +817,7 @@ servicemonitors:
       - kyverno
       matchLabels:
         app.kubernetes.io/instance: cray-kyverno
-      interval: 30s
+      interval: 1m
       scheme: http
       metricsRelabelings: {}
       relabelings: {}
