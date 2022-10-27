@@ -807,6 +807,21 @@ servicemonitors:
       metricsRelabelings: {}
       relabelings: {}
 
+  kyvernoExporter:
+    enabled: true
+    servicename: cray-kyverno-svc-metrics
+    serviceMonitor:
+      namespace: sysmgmt-health
+      port: metrics-port
+      matchNamespace:
+      - kyverno
+      matchLabels:
+        app.kubernetes.io/instance: cray-kyverno
+      interval: 1m
+      scheme: http
+      metricsRelabelings: {}
+      relabelings: {}
+
 grafterm:
   image:
     repository: artifactory.algol60.net/csm-docker/stable/cray-grafterm
