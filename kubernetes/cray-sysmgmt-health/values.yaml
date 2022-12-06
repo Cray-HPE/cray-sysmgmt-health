@@ -96,8 +96,8 @@ prometheus-operator:
 
   prometheus:
     prometheusSpec:
-      remoteWrite:
-        - url: http://prometheus-kafka-adapter.sma.svc.cluster.local:80/receive
+      #remoteWrite:
+      #  - url: http://prometheus-kafka-adapter.sma.svc.cluster.local:80/receive
       image:
         repository: artifactory.algol60.net/csm-docker/stable/quay.io/prometheus/prometheus
         tag: v2.36.1
