@@ -27,10 +27,16 @@ kind: Job
 metadata:
   name: "{{ include "cray-sysmgmt-health.fullname" . }}-patch-nodeexporter-alerts-{{ .Release.Revision }}"
   labels:
-    app.kubernetes.io/name: {{ include "cray-sysmgmt-health.fullname" . }}-patch-nodeexporter-alerts
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-delete-policy": hook-failed,before-hook-creation
 spec:
   template:
     metadata:
+      name: "{{ include "cray-sysmgmt-health.fullname" . }}-patch-nodeexporter-alerts-{{ .Release.Revision }}"
+      labels:
+{{ include "cray-sysmgmt-health.labels" . | indent 8 }}
       annotations:
         sidecar.istio.io/inject: "false"
     spec:
