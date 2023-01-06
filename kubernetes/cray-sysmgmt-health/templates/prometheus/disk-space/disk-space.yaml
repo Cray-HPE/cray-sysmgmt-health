@@ -85,14 +85,14 @@ spec:
     - alert: PodCpuUsageWarning
       annotations:
         message: ' Pod CPU usage is above 70% (instance "{{`{{ $labels.instance }}`}}") '
-      expr: (sum(rate(container_cpu_usage_seconds_total{name!=""}[3m])) BY (instance, namespace, pod) * 100) > 70
+      expr: (sum by (pod) (rate(container_cpu_usage_seconds_total{name!=""}[3m])) / sum by (pod) (kube_pod_container_resource_limits{resource="cpu"} > 0) * 100) > 70
       for: 2m
       labels:
         severity: warning
     - alert: PodCpuUsageTooHigh
       annotations:
         message: ' Pod CPU usage is above 85% (instance "{{`{{ $labels.instance }}`}}") '
-      expr: (sum(rate(container_cpu_usage_seconds_total{name!=""}[3m])) BY (instance, namespace, pod) * 100) > 85
+      expr: (sum by (pod) (rate(container_cpu_usage_seconds_total{name!=""}[3m])) / sum by (pod) (kube_pod_container_resource_limits{resource="cpu"} > 0) * 100) > 85
       for: 2m
       labels:
         severity: critical
