@@ -119,8 +119,8 @@ spec:
         severity: warning
     - alert: NodeCpuUsageTooHigh
       annotations:
-        message: 'CPU usage for NCN is above 85% (instance "{{`{{ $labels.instance }}`}}")'
-      expr: 100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[10m]) * 100) * on(instance) group_left(nodename) (node_uname_info)) > 85
+        message: 'CPU usage for NCN is above 80% (instance "{{`{{ $labels.instance }}`}}")'
+      expr: 100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[10m]) * 100) * on(instance) group_left(nodename) (node_uname_info)) > 80
       for: 2m
       labels:
         severity: critical
@@ -133,8 +133,8 @@ spec:
         severity: warning
     - alert: NodeMemoryUsageTooHigh
       annotations:
-        message: ' Memory usage for NCN is above 85% (instance "{{`{{ $labels.instance }}`}}") '
-      expr: 100 * (1 - ((avg_over_time(node_memory_MemFree_bytes[1h]) + avg_over_time(node_memory_Cached_bytes[1h]) + avg_over_time(node_memory_Buffers_bytes[1h])) / avg_over_time(node_memory_MemTotal_bytes[1h]))) >85
+        message: ' Memory usage for NCN is above 80% (instance "{{`{{ $labels.instance }}`}}") '
+      expr: 100 * (1 - ((avg_over_time(node_memory_MemFree_bytes[1h]) + avg_over_time(node_memory_Cached_bytes[1h]) + avg_over_time(node_memory_Buffers_bytes[1h])) / avg_over_time(node_memory_MemTotal_bytes[1h]))) >80
       for: 2m
       labels:
         severity: critical
