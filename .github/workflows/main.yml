@@ -20,3 +20,6 @@ jobs:
 
       - name: Check for removed and deprecated api usage
         uses: Cray-HPE/.github/actions/csm-k8s-api-checker@v0-csm-k8s-api-checker
+        with:
+          prerequisite: |
+            helm template kubernetes/cray-sysmgmt-health --generate-name --dry-run  > Chart.yaml
