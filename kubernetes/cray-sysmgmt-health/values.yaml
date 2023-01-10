@@ -100,7 +100,7 @@ prometheus-operator:
         - url: http://prometheus-kafka-adapter.sma.svc.cluster.local:80/receive
       image:
         repository: artifactory.algol60.net/csm-docker/stable/quay.io/prometheus/prometheus
-        tag: v2.36.1
+        tag: v2.41.0
 
       # Enable administrative HTTP API, 'cause why not?
       enableAdminAPI: true
@@ -216,6 +216,7 @@ prometheus-operator:
     alertmanagerSpec:
       image:
         repository: artifactory.algol60.net/csm-docker/stable/quay.io/prometheus/alertmanager
+        tag: v0.25.0
 
       # Adjust retention period consistent with provisioned storage (see next)
       retention: 48h
@@ -345,7 +346,7 @@ prometheus-operator:
 
     image:
       repository: artifactory.algol60.net/csm-docker/stable/quay.io/prometheus/node-exporter
-      tag: v1.2.2
+      tag: v1.5.0
     resources:
       limits:
         cpu: "6"
