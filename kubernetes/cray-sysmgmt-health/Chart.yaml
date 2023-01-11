@@ -41,12 +41,13 @@ home: https://github.com/Cray-HPE/cray-sysmgmt-health
 sources:
 - https://github.com/Cray-HPE/cray-sysmgmt-health
 dependencies:
-- name: kube-prometheus-stack
-  version: 43.2.1
-  repository: https://prometheus-community.github.io/helm-charts
+- name: prometheus-operator
+  repository: https://artifactory.algol60.net/artifactory/csm-helm-charts/unstable/prometheus-operator/
+  version: 9.3.1-20230111094444+a664f03
 - name: prometheus-snmp-exporter
   repository: https://prometheus-community.github.io/helm-charts
   version: 1.1.0
+
 maintainers:
 - name: bklein
 - name: brantk-hpe
