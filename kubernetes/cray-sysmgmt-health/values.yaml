@@ -398,7 +398,6 @@ prometheus-operator:
   kubeStateMetrics:
     enabled: true
 
-
 customRules:
   create: true
   rules:
