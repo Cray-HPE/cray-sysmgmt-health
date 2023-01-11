@@ -822,6 +822,20 @@ servicemonitors:
       scheme: http
       metricsRelabelings: {}
       relabelings: {}
+  iufExporter:
+    enabled: true
+    servicename: argo-only-argo-workflows-workflow-controller
+    serviceMonitor:
+      namespace: sysmgmt-health
+      port: metrics
+      matchNamespace:
+      - argo
+      matchLabels:
+        app.kubernetes.io/name: argo-workflows-workflow-controller
+      interval: 1m
+      scheme: http
+      metricsRelabelings: {}
+      relabelings: {}
 
 grafterm:
   image:

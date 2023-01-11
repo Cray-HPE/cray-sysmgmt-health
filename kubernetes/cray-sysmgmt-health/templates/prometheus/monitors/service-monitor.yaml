@@ -26,10 +26,10 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ template "cray-sysmgmt-health.fullname" $ }}-{{ $val.servicename }}-{{ $val.cluster }}-exporter
+  name: {{ printf "%s-%s-%s-%s" (include "cray-sysmgmt-health.fullname" $)  $val.servicename $val.cluster "exporter"  | trunc 63 | trimSuffix "-"}}
   namespace: {{ $val.serviceMonitor.namespace }}
   labels:
-    app: {{ template "cray-sysmgmt-health.name" $ }}-{{ $val.servicename }}-{{ $val.cluster }}-exporter
+    app: {{ printf "%s-%s-%s-%s" (include "cray-sysmgmt-health.fullname" $)  $val.servicename $val.cluster "exporter"  | trunc 63 | trimSuffix "-"}}
     release: {{ template "cray-sysmgmt-health.name" $ }}
 {{ include "cray-sysmgmt-health.labels" $ | indent 4 }}
 spec:
