@@ -822,6 +822,7 @@ servicemonitors:
       scheme: http
       metricsRelabelings: {}
       relabelings: {}
+
   iufExporter:
     enabled: true
     servicename: argo-only-argo-workflows-workflow-controller
@@ -832,6 +833,21 @@ servicemonitors:
       - argo
       matchLabels:
         app.kubernetes.io/name: argo-workflows-workflow-controller
+      interval: 1m
+      scheme: http
+      metricsRelabelings: {}
+      relabelings: {}
+
+  grokExporter:
+    enabled: true
+    servicename: grok-exporter
+    serviceMonitor:
+      namespace: sysmgmt-health
+      port: http
+      matchNamespace:
+      - sysmgmt-health
+      matchLabels:
+        app: grok-exporter
       interval: 1m
       scheme: http
       metricsRelabelings: {}
