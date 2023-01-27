@@ -25,8 +25,8 @@
   "fiscalYearStartMonth": 0,
   "gnetId": 1860,
   "graphTooltip": 0,
-  "id": 58,
-  "iteration": 1673953453378,
+  "id": 1,
+  "iteration": 1674811231019,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -396,14 +396,13 @@
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
-      "description": "Time to execute the test for the product selected",
+      "description": "",
       "fieldConfig": {
         "defaults": {
           "color": {
             "fixedColor": "orange",
             "mode": "fixed"
           },
-          "decimals": 2,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -433,9 +432,9 @@
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
-            "sum"
+            "firstNotNull"
           ],
-          "fields": "/^Value$/",
+          "fields": "/^Exec$/",
           "values": false
         },
         "text": {},
@@ -450,7 +449,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "argo_workflows_operation_counter{pname=~\"$Product\"}",
+          "expr": "argo_workflows_operation_time{pdname=~\"$Product\"}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -462,17 +461,32 @@
           "step": 900
         }
       ],
-      "title": "Total execution time for product",
+      "title": "Execution time for product selected",
       "transformations": [
         {
-          "id": "filterFieldsByName",
+          "id": "reduce",
           "options": {
-            "include": {
-              "names": [
-                "Value",
-                "opend",
-                "opname"
-              ]
+            "includeTimeField": false,
+            "mode": "reduceFields",
+            "reducers": [
+              "max",
+              "min"
+            ]
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Exec",
+            "binary": {
+              "left": "opend Max",
+              "operator": "-",
+              "reducer": "sum",
+              "right": "opstart Min"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
             }
           }
         }
@@ -584,35 +598,15 @@
           "options": {}
         },
         {
-          "id": "convertFieldType",
+          "id": "filterFieldsByName",
           "options": {
-            "conversions": [
-              {
-                "destinationType": "number",
-                "targetField": "Value #A"
-              },
-              {
-                "destinationType": "number",
-                "targetField": "Value #B"
-              }
-            ],
-            "fields": {}
-          }
-        },
-        {
-          "id": "calculateField",
-          "options": {
-            "alias": "Time",
-            "binary": {
-              "left": "Value #A",
-              "reducer": "sum",
-              "right": "Value #B"
-            },
-            "mode": "binary",
-            "reduce": {
-              "reducer": "sum"
-            },
-            "replaceFields": false
+            "include": {
+              "names": [
+                "pname",
+                "status",
+                "Value #C"
+              ]
+            }
           }
         },
         {
@@ -623,20 +617,9 @@
             "renameByName": {
               "Time": "Time",
               "Value": "Time",
+              "Value #C": "Time taken",
               "pname": "Product",
               "status": "Status"
-            }
-          }
-        },
-        {
-          "id": "filterFieldsByName",
-          "options": {
-            "include": {
-              "names": [
-                "Product",
-                "Status",
-                "Time 2"
-              ]
             }
           }
         }
@@ -1012,7 +995,6 @@
             "fixedColor": "orange",
             "mode": "fixed"
           },
-          "decimals": 2,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -1033,18 +1015,18 @@
         "x": 19,
         "y": 12
       },
-      "id": 20,
+      "id": 364,
       "links": [],
       "options": {
         "colorMode": "value",
         "graphMode": "area",
-        "justifyMode": "center",
+        "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
-            "sum"
+            "firstNotNull"
           ],
-          "fields": "/^Value$/",
+          "fields": "/^Exec$/",
           "values": false
         },
         "text": {},
@@ -1059,42 +1041,46 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\"}",
+          "expr": "argo_workflows_operation_time{pdname=~\"$Product\", stage=~\"$Stage\"}",
           "format": "table",
           "hide": false,
           "instant": true,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "",
+          "legendFormat": "__auto",
           "range": false,
           "refId": "A",
           "step": 900
         }
       ],
-      "title": "Total execution time for stage",
+      "title": "Execution time for stage selected",
       "transformations": [
         {
-          "id": "filterFieldsByName",
+          "id": "reduce",
           "options": {
-            "include": {
-              "names": [
-                "Value",
-                "stage",
-                "pdname"
-              ]
-            }
+            "includeTimeField": false,
+            "labelsToFields": true,
+            "mode": "reduceFields",
+            "reducers": [
+              "max",
+              "min"
+            ]
           }
         },
         {
-          "id": "convertFieldType",
+          "id": "calculateField",
           "options": {
-            "conversions": [
-              {
-                "destinationType": "number",
-                "targetField": "Value"
-              }
-            ],
-            "fields": {}
+            "alias": "Exec",
+            "binary": {
+              "left": "opend Max",
+              "operator": "-",
+              "reducer": "sum",
+              "right": "opstart Min"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            }
           }
         }
       ],
@@ -1105,7 +1091,7 @@
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
-      "description": "List of stages with it's status and execution test",
+      "description": "List of stages with its status and time",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1205,35 +1191,15 @@
           "options": {}
         },
         {
-          "id": "convertFieldType",
+          "id": "filterFieldsByName",
           "options": {
-            "conversions": [
-              {
-                "destinationType": "number",
-                "targetField": "Value #A"
-              },
-              {
-                "destinationType": "number",
-                "targetField": "Value #B"
-              }
-            ],
-            "fields": {}
-          }
-        },
-        {
-          "id": "calculateField",
-          "options": {
-            "alias": "Time",
-            "binary": {
-              "left": "Value #A",
-              "reducer": "sum",
-              "right": "Value #B"
-            },
-            "mode": "binary",
-            "reduce": {
-              "reducer": "sum"
-            },
-            "replaceFields": false
+            "include": {
+              "names": [
+                "stage",
+                "status",
+                "Value #C"
+              ]
+            }
           }
         },
         {
@@ -1245,21 +1211,10 @@
               "Time": "Time",
               "Time 2": "",
               "Value": "Time",
+              "Value #C": "Time taken",
               "pname": "Product",
               "stage": "Stage",
               "status": "Status"
-            }
-          }
-        },
-        {
-          "id": "filterFieldsByName",
-          "options": {
-            "include": {
-              "names": [
-                "Stage",
-                "Status",
-                "Time 2"
-              ]
             }
           }
         }
@@ -1627,7 +1582,7 @@
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
-      "description": "Time to execute the selected test",
+      "description": "",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1655,12 +1610,12 @@
         "x": 19,
         "y": 23
       },
-      "id": 330,
+      "id": 20,
       "links": [],
       "options": {
         "colorMode": "value",
         "graphMode": "area",
-        "justifyMode": "auto",
+        "justifyMode": "center",
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -1681,7 +1636,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", opname=~\"$Operation\"}",
+          "expr": "argo_workflows_operation_time{pdname=~\"$Product\", stage=~\"$Stage\", opname=~\"$Operation\"}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1693,7 +1648,7 @@
           "step": 900
         }
       ],
-      "title": "Total execution time for operation",
+      "title": "Execution time for operation selected",
       "transformations": [
         {
           "id": "filterFieldsByName",
@@ -1701,9 +1656,7 @@
             "include": {
               "names": [
                 "Value",
-                "pdname",
-                "opname",
-                "stage"
+                "opname"
               ]
             }
           }
@@ -1728,7 +1681,7 @@
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
       },
-      "description": "List of Operation with it's status and execution test",
+      "description": "List of Operations with its status and time",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1771,7 +1724,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 5,
+        "h": 7,
         "w": 24,
         "x": 0,
         "y": 28
@@ -1798,7 +1751,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(argo_workflows_operation_counter{pname=~\"$Product\", opname=~\"$FailedOperations\", status=\"Failed\"}) by (status, opname)",
+          "expr": "sum(argo_workflows_operation_counter{pname=~\"$Product\",stage=~\"$Stage\",opname=~\"$FailedOperations\",status=\"Failed\"}) by (status, opname)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1812,13 +1765,28 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(argo_workflows_operation_counter{pname=~\"$Product\", opname!~\"$FailedOperations\", status=~\"Succeeded\"}) by (status, opname)",
+          "expr": "sum(argo_workflows_operation_counter{pname=~\"$Product\",stage=~\"$Stage\",opname!~\"$FailedOperations\",status=~\"Succeeded\"}) by (status, opname)",
           "format": "table",
           "hide": false,
           "instant": true,
           "legendFormat": "__auto",
           "range": false,
           "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(argo_workflows_operation_time{pdname=~\"$Product\",stage=~\"$Stage\",opname=~\"$Operation\"}) by (opname)",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "C"
         }
       ],
       "title": "Operation detail",
@@ -1828,35 +1796,15 @@
           "options": {}
         },
         {
-          "id": "convertFieldType",
+          "id": "filterFieldsByName",
           "options": {
-            "conversions": [
-              {
-                "destinationType": "number",
-                "targetField": "Value #A"
-              },
-              {
-                "destinationType": "number",
-                "targetField": "Value #B"
-              }
-            ],
-            "fields": {}
-          }
-        },
-        {
-          "id": "calculateField",
-          "options": {
-            "alias": "Time",
-            "binary": {
-              "left": "Value #A",
-              "reducer": "sum",
-              "right": "Value #B"
-            },
-            "mode": "binary",
-            "reduce": {
-              "reducer": "sum"
-            },
-            "replaceFields": false
+            "include": {
+              "names": [
+                "opname",
+                "status",
+                "Value #C"
+              ]
+            }
           }
         },
         {
@@ -1865,24 +1813,9 @@
             "excludeByName": {},
             "indexByName": {},
             "renameByName": {
-              "Time": "Time",
-              "Time 2": "",
-              "Value": "Time",
-              "pname": "Product",
-              "stage": "Stage",
+              "Value #C": "Time taken",
+              "opname": "Operation Name",
               "status": "Status"
-            }
-          }
-        },
-        {
-          "id": "filterFieldsByName",
-          "options": {
-            "include": {
-              "names": [
-                "Status",
-                "Time 2",
-                "opname"
-              ]
             }
           }
         }
@@ -1926,7 +1859,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 33
+        "y": 35
       },
       "id": 360,
       "options": {
@@ -1996,7 +1929,7 @@
     "list": [
       {
         "current": {
-          "selected": false,
+          "selected": true,
           "text": "All",
           "value": "$__all"
         },
@@ -2194,6 +2127,6 @@
   "timezone": "browser",
   "title": "IUF Timing Dashboard",
   "uid": "Timing",
-  "version": 24,
+  "version": 4,
   "weekStart": ""
 }
