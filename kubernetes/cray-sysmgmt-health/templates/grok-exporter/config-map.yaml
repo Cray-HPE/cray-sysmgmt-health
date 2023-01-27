@@ -50,16 +50,17 @@ data:
       - type: gauge
         name: goss_tests
         help: GOSS TESTS
-        match: '{"log_timestamp": "%{TIMESTAMP:tstmp}", "Product": "%{PRODUCT:prod}", "log_script": "%{SCRIPT:scrip}", "log_message": "Test result", "Description": "%{DESC:desc}", "Execution Time \(raw\)": %{NUM:raw}, "Execution Time \(seconds\)": %{NUM:time}, "Node": "%{NODE:node}", "Result Code": %{CODE:code}, "Result String": "%{RESULT:res}", "Source": ".*\/%{SUITE:suite}", "Test Name": "%{DESC:name}", "Test Summary": "%{DESC:sum}"}'
-        value: '{{`{{.code}}`}}'
+        match: '{"log_timestamp": "%{TIMESTAMP:tstmp}", "Product": "%{PRODUCT:prod}", "log_script": "%{SCRIPT:scrip}", "log_message": "Test result", "Description": "%{DESC:desc}", "Execution Time \(nanoseconds\)": %{NUM:ns}, "Execution Time \(seconds\)": %{TIME:time}, "Node": "%{NODE:node}", "Result Code": %{CODE:code}, "Result String": "%{RESULT:res}", "Source": ".*\/%{SUITE:suite}", "Test Name": "%{DESC:name}", "Test Summary": "%{DESC:sum}"}'
+        value: '{{`{{.time}}`}}'
         labels:
           Timestamp: '{{`{{.tstmp}}`}}'
           Product: '{{`{{.prod}}`}}'
           Script: '{{`{{.scrip}}`}}'
           Description: '{{`{{.desc}}`}}'
-          Execution_raw: '{{`{{.raw}}`}}'
+          Execution_raw: '{{`{{.ns}}`}}'
           Execution_time: '{{`{{.time}}`}}'
           Node: '{{`{{.node}}`}}'
+          Code: '{{`{{.code}}`}}'
           Result: '{{`{{.res}}`}}'
           Suite: '{{`{{.suite}}`}}'
           Test_name: '{{`{{.name}}`}}'
