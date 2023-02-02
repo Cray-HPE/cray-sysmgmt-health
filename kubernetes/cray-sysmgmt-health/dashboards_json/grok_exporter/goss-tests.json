@@ -26,8 +26,8 @@
   "fiscalYearStartMonth": 0,
   "gnetId": 1860,
   "graphTooltip": 0,
-  "id": 59,
-  "iteration": 1674815873369,
+  "id": 10,
+  "iteration": 1675311447518,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -61,12 +61,12 @@
                 "FAIL": {
                   "color": "red",
                   "index": 0,
-                  "text": "Fail"
+                  "text": "Failed"
                 },
                 "PASS": {
                   "color": "green",
                   "index": 1,
-                  "text": "Pass"
+                  "text": "Passed"
                 }
               },
               "type": "value"
@@ -91,7 +91,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
+        "h": 5,
         "w": 4,
         "x": 0,
         "y": 1
@@ -178,7 +178,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
+        "h": 5,
         "w": 5,
         "x": 4,
         "y": 1
@@ -259,7 +259,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
+        "h": 5,
         "w": 5,
         "x": 9,
         "y": 1
@@ -341,7 +341,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
+        "h": 5,
         "w": 5,
         "x": 14,
         "y": 1
@@ -423,7 +423,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
+        "h": 5,
         "w": 5,
         "x": 19,
         "y": 1
@@ -535,7 +535,7 @@
             "properties": [
               {
                 "id": "custom.width",
-                "value": 523
+                "value": 226
               }
             ]
           },
@@ -547,7 +547,7 @@
             "properties": [
               {
                 "id": "custom.width",
-                "value": 521
+                "value": 362
               }
             ]
           }
@@ -555,9 +555,9 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 24,
+        "w": 14,
         "x": 0,
-        "y": 7
+        "y": 6
       },
       "id": 318,
       "links": [],
@@ -657,12 +657,110 @@
       "type": "table"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "purple",
+            "mode": "fixed"
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "dateTimeAsUS"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 10,
+        "x": 14,
+        "y": 6
+      },
+      "id": 361,
+      "links": [],
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "first"
+          ],
+          "fields": "/^Timestamp$/",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.5.9",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(goss_tests{Product=~\"$Product\"}) by (Product, Timestamp)",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "A",
+          "step": 900
+        }
+      ],
+      "title": "Timestamp of the test log",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "Timestamp"
+              ]
+            }
+          }
+        },
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "time",
+                "targetField": "Timestamp"
+              }
+            ],
+            "fields": {}
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 11
+        "y": 10
       },
       "id": 324,
       "panels": [],
@@ -686,12 +784,12 @@
                 "FAIL": {
                   "color": "red",
                   "index": 1,
-                  "text": "Fail"
+                  "text": "Failed"
                 },
                 "PASS": {
                   "color": "green",
                   "index": 0,
-                  "text": "Pass"
+                  "text": "Passed"
                 }
               },
               "type": "value"
@@ -716,10 +814,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
+        "h": 5,
         "w": 4,
         "x": 0,
-        "y": 12
+        "y": 11
       },
       "id": 319,
       "links": [],
@@ -801,10 +899,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
+        "h": 5,
         "w": 5,
         "x": 4,
-        "y": 12
+        "y": 11
       },
       "id": 349,
       "links": [],
@@ -883,10 +981,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
+        "h": 5,
         "w": 5,
         "x": 9,
-        "y": 12
+        "y": 11
       },
       "id": 339,
       "links": [],
@@ -965,10 +1063,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
+        "h": 5,
         "w": 5,
         "x": 14,
-        "y": 12
+        "y": 11
       },
       "id": 343,
       "links": [],
@@ -1047,10 +1145,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
+        "h": 5,
         "w": 5,
         "x": 19,
-        "y": 12
+        "y": 11
       },
       "id": 20,
       "links": [],
@@ -1182,7 +1280,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 18
+        "y": 16
       },
       "id": 357,
       "links": [],
@@ -1292,7 +1390,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 26
+        "y": 24
       },
       "id": 328,
       "panels": [],
@@ -1342,10 +1440,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
+        "h": 5,
         "w": 4,
         "x": 0,
-        "y": 27
+        "y": 25
       },
       "id": 329,
       "links": [],
@@ -1426,10 +1524,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
+        "h": 5,
         "w": 5,
         "x": 4,
-        "y": 27
+        "y": 25
       },
       "id": 344,
       "links": [],
@@ -1508,10 +1606,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
+        "h": 5,
         "w": 5,
         "x": 9,
-        "y": 27
+        "y": 25
       },
       "id": 345,
       "links": [],
@@ -1590,10 +1688,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
+        "h": 5,
         "w": 5,
         "x": 14,
-        "y": 27
+        "y": 25
       },
       "id": 346,
       "links": [],
@@ -1672,10 +1770,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
+        "h": 5,
         "w": 5,
         "x": 19,
-        "y": 27
+        "y": 25
       },
       "id": 330,
       "links": [],
@@ -1807,7 +1905,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 33
+        "y": 30
       },
       "id": 358,
       "links": [],
@@ -1917,7 +2015,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 41
+        "y": 38
       },
       "id": 336,
       "panels": [],
@@ -1958,7 +2056,7 @@
         "h": 5,
         "w": 12,
         "x": 0,
-        "y": 42
+        "y": 39
       },
       "id": 359,
       "options": {
@@ -2062,7 +2160,7 @@
         "h": 5,
         "w": 12,
         "x": 12,
-        "y": 42
+        "y": 39
       },
       "id": 360,
       "options": {
@@ -2208,7 +2306,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 47
+        "y": 44
       },
       "id": 334,
       "links": [],
@@ -2347,7 +2445,7 @@
         "h": 9,
         "w": 24,
         "x": 0,
-        "y": 55
+        "y": 52
       },
       "id": 352,
       "links": [],
@@ -2423,7 +2521,7 @@
     "list": [
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": "All",
           "value": "$__all"
         },
