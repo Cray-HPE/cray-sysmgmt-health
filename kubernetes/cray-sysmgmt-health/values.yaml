@@ -1,7 +1,7 @@
 #
 # MIT License
 #
-# (C) Copyright 2021-2022 Hewlett Packard Enterprise Development LP
+# (C) Copyright 2022-2023 Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -100,7 +100,7 @@ prometheus-operator:
         - url: http://prometheus-kafka-adapter.sma.svc.cluster.local:80/receive
       image:
         repository: artifactory.algol60.net/csm-docker/stable/quay.io/prometheus/prometheus
-        tag: v2.36.1
+        tag: v2.41.0
 
       # Enable administrative HTTP API, 'cause why not?
       enableAdminAPI: true
@@ -233,6 +233,7 @@ prometheus-operator:
     alertmanagerSpec:
       image:
         repository: artifactory.algol60.net/csm-docker/stable/quay.io/prometheus/alertmanager
+        tag: v0.25.0
 
       # Adjust retention period consistent with provisioned storage (see next)
       retention: 48h
@@ -362,7 +363,7 @@ prometheus-operator:
 
     image:
       repository: artifactory.algol60.net/csm-docker/stable/quay.io/prometheus/node-exporter
-      tag: v1.2.2
+      tag: v1.5.0
     resources:
       limits:
         cpu: "6"
@@ -833,6 +834,36 @@ servicemonitors:
       - kyverno
       matchLabels:
         app.kubernetes.io/instance: cray-kyverno
+      interval: 1m
+      scheme: http
+      metricsRelabelings: {}
+      relabelings: {}
+
+  iufExporter:
+    enabled: true
+    servicename: argo-only-argo-workflows-workflow-controller
+    serviceMonitor:
+      namespace: sysmgmt-health
+      port: metrics
+      matchNamespace:
+      - argo
+      matchLabels:
+        app.kubernetes.io/name: argo-workflows-workflow-controller
+      interval: 1m
+      scheme: http
+      metricsRelabelings: {}
+      relabelings: {}
+
+  grokExporter:
+    enabled: true
+    servicename: grok-exporter
+    serviceMonitor:
+      namespace: sysmgmt-health
+      port: http
+      matchNamespace:
+      - sysmgmt-health
+      matchLabels:
+        app: grok-exporter
       interval: 1m
       scheme: http
       metricsRelabelings: {}

@@ -1,7 +1,7 @@
 #
 # MIT License
 #
-# (C) Copyright 2021-2022 Hewlett Packard Enterprise Development LP
+# (C) Copyright 2022-2023 Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -23,7 +23,7 @@
 #
 apiVersion: v2
 name: cray-sysmgmt-health
-version: 0.26.10
+version: 0.26.14
 description: An extension of the official prometheus-operator helm chart for monitoring
   system health.
 keywords:
@@ -58,11 +58,11 @@ appVersion: 9.3.1
 annotations:
   artifacthub.io/images: |
     - name: alertmanager
-      image: artifactory.algol60.net/csm-docker/stable/quay.io/prometheus/alertmanager:v0.21.0
+      image: artifactory.algol60.net/csm-docker/stable/quay.io/prometheus/alertmanager:v0.25.0
     - name: configmap-reload
       image: artifactory.algol60.net/csm-docker/stable/docker.io/jimmidyson/configmap-reload:v0.3.0
     - name: prometheus
-      image: artifactory.algol60.net/csm-docker/stable/quay.io/prometheus/prometheus:v2.36.1
+      image: artifactory.algol60.net/csm-docker/stable/quay.io/prometheus/prometheus:v2.41.0
     - name: prometheus-config-reloader
       image: artifactory.algol60.net/csm-docker/stable/quay.io/coreos/prometheus-config-reloader:v0.38.1
   artifacthub.io/license: MIT
