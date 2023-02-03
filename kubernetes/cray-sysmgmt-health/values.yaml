@@ -184,6 +184,23 @@ prometheus-operator:
           - source_labels: [__meta_kubernetes_pod_container_name]
             action: replace
             target_label: job
+        
+        - job_name: 'opensearch'
+          scrape_timeout: 10s
+          scrape_interval: 1m
+          honor_labels: true
+          metrics_path: '/_prometheus/metrics'
+          scheme: https
+          basic_auth:
+            username: "admin"
+            password: "admin"
+          static_configs:
+            - targets:
+              - 'opensearch-masters-0.opensearch.sma.svc.cluster.local:9200'
+              - 'opensearch-masters-1.opensearch.sma.svc.cluster.local:9200'
+              - 'opensearch-masters-2.opensearch.sma.svc.cluster.local:9200'
+          tls_config:
+            insecure_skip_verify: true
 
         # Federate metrics from Istio's Prometheus instance
         # - job_name: 'federate-istio'
