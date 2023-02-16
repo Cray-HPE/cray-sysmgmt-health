@@ -55,11 +55,11 @@ Create the name of the service account to use
 {{- end -}}
 {{- end -}}
 
-{{- define "cray-sysmgmt-health.prometheus-operator.fullname" -}}
-{{- if (index .Values "prometheus-operator" "fullnameOverride") -}}
-{{- (index .Values "prometheus-operator" "fullnameOverride") | trunc 26 | trimSuffix "-" -}}
+{{- define "cray-sysmgmt-health.kube-prometheus-stack.fullname" -}}
+{{- if (index .Values "kube-prometheus-stack" "fullnameOverride") -}}
+{{- (index .Values "kube-prometheus-stack" "fullnameOverride") | trunc 26 | trimSuffix "-" -}}
 {{- else -}}
-{{- $name := default "prometheus-operator" (index .Values "prometheus-operator" "nameOverride") -}}
+{{- $name := default "kube-prometheus-stack" (index .Values "kube-prometheus-stack" "nameOverride") -}}
 {{- if contains $name .Release.Name -}}
 {{- .Release.Name | trunc 26 | trimSuffix "-" -}}
 {{- else -}}
@@ -68,11 +68,11 @@ Create the name of the service account to use
 {{- end -}}
 {{- end -}}
 
-{{- define "cray-sysmgmt-health.prometheus-operator.grafana.fullname" -}}
-{{- if (index .Values "prometheus-operator" "grafana" "fullnameOverride") -}}
-{{- (index .Values "prometheus-operator" "grafana" "fullnameOverride") | trunc 63 | trimSuffix "-" -}}
+{{- define "cray-sysmgmt-health.kube-prometheus-stack.grafana.fullname" -}}
+{{- if (index .Values "kube-prometheus-stack" "grafana" "fullnameOverride") -}}
+{{- (index .Values "kube-prometheus-stack" "grafana" "fullnameOverride") | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
-{{- $name := default "grafana" (index .Values "prometheus-operator" "grafana" "nameOverride") -}}
+{{- $name := default "grafana" (index .Values "kube-prometheus-stack" "grafana" "nameOverride") -}}
 {{- if contains $name .Release.Name -}}
 {{- .Release.Name | trunc 63 | trimSuffix "-" -}}
 {{- else -}}

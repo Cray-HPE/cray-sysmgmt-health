@@ -26,15 +26,15 @@ Generated from 'osds-overview' from https://raw.githubusercontent.com/ceph/ceph/
 Do not change in-place! In order to change this file review the scripts in:
 https://stash.us.cray.com/projects/SPET/repos/cray-charts/browse/stable/cray-sysmgmt-health/hack
 */ -}}
-{{- $kubeTargetVersion := default .Capabilities.KubeVersion.GitVersion (index .Values "prometheus-operator" "kubeTargetVersionOverride") }}
-{{- if and (semverCompare ">=1.10.0-0" $kubeTargetVersion) (semverCompare "<9.9.9-9" $kubeTargetVersion) (index .Values "prometheus-operator" "grafana" "enabled") .Values.customDashboards.ceph.enabled }}
+{{- $kubeTargetVersion := default .Capabilities.KubeVersion.GitVersion (index .Values "kube-prometheus-stack" "kubeTargetVersionOverride") }}
+{{- if and (semverCompare ">=1.10.0-0" $kubeTargetVersion) (semverCompare "<9.9.9-9" $kubeTargetVersion) (index .Values "kube-prometheus-stack" "grafana" "enabled") .Values.customDashboards.ceph.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ printf "%s-%s" (include "cray-sysmgmt-health.fullname" $) "osds-overview" | trunc 63 | trimSuffix "-" }}
   labels:
-    {{- if (index $.Values "prometheus-operator" "grafana" "sidecar" "dashboards" "label") }}
-    {{ (index $.Values "prometheus-operator" "grafana" "sidecar" "dashboards" "label") }}: "1"
+    {{- if (index $.Values "kube-prometheus-stack" "grafana" "sidecar" "dashboards" "label") }}
+    {{ (index $.Values "kube-prometheus-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
     {{- end }}
     app: {{ template "cray-sysmgmt-health.name" $ }}-grafana
 {{ include "cray-sysmgmt-health.labels" $ | indent 4 }}

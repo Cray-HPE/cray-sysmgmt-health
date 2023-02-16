@@ -21,7 +21,7 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 #
-{{- if and (index .Values "prometheus-operator" "grafana" "enabled") .Values.customDashboards.istio.enabled }}
+{{- if and (index .Values "kube-prometheus-stack" "grafana" "enabled") .Values.customDashboards.istio.enabled }}
 {{- $files := .Files.Glob "dashboards_json/**.json" }}
 {{- if $files }}
 apiVersion: v1
@@ -32,14 +32,14 @@ items:
 - apiVersion: v1
   kind: ConfigMap
   metadata:
-    name: {{ printf "%s-%s" (include "prometheus-operator.fullname" $) $dashboardName | trunc 63 | trimSuffix "-" }}
-    namespace: {{ template "prometheus-operator.namespace" $ }}
+    name: {{ printf "%s-%s" (include "kube-prometheus-stack.fullname" $) $dashboardName | trunc 63 | trimSuffix "-" }}
+    namespace: {{ template "kube-prometheus-stack.namespace" $ }}
     labels:
-      {{- if (index $.Values "prometheus-operator" "grafana" "sidecar" "dashboards" "label") }}
-      {{ (index $.Values "prometheus-operator" "grafana" "sidecar" "dashboards" "label") }}: "1"
+      {{- if (index $.Values "kube-prometheus-stack" "grafana" "sidecar" "dashboards" "label") }}
+      {{ (index $.Values "kube-prometheus-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
       {{- end }}
-      app: {{ template "prometheus-operator.name" $ }}-grafana
-{{ include "prometheus-operator.labels" $ | indent 6 }}
+      app: {{ template "kube-prometheus-stack.name" $ }}-grafana
+{{ include "kube-prometheus-stack.labels" $ | indent 6 }}
   data:
     {{ $dashboardName }}.json: {{ $.Files.Get $path | toJson }}
 {{- end }}

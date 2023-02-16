@@ -22,19 +22,19 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 #
 {{- /* Added manually, can be changed in-place. */ -}}
-{{- $kubeTargetVersion := default .Capabilities.KubeVersion.GitVersion (index .Values "prometheus-operator" "kubeTargetVersionOverride") }}
-{{- if and (semverCompare ">=1.14.0-0" $kubeTargetVersion) (semverCompare "<9.9.9-9" $kubeTargetVersion) (index .Values "prometheus-operator" "grafana" "enabled") .Values.customDashboards.prometheusOperator.enabled (index .Values "prometheus-operator" "coreDns" "enabled") }}
+{{- $kubeTargetVersion := default .Capabilities.KubeVersion.GitVersion (index .Values "kube-prometheus-stack" "kubeTargetVersionOverride") }}
+{{- if and (semverCompare ">=1.14.0-0" $kubeTargetVersion) (semverCompare "<9.9.9-9" $kubeTargetVersion) (index .Values "kube-prometheus-stack" "grafana" "enabled") .Values.customDashboards.prometheusOperator.enabled (index .Values "kube-prometheus-stack" "coreDns" "enabled") }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  namespace: {{ template "prometheus-operator.namespace" . }}
-  name: {{ printf "%s-%s" (include "prometheus-operator.fullname" $) "k8s-coredns" | trunc 63 | trimSuffix "-" }}
+  namespace: {{ template "kube-prometheus-stack.namespace" . }}
+  name: {{ printf "%s-%s" (include "kube-prometheus-stack.fullname" $) "k8s-coredns" | trunc 63 | trimSuffix "-" }}
   labels:
-    {{- if (index .Values "prometheus-operator" "grafana" "sidecar" "dashboards" "label") }}
-    {{ (index .Values "prometheus-operator" "grafana" "sidecar" "dashboards" "label") }}: "1"
+    {{- if (index .Values "kube-prometheus-stack" "grafana" "sidecar" "dashboards" "label") }}
+    {{ (index .Values "kube-prometheus-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
     {{- end }}
-    app: {{ template "prometheus-operator.name" $ }}-grafana
-{{ include "prometheus-operator.labels" $ | indent 4 }}
+    app: {{ template "kube-prometheus-stack.name" $ }}-grafana
+{{ include "kube-prometheus-stack.labels" $ | indent 4 }}
 data:
   k8s-coredns.json: |-
     {
