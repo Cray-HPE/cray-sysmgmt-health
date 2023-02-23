@@ -184,7 +184,8 @@ prometheus-operator:
           - source_labels: [__meta_kubernetes_pod_container_name]
             action: replace
             target_label: job
-        
+
+        # Scrape opensearch metrics
         - job_name: 'opensearch'
           scrape_timeout: 10s
           scrape_interval: 1m
@@ -263,7 +264,7 @@ prometheus-operator:
 
     image:
       repository: artifactory.algol60.net/csm-docker/stable/docker.io/grafana/grafana
-      tag: 8.5.9
+      tag: 9.3.2
     env:
       GF_PATHS_PLUGINS: /var/lib/grafana-plugins
 
