@@ -21,7 +21,7 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 #
-{{- if (index .Values "prometheus-operator" "grafana" "enabled") }}
+{{- if (index .Values "kube-prometheus-stack" "grafana" "enabled") }}
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -34,14 +34,14 @@ spec:
   gateways:
   - {{ .Values.global.authGateway }}
   hosts:
-  - {{ (index .Values "prometheus-operator" "grafana" "externalAuthority") }}
+  - {{ (index .Values "kube-prometheus-stack" "grafana" "externalAuthority") }}
   http:
   - match:
     - authority:
-        exact: {{ (index .Values "prometheus-operator" "grafana" "externalAuthority") }}
+        exact: {{ (index .Values "kube-prometheus-stack" "grafana" "externalAuthority") }}
     route:
     - destination:
-        host: {{ template "cray-sysmgmt-health.prometheus-operator.grafana.fullname" . }}
+        host: {{ template "cray-sysmgmt-health.kube-prometheus-stack.grafana.fullname" . }}
         port:
           number: 80
       headers:
@@ -63,7 +63,7 @@ metadata:
     app: {{ template "cray-sysmgmt-health.name" . }}-grafana
 {{ include "cray-sysmgmt-health.labels" . | indent 4 }}
 spec:
-  host: {{ template "cray-sysmgmt-health.prometheus-operator.grafana.fullname" . }}
+  host: {{ template "cray-sysmgmt-health.kube-prometheus-stack.grafana.fullname" . }}
   trafficPolicy:
     tls:
       mode: DISABLE

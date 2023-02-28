@@ -29,9 +29,9 @@ data:
   fix-kubelet-target-down-alert.sh: |-
     #!/bin/sh
 
-    echo "Reconfiguring cray-sysmgmt-health-promet-kubelet servicemonitor"
-    mfile=/tmp/cray-sysmgmt-health-promet-kubelet.yaml
-    kubectl get servicemonitors.monitoring.coreos.com -n sysmgmt-health cray-sysmgmt-health-promet-kubelet -o yaml > $mfile
+    echo "Reconfiguring cray-sysmgmt-health-kube-p-kubelet servicemonitor"
+    mfile=/tmp/cray-sysmgmt-health-kube-p-kubelet.yaml
+    kubectl get servicemonitors.monitoring.coreos.com -n sysmgmt-health cray-sysmgmt-health-kube-p-kubelet -o yaml > $mfile
     sed -i '/\/metrics\/resource/{N;s/https-metrics/"10255"/;}' $mfile
     sed -i '/\/metrics\/resource/{N;N;N;N;N;N;s/scheme: https/scheme: http/;}' $mfile
     kubectl -n sysmgmt-health apply -f $mfile
@@ -54,7 +54,7 @@ data:
     #!/bin/sh
 
     echo "Disabling etcdHighNumberOfFailedGRPCRequests alert"
-    mfile=/tmp/cray-sysmgmt-health-promet-etcd.yaml
-    kubectl get prometheusrules.monitoring.coreos.com -n sysmgmt-health cray-sysmgmt-health-promet-etcd -o yaml > $mfile
+    mfile=/tmp/cray-sysmgmt-health-kube-p-etcd.yaml
+    kubectl get prometheusrules.monitoring.coreos.com -n sysmgmt-health cray-sysmgmt-health-kube-p-etcd -o yaml > $mfile
     sed -i '/- alert: etcdHighNumberOfFailedGRPCRequests/,/severity: critical/d' $mfile
     kubectl -n sysmgmt-health apply -f $mfile
