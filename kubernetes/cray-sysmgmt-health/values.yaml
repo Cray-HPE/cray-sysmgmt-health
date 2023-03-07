@@ -51,16 +51,16 @@ prometheus-snmp-exporter:
     enabled: true
     namespace: sysmgmt-health
     selector:
-      prometheus: cray-sysmgmt-health-promet-prometheus
+      prometheus: cray-sysmgmt-health-kube-p-prometheus
       release: cray-sysmgmt-health
 
     params:
       - name: sw-spine-01
-        target: 10.252.0.2
+        target: 10.254.0.2
       - name: sw-spine-02
-        target: 10.252.0.3
+        target: 10.254.0.3
 
-prometheus-operator:
+kube-prometheus-stack:
 
 
   prometheusOperator:
@@ -68,18 +68,22 @@ prometheus-operator:
       patch:
         enabled: true
         image:
-          repository: artifactory.algol60.net/csm-docker/stable/docker.io/jettech/kube-webhook-certgen
+          registry: artifactory.algol60.net
+          repository: csm-docker/stable/docker.io/jettech/kube-webhook-certgen
           tag: v1.2.1
           pullPolicy: IfNotPresent
 
     image:
-      repository: artifactory.algol60.net/csm-docker/stable/quay.io/coreos/prometheus-operator
-      tag: v0.38.1
+      registry: artifactory.algol60.net
+      repository: csm-docker/stable/docker.io/bitnami/prometheus-operator
+      tag: v0.63.0
       pullPolicy: IfNotPresent
 
-    prometheusConfigReloaderImage:
-      repository: artifactory.algol60.net/csm-docker/stable/quay.io/coreos/prometheus-config-reloader
-      tag: v0.38.1
+    prometheusConfigReloader:
+      image:
+        registry: artifactory.algol60.net
+        repository: csm-docker/stable/docker.io/prom/prometheus-config-reloader
+        tag: v0.62.0
 
     # Resources for config-reloader side car, these are the same for requests and limits.
     # configReloaderCpu: 100m (default)
@@ -101,7 +105,6 @@ prometheus-operator:
       image:
         repository: artifactory.algol60.net/csm-docker/stable/quay.io/prometheus/prometheus
         tag: v2.41.0
-
       # Enable administrative HTTP API, 'cause why not?
       enableAdminAPI: true
 
@@ -233,7 +236,8 @@ prometheus-operator:
 
     alertmanagerSpec:
       image:
-        repository: artifactory.algol60.net/csm-docker/stable/quay.io/prometheus/alertmanager
+        registry: artifactory.algol60.net
+        repository: csm-docker/stable/quay.io/prometheus/alertmanager
         tag: v0.25.0
 
       # Adjust retention period consistent with provisioned storage (see next)
@@ -314,7 +318,7 @@ prometheus-operator:
         datasources:
         - name: istio-monitoring
           type: prometheus
-          url: http://cray-sysmgmt-health-promet-prometheus:9090
+          url: http://cray-sysmgmt-health-kube-p-prometheus:9090
           access: proxy
 
     testFramework:
@@ -351,6 +355,10 @@ prometheus-operator:
   kubeEtcd:
     # Configure secure access to the etcd cluster via the key and certs
     # defined in the `etcd-client-cert` secret (see below).
+    service:
+      enabled: true
+      port: 2379
+      targetPort: 2379
     serviceMonitor:
       interval: ""
       scheme: https
@@ -361,6 +369,9 @@ prometheus-operator:
       keyFile: "/etc/prometheus/secrets/etcd-client-cert/etcd-client-key"
 
   prometheus-node-exporter:
+    rbac:
+      create: true
+      pspEnabled: true
 
     image:
       repository: artifactory.algol60.net/csm-docker/stable/quay.io/prometheus/node-exporter
@@ -411,8 +422,38 @@ prometheus-operator:
   # Compatibility with dashboards and rules templates
   kube-state-metrics:
     image:
-      repository: artifactory.algol60.net/csm-docker/stable/quay.io/coreos/kube-state-metrics
-      tag: v1.9.7
+      repository: artifactory.algol60.net/csm-docker/stable/docker.io/bitnami/kube-state-metrics
+      tag: v2.8.0
+    collectors:
+      - certificatesigningrequests
+      - configmaps
+      - cronjobs
+      - daemonsets
+      - deployments
+      - endpoints
+      # - horizontalpodautoscalers
+      - ingresses
+      - jobs
+      - leases
+      - limitranges
+      - mutatingwebhookconfigurations
+      - namespaces
+      - networkpolicies
+      - nodes
+      - persistentvolumeclaims
+      - persistentvolumes
+      - poddisruptionbudgets
+      - pods
+      - replicasets
+      - replicationcontrollers
+      - resourcequotas
+      - secrets
+      - services
+      - statefulsets
+      - storageclasses
+      - validatingwebhookconfigurations
+      - volumeattachments
+      # - verticalpodautoscalers
 
   kubeStateMetrics:
     enabled: true
@@ -874,7 +915,7 @@ servicemonitors:
 grafterm:
   image:
     repository: artifactory.algol60.net/csm-docker/stable/cray-grafterm
-    tag: 1.0.2
+    tag: 1.0.3
     pullPolicy: IfNotPresent
   dashboards:
     enabled: true

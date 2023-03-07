@@ -21,7 +21,7 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 #
-{{- if (index .Values "prometheus-operator" "prometheus" "enabled") }}
+{{- if (index .Values "kube-prometheus-stack" "prometheus" "enabled") }}
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -34,14 +34,14 @@ spec:
   gateways:
   - {{ .Values.global.authGateway }}
   hosts:
-  - {{ (index .Values "prometheus-operator" "prometheus" "prometheusSpec" "externalAuthority") }}
+  - {{ (index .Values "kube-prometheus-stack" "prometheus" "prometheusSpec" "externalAuthority") }}
   http:
   - match:
     - authority:
-        exact: {{ (index .Values "prometheus-operator" "prometheus" "prometheusSpec" "externalAuthority") }}
+        exact: {{ (index .Values "kube-prometheus-stack" "prometheus" "prometheusSpec" "externalAuthority") }}
     route:
     - destination:
-        host: {{ template "cray-sysmgmt-health.prometheus-operator.fullname" . }}-prometheus
+        host: {{ template "cray-sysmgmt-health.kube-prometheus-stack.fullname" . }}-prometheus
         port:
           number: 9090
 ---
@@ -53,7 +53,7 @@ metadata:
     app: {{ template "cray-sysmgmt-health.name" . }}-prometheus
 {{ include "cray-sysmgmt-health.labels" . | indent 4 }}
 spec:
-  host: {{ template "cray-sysmgmt-health.prometheus-operator.fullname" . }}-prometheus
+  host: {{ template "cray-sysmgmt-health.kube-prometheus-stack.fullname" . }}-prometheus
   trafficPolicy:
     tls:
       mode: DISABLE
