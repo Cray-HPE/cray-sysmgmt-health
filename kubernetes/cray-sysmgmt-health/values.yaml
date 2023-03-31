@@ -269,7 +269,7 @@ kube-prometheus-stack:
 
     image:
       repository: artifactory.algol60.net/csm-docker/stable/docker.io/grafana/grafana
-      tag: 9.3.2
+      tag: 9.3.3
     env:
       GF_PATHS_PLUGINS: /var/lib/grafana-plugins
 
@@ -302,6 +302,8 @@ kube-prometheus-stack:
         header_name: X-WEBAUTH-USER
         header_property: username
         auto_sign_up: true
+      plugins:
+        allow_loading_unsigned_plugins: hpe-clusterview-panel
 
     sidecar:
       image:
@@ -909,6 +911,23 @@ servicemonitors:
       matchLabels:
         app: grok-exporter
       interval: 1m
+      scheme: http
+      metricsRelabelings: {}
+      relabelings: {}
+
+  canu-test:
+    enabled: true
+    servicename: canu-test
+    selector:
+      sidecar: grok
+    serviceMonitor:
+      namespace: sysmgmt-health
+      port: http
+      matchNamespace:
+      - sysmgmt-health
+      matchLabels:
+        app.selector: grok
+      interval: 30s
       scheme: http
       metricsRelabelings: {}
       relabelings: {}
