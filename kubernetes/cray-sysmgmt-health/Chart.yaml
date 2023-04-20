@@ -63,5 +63,5 @@ annotations:
     - name: prometheus
       image: artifactory.algol60.net/csm-docker/stable/quay.io/prometheus/prometheus:v2.41.0
     - name: prometheus-config-reloader
-      image: artifactory.algol60.net/csm-docker/stable/quay.io/coreos/prometheus-config-reloader:v0.38.1
+      image: artifactory.algol60.net/csm-docker/stable/docker.io/prom/prometheus-config-reloader:v0.62.0
   artifacthub.io/license: MIT
