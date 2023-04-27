@@ -31,8 +31,10 @@ metadata:
     app: {{ template "cray-sysmgmt-health.name" . }}-prometheus
 {{ include "cray-sysmgmt-health.labels" . | indent 4 }}
 spec:
+  {{- with .Values.global.authGateways }}
   gateways:
-  - {{ .Values.global.authGateway }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   hosts:
   - {{ (index .Values "kube-prometheus-stack" "prometheus" "prometheusSpec" "externalAuthority") }}
   http:
