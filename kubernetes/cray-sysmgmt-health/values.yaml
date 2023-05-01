@@ -22,7 +22,9 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 #
 global:
-  authGateway: services/services-gateway
+  authGateways:
+  - services/services-gateway
+  - services/customer-admin-gateway
   rbac:
     create: true
     pspEnabled: true
