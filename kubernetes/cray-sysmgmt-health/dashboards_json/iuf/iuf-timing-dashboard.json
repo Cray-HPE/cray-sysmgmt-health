@@ -1,11 +1,60 @@
 {
+  "__inputs": [
+    {
+      "name": "DS_PROMETHEUS",
+      "label": "Prometheus",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    }
+  ],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "panel",
+      "id": "gauge",
+      "name": "Gauge",
+      "version": ""
+    },
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "9.3.2"
+    },
+    {
+      "type": "datasource",
+      "id": "prometheus",
+      "name": "Prometheus",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "state-timeline",
+      "name": "State timeline",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": ""
+    }
+  ],
   "annotations": {
     "list": [
       {
         "builtIn": 1,
         "datasource": {
-          "type": "prometheus",
-          "uid": "PBFA97CFB590B2093"
+          "type": "datasource",
+          "uid": "grafana"
         },
         "enable": true,
         "hide": true,
@@ -25,8 +74,7 @@
   "fiscalYearStartMonth": 0,
   "gnetId": 1860,
   "graphTooltip": 0,
-  "id": 3,
-  "iteration": 1675314772016,
+  "id": null,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -49,7 +97,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "",
       "fieldConfig": {
@@ -95,22 +143,22 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "8.5.9",
+      "pluginVersion": "9.3.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
           "expr": "argo_workflows_operation_counter{pname=~\"$Product\"}",
           "format": "table",
           "hide": false,
-          "instant": false,
+          "instant": true,
           "intervalFactor": 2,
           "legendFormat": "__auto",
-          "range": true,
+          "range": false,
           "refId": "A",
           "step": 240
         }
@@ -133,7 +181,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "The overall product status",
       "fieldConfig": {
@@ -193,22 +241,22 @@
         },
         "textMode": "value"
       },
-      "pluginVersion": "8.5.9",
+      "pluginVersion": "9.3.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
           "expr": "argo_workflows_operation_counter{pname=~\"$FailedProducts\", status=\"Failed\"}",
           "format": "table",
           "hide": false,
-          "instant": false,
+          "instant": true,
           "intervalFactor": 1,
           "legendFormat": "__auto",
-          "range": true,
+          "range": false,
           "refId": "A",
           "step": 900
         }
@@ -231,7 +279,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "",
       "fieldConfig": {
@@ -274,22 +322,22 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "8.5.9",
+      "pluginVersion": "9.3.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
           "expr": "argo_workflows_operation_counter{pname=~\"$Product\", pname!~\"$FailedProducts\", status=\"Succeeded\"}",
           "format": "table",
           "hide": false,
-          "instant": false,
+          "instant": true,
           "intervalFactor": 2,
           "legendFormat": "__auto",
-          "range": true,
+          "range": false,
           "refId": "A",
           "step": 240
         }
@@ -312,7 +360,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "The number of products that ran the goss tests, Number of products that failed, and Number of products that passed.",
       "fieldConfig": {
@@ -356,22 +404,22 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "8.5.9",
+      "pluginVersion": "9.3.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
           "expr": "argo_workflows_operation_counter{pname=~\"$Product\", pname=~\"$FailedProducts\", status=\"Failed\"}",
           "format": "table",
           "hide": false,
-          "instant": false,
+          "instant": true,
           "intervalFactor": 2,
           "legendFormat": "__auto",
-          "range": true,
+          "range": false,
           "refId": "A",
           "step": 240
         }
@@ -394,7 +442,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "",
       "fieldConfig": {
@@ -440,12 +488,12 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.5.9",
+      "pluginVersion": "9.3.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -455,7 +503,7 @@
           "instant": true,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "",
+          "legendFormat": "__auto",
           "range": false,
           "refId": "A",
           "step": 900
@@ -496,7 +544,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "List of products with it's status and execution test",
       "fieldConfig": {
@@ -559,12 +607,12 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "8.5.9",
+      "pluginVersion": "9.3.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -572,13 +620,14 @@
           "format": "table",
           "hide": false,
           "instant": true,
+          "legendFormat": "__auto",
           "range": false,
           "refId": "A"
         },
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -642,7 +691,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "",
       "fieldConfig": {
@@ -686,22 +735,22 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "8.5.9",
+      "pluginVersion": "9.3.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
           "expr": "argo_workflows_operation_counter{pname=~\"$Product\",stage=~\"$Stage\"}",
           "format": "table",
           "hide": false,
-          "instant": false,
+          "instant": true,
           "intervalFactor": 2,
           "legendFormat": "__auto",
-          "range": true,
+          "range": false,
           "refId": "A",
           "step": 240
         }
@@ -724,7 +773,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "The result for the suite selected",
       "fieldConfig": {
@@ -784,12 +833,12 @@
         "text": {},
         "textMode": "value"
       },
-      "pluginVersion": "8.5.9",
+      "pluginVersion": "9.3.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -822,7 +871,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "",
       "fieldConfig": {
@@ -866,22 +915,22 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "8.5.9",
+      "pluginVersion": "9.3.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
           "expr": "argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", stage!~\"$FailedStages\", status=\"Succeeded\"}",
           "format": "table",
           "hide": false,
-          "instant": false,
+          "instant": true,
           "intervalFactor": 2,
           "legendFormat": "__auto",
-          "range": true,
+          "range": false,
           "refId": "A",
           "step": 240
         }
@@ -904,7 +953,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "The number of products that ran the goss tests, Number of products that failed, and Number of products that passed.",
       "fieldConfig": {
@@ -948,22 +997,22 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "8.5.9",
+      "pluginVersion": "9.3.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
           "expr": "argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\" ,stage=~\"$FailedStages\", status=\"Failed\"}",
           "format": "table",
           "hide": false,
-          "instant": false,
+          "instant": true,
           "intervalFactor": 2,
           "legendFormat": "__auto",
-          "range": true,
+          "range": false,
           "refId": "A",
           "step": 240
         }
@@ -986,7 +1035,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "",
       "fieldConfig": {
@@ -1032,12 +1081,12 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.5.9",
+      "pluginVersion": "9.3.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -1089,7 +1138,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "List of stages with its status and time",
       "fieldConfig": {
@@ -1152,12 +1201,12 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "8.5.9",
+      "pluginVersion": "9.3.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -1165,13 +1214,14 @@
           "format": "table",
           "hide": false,
           "instant": true,
+          "legendFormat": "__auto",
           "range": false,
           "refId": "A"
         },
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -1237,7 +1287,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "",
       "fieldConfig": {
@@ -1252,7 +1302,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               }
             ]
           }
@@ -1279,22 +1330,22 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "8.5.9",
+      "pluginVersion": "9.3.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
           "expr": "argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", opname=~\"$Operation\"}",
           "format": "table",
           "hide": false,
-          "instant": false,
+          "instant": true,
           "intervalFactor": 2,
           "legendFormat": "__auto",
-          "range": true,
+          "range": false,
           "refId": "A",
           "step": 240
         }
@@ -1317,7 +1368,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "The result for the test selected",
       "fieldConfig": {
@@ -1345,7 +1396,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               }
             ]
           },
@@ -1376,22 +1428,22 @@
         "text": {},
         "textMode": "value"
       },
-      "pluginVersion": "8.5.9",
+      "pluginVersion": "9.3.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
           "expr": "argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", opname=~\"$Operation\", opname=~\"$FailedOperations\", status=~\"Failed\"}",
           "format": "table",
           "hide": false,
-          "instant": false,
+          "instant": true,
           "intervalFactor": 1,
           "legendFormat": "__auto",
-          "range": true,
+          "range": false,
           "refId": "A",
           "step": 900
         }
@@ -1414,7 +1466,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "",
       "fieldConfig": {
@@ -1430,7 +1482,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               }
             ]
           }
@@ -1457,22 +1510,22 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "8.5.9",
+      "pluginVersion": "9.3.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
           "expr": "argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", opname=~\"$Operation\", opname!~\"$FailedOperations\", status=\"Succeeded\"}",
           "format": "table",
           "hide": false,
-          "instant": false,
+          "instant": true,
           "intervalFactor": 2,
           "legendFormat": "__auto",
-          "range": true,
+          "range": false,
           "refId": "A",
           "step": 240
         }
@@ -1495,7 +1548,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "",
       "fieldConfig": {
@@ -1511,7 +1564,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               }
             ]
           }
@@ -1538,22 +1592,22 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "8.5.9",
+      "pluginVersion": "9.3.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
           "expr": "argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", opname=~\"$Operation\", opname=~\"$FailedOperations\", status=\"Failed\"}",
           "format": "table",
           "hide": false,
-          "instant": false,
+          "instant": true,
           "intervalFactor": 2,
           "legendFormat": "__auto",
-          "range": true,
+          "range": false,
           "refId": "A",
           "step": 240
         }
@@ -1576,7 +1630,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "",
       "fieldConfig": {
@@ -1585,13 +1639,13 @@
             "fixedColor": "orange",
             "mode": "fixed"
           },
-          "decimals": 2,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               }
             ]
           },
@@ -1605,16 +1659,16 @@
         "x": 19,
         "y": 23
       },
-      "id": 20,
+      "id": 366,
       "links": [],
       "options": {
         "colorMode": "value",
         "graphMode": "area",
-        "justifyMode": "center",
+        "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
-            "sum"
+            "lastNotNull"
           ],
           "fields": "/^Value$/",
           "values": false
@@ -1622,12 +1676,12 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.5.9",
+      "pluginVersion": "9.3.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -1637,7 +1691,7 @@
           "instant": true,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "",
+          "legendFormat": "__auto",
           "range": false,
           "refId": "A",
           "step": 900
@@ -1647,25 +1701,16 @@
       "transformations": [
         {
           "id": "filterFieldsByName",
-          "options": {
-            "include": {
-              "names": [
-                "Value",
-                "opname"
-              ]
-            }
-          }
+          "options": {}
         },
         {
-          "id": "convertFieldType",
+          "id": "reduce",
           "options": {
-            "conversions": [
-              {
-                "destinationType": "number",
-                "targetField": "Value"
-              }
-            ],
-            "fields": {}
+            "includeTimeField": false,
+            "mode": "reduceFields",
+            "reducers": [
+              "sum"
+            ]
           }
         }
       ],
@@ -1674,7 +1719,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "List of Operations with its status and time",
       "fieldConfig": {
@@ -1709,7 +1754,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               }
             ]
           },
@@ -1736,12 +1782,12 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "8.5.9",
+      "pluginVersion": "9.3.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -1749,13 +1795,14 @@
           "format": "table",
           "hide": false,
           "instant": true,
+          "legendFormat": "__auto",
           "range": false,
           "refId": "A"
         },
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -1770,7 +1817,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -1819,7 +1866,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1836,7 +1883,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1859,7 +1907,8 @@
         "alignValue": "left",
         "legend": {
           "displayMode": "list",
-          "placement": "bottom"
+          "placement": "bottom",
+          "showLegend": true
         },
         "mergeValues": true,
         "rowHeight": 0.9,
@@ -1873,13 +1922,14 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "exemplar": true,
+          "exemplar": false,
           "expr": "argo_workflows_operation_time{pdname=~\"$Product\", stage=~\"$Stage\", opname=~\"$Operation\"}",
           "format": "table",
-          "range": true,
+          "instant": true,
+          "range": false,
           "refId": "A"
         }
       ],
@@ -1913,7 +1963,7 @@
     }
   ],
   "refresh": "",
-  "schemaVersion": 36,
+  "schemaVersion": 37,
   "style": "dark",
   "tags": [
     "IUF"
@@ -1923,12 +1973,27 @@
       {
         "current": {
           "selected": true,
-          "text": "All",
-          "value": "$__all"
+          "text": "default",
+          "value": "default"
         },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Data source",
+        "multi": false,
+        "name": "DS_PROMETHEUS",
+        "options": [],
+        "query": "prometheus",
+        "queryValue": "",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      },
+      {
+        "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "PBFA97CFB590B2093"
+          "uid": "${DS_PROMETHEUS}"
         },
         "definition": "label_values(argo_workflows_operation_time, pdname)",
         "hide": 0,
@@ -1948,14 +2013,10 @@
         "type": "query"
       },
       {
-        "current": {
-          "selected": false,
-          "text": "All",
-          "value": "$__all"
-        },
+        "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "PBFA97CFB590B2093"
+          "uid": "${DS_PROMETHEUS}"
         },
         "definition": "label_values(argo_workflows_operation_time{pdname=~\"$Product\"}, stage)",
         "hide": 0,
@@ -1975,14 +2036,10 @@
         "type": "query"
       },
       {
-        "current": {
-          "selected": true,
-          "text": "All",
-          "value": "$__all"
-        },
+        "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "PBFA97CFB590B2093"
+          "uid": "${DS_PROMETHEUS}"
         },
         "definition": "label_values(argo_workflows_operation_time{pdname=~\"$Product\", stage=~\"$Stage\"}, opname)",
         "hide": 0,
@@ -2002,18 +2059,10 @@
         "type": "query"
       },
       {
-        "current": {
-          "selected": true,
-          "text": [
-            "All"
-          ],
-          "value": [
-            "$__all"
-          ]
-        },
+        "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "PBFA97CFB590B2093"
+          "uid": "${DS_PROMETHEUS}"
         },
         "definition": "label_values(argo_workflows_operation_counter{pname=~\"$Product\", status=\"Failed\"}, pname)",
         "hide": 2,
@@ -2033,14 +2082,10 @@
         "type": "query"
       },
       {
-        "current": {
-          "selected": false,
-          "text": "All",
-          "value": "$__all"
-        },
+        "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "PBFA97CFB590B2093"
+          "uid": "${DS_PROMETHEUS}"
         },
         "definition": "label_values(argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", status=~\"Failed\"}, stage)",
         "hide": 2,
@@ -2060,14 +2105,10 @@
         "type": "query"
       },
       {
-        "current": {
-          "selected": false,
-          "text": "All",
-          "value": "$__all"
-        },
+        "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "PBFA97CFB590B2093"
+          "uid": "${DS_PROMETHEUS}"
         },
         "definition": "label_values(argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", opname=~\"$Operation\", status=~\"Failed\"}, opname)",
         "hide": 2,
@@ -2089,7 +2130,7 @@
     ]
   },
   "time": {
-    "from": "now-2d",
+    "from": "now-5m",
     "to": "now"
   },
   "timepicker": {
@@ -2120,6 +2161,6 @@
   "timezone": "browser",
   "title": "IUF Timing Dashboard",
   "uid": "Timing",
-  "version": 1,
+  "version": 2,
   "weekStart": ""
 }
