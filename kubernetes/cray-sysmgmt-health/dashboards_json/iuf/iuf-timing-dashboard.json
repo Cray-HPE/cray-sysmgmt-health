@@ -155,10 +155,10 @@
           "expr": "argo_workflows_operation_counter{pname=~\"$Product\"}",
           "format": "table",
           "hide": false,
-          "instant": false,
+          "instant": true,
           "intervalFactor": 2,
           "legendFormat": "__auto",
-          "range": true,
+          "range": false,
           "refId": "A",
           "step": 240
         }
@@ -253,10 +253,10 @@
           "expr": "argo_workflows_operation_counter{pname=~\"$FailedProducts\", status=\"Failed\"}",
           "format": "table",
           "hide": false,
-          "instant": false,
+          "instant": true,
           "intervalFactor": 1,
           "legendFormat": "__auto",
-          "range": true,
+          "range": false,
           "refId": "A",
           "step": 900
         }
@@ -334,10 +334,10 @@
           "expr": "argo_workflows_operation_counter{pname=~\"$Product\", pname!~\"$FailedProducts\", status=\"Succeeded\"}",
           "format": "table",
           "hide": false,
-          "instant": false,
+          "instant": true,
           "intervalFactor": 2,
           "legendFormat": "__auto",
-          "range": true,
+          "range": false,
           "refId": "A",
           "step": 240
         }
@@ -416,10 +416,10 @@
           "expr": "argo_workflows_operation_counter{pname=~\"$Product\", pname=~\"$FailedProducts\", status=\"Failed\"}",
           "format": "table",
           "hide": false,
-          "instant": false,
+          "instant": true,
           "intervalFactor": 2,
           "legendFormat": "__auto",
-          "range": true,
+          "range": false,
           "refId": "A",
           "step": 240
         }
@@ -503,7 +503,7 @@
           "instant": true,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "",
+          "legendFormat": "__auto",
           "range": false,
           "refId": "A",
           "step": 900
@@ -620,6 +620,7 @@
           "format": "table",
           "hide": false,
           "instant": true,
+          "legendFormat": "__auto",
           "range": false,
           "refId": "A"
         },
@@ -746,10 +747,10 @@
           "expr": "argo_workflows_operation_counter{pname=~\"$Product\",stage=~\"$Stage\"}",
           "format": "table",
           "hide": false,
-          "instant": false,
+          "instant": true,
           "intervalFactor": 2,
           "legendFormat": "__auto",
-          "range": true,
+          "range": false,
           "refId": "A",
           "step": 240
         }
@@ -926,10 +927,10 @@
           "expr": "argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", stage!~\"$FailedStages\", status=\"Succeeded\"}",
           "format": "table",
           "hide": false,
-          "instant": false,
+          "instant": true,
           "intervalFactor": 2,
           "legendFormat": "__auto",
-          "range": true,
+          "range": false,
           "refId": "A",
           "step": 240
         }
@@ -1008,10 +1009,10 @@
           "expr": "argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\" ,stage=~\"$FailedStages\", status=\"Failed\"}",
           "format": "table",
           "hide": false,
-          "instant": false,
+          "instant": true,
           "intervalFactor": 2,
           "legendFormat": "__auto",
-          "range": true,
+          "range": false,
           "refId": "A",
           "step": 240
         }
@@ -1213,6 +1214,7 @@
           "format": "table",
           "hide": false,
           "instant": true,
+          "legendFormat": "__auto",
           "range": false,
           "refId": "A"
         },
@@ -1340,10 +1342,10 @@
           "expr": "argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", opname=~\"$Operation\"}",
           "format": "table",
           "hide": false,
-          "instant": false,
+          "instant": true,
           "intervalFactor": 2,
           "legendFormat": "__auto",
-          "range": true,
+          "range": false,
           "refId": "A",
           "step": 240
         }
@@ -1438,10 +1440,10 @@
           "expr": "argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", opname=~\"$Operation\", opname=~\"$FailedOperations\", status=~\"Failed\"}",
           "format": "table",
           "hide": false,
-          "instant": false,
+          "instant": true,
           "intervalFactor": 1,
           "legendFormat": "__auto",
-          "range": true,
+          "range": false,
           "refId": "A",
           "step": 900
         }
@@ -1520,10 +1522,10 @@
           "expr": "argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", opname=~\"$Operation\", opname!~\"$FailedOperations\", status=\"Succeeded\"}",
           "format": "table",
           "hide": false,
-          "instant": false,
+          "instant": true,
           "intervalFactor": 2,
           "legendFormat": "__auto",
-          "range": true,
+          "range": false,
           "refId": "A",
           "step": 240
         }
@@ -1602,10 +1604,10 @@
           "expr": "argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", opname=~\"$Operation\", opname=~\"$FailedOperations\", status=\"Failed\"}",
           "format": "table",
           "hide": false,
-          "instant": false,
+          "instant": true,
           "intervalFactor": 2,
           "legendFormat": "__auto",
-          "range": true,
+          "range": false,
           "refId": "A",
           "step": 240
         }
@@ -1637,7 +1639,6 @@
             "fixedColor": "orange",
             "mode": "fixed"
           },
-          "decimals": 2,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -1658,16 +1659,16 @@
         "x": 19,
         "y": 23
       },
-      "id": 20,
+      "id": 366,
       "links": [],
       "options": {
         "colorMode": "value",
         "graphMode": "area",
-        "justifyMode": "center",
+        "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
-            "sum"
+            "lastNotNull"
           ],
           "fields": "/^Value$/",
           "values": false
@@ -1690,7 +1691,7 @@
           "instant": true,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "",
+          "legendFormat": "__auto",
           "range": false,
           "refId": "A",
           "step": 900
@@ -1700,25 +1701,16 @@
       "transformations": [
         {
           "id": "filterFieldsByName",
-          "options": {
-            "include": {
-              "names": [
-                "Value",
-                "opname"
-              ]
-            }
-          }
+          "options": {}
         },
         {
-          "id": "convertFieldType",
+          "id": "reduce",
           "options": {
-            "conversions": [
-              {
-                "destinationType": "number",
-                "targetField": "Value"
-              }
-            ],
-            "fields": {}
+            "includeTimeField": false,
+            "mode": "reduceFields",
+            "reducers": [
+              "sum"
+            ]
           }
         }
       ],
@@ -1803,6 +1795,7 @@
           "format": "table",
           "hide": false,
           "instant": true,
+          "legendFormat": "__auto",
           "range": false,
           "refId": "A"
         },
@@ -1932,10 +1925,11 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "exemplar": true,
+          "exemplar": false,
           "expr": "argo_workflows_operation_time{pdname=~\"$Product\", stage=~\"$Stage\", opname=~\"$Operation\"}",
           "format": "table",
-          "range": true,
+          "instant": true,
+          "range": false,
           "refId": "A"
         }
       ],
@@ -2136,7 +2130,7 @@
     ]
   },
   "time": {
-    "from": "now-2d",
+    "from": "now-5m",
     "to": "now"
   },
   "timepicker": {
@@ -2167,6 +2161,6 @@
   "timezone": "browser",
   "title": "IUF Timing Dashboard",
   "uid": "Timing",
-  "version": 1,
+  "version": 2,
   "weekStart": ""
 }
