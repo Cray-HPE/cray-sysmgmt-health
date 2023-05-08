@@ -33,6 +33,11 @@ spec:
   selector:
     matchLabels:
       app: grok-exporter
+  strategy:
+    rollingUpdate:
+      maxSurge: 35%
+      maxUnavailable: 35%
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -57,6 +62,15 @@ spec:
                 operator: In
                 values:
                 - ncn-m003
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - grok-exporter
+            topologyKey: "kubernetes.io/hostname"
       containers:
         - name: grok-exporter
           image: artifactory.algol60.net/csm-docker/stable/docker.io/grok-exporter/grok-exporter:latest
