@@ -1,0 +1,69 @@
+{{- /*
+MIT License
+
+(C) Copyright 2023 Hewlett Packard Enterprise Development LP
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+*/}}
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "cray-sysmgmt-health.fullname" . }}-thanos-compactor
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: thanos-compactor
+    thanos-peer: "true"
+spec:
+  serviceName: "cray-sysmgmt-health-thanos-compactor"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: thanos-compactor
+      thanos-peer: "true"
+  template:
+    metadata:
+      labels:
+        app: thanos-compactor
+        thanos-peer: "true"
+    spec:
+      containers:
+      - name: thanos-compactor
+        image: artifactory.algol60.net/csm-docker/stable/quay.io/thanos:v0.31.0
+        args:
+        - "compact"
+        - "--log.level=debug"
+        - "--retention.resolution-raw={{.Values.thanosCompactor.resolutionraw}}"
+        - "--retention.resolution-5m={{.Values.thanosCompactor.resolution5m}}"
+        - "--retention.resolution-1h={{.Values.thanosCompactor.resolution1h}}"
+        - "--data-dir=/var/thanos/store"
+        - "--objstore.config-file=/etc/conf/objstorage.yaml"
+        - "--wait"
+        ports:
+        - name: http
+          containerPort: 10902
+        volumeMounts:
+        - name: object-storage
+          mountPath: /etc/conf/
+          readOnly: false
+      volumes:
+      - name: object-storage
+        secret:
+          secretName: thanos-secret
+
