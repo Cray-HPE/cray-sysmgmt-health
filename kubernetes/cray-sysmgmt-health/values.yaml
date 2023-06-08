@@ -89,7 +89,7 @@ kube-prometheus-stack:
         image:
           registry: artifactory.algol60.net
           repository: csm-docker/stable/docker.io/jettech/kube-webhook-certgen
-          tag: v1.2.1
+          tag: v1.3.0
           pullPolicy: IfNotPresent
 
     image:
