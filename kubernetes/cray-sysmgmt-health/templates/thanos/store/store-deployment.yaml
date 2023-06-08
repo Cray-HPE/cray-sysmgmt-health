@@ -1,0 +1,76 @@
+{{- /*
+MIT License
+
+(C) Copyright 2023 Hewlett Packard Enterprise Development LP
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+*/}}
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "cray-sysmgmt-health.fullname" . }}-thanos-store
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: thanos-store
+    app.kubernetes.io/name: thanos-store
+spec:
+  serviceName: "cray-sysmgmt-health-thanos-store"
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: thanos-store
+      app: thanos-store
+  template:
+    metadata:
+      labels:
+        app: thanos-store
+        app.kubernetes.io/name: thanos-store
+    spec:
+      containers:
+      - name: thanos-store
+        image: artifactory.algol60.net/csm-docker/stable/quay.io/thanos:v0.31.0
+        args:
+        - "store"
+        - "--log.level=debug"
+        - "--data-dir=/var/thanos/store"
+        - "--grpc-address=0.0.0.0:10901"
+        - "--http-address=0.0.0.0:10902"
+        - "--objstore.config-file=/etc/conf/objstorage.yaml"
+        livenessProbe:
+          failureThreshold: 8
+          httpGet:
+            path: /-/healthy
+            port: 10902
+            scheme: HTTP
+          periodSeconds: 30
+        ports:
+        - name: http
+          containerPort: 10902
+        - name: grpc
+          containerPort: 10901
+        volumeMounts:
+        - name: object-storage
+          mountPath: /etc/conf/
+          readOnly: false
+      volumes:
+      - name: object-storage
+        secret:
+          secretName: thanos-secret
+

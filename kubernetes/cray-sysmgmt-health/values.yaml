@@ -29,6 +29,19 @@ global:
     create: true
     pspEnabled: true
 
+thanosSecret:
+  configThanos:
+    alertmanagers:
+      - static_configs: ["cray-sysmgmt-health-kube-p-alertmanager.sysmgmt-health.svc.cluster.local:9093"]
+        scheme: http
+        timeout: 30s
+        api_version: v1
+
+thanosCompactor:
+  resolutionraw: 0d
+  resolution5m: 0d
+  resolution1h: 0d
+
 kubectl:
   image:
     repository: artifactory.algol60.net/csm-docker/stable/docker-kubectl
@@ -64,6 +77,10 @@ prometheus-snmp-exporter:
 
 kube-prometheus-stack:
 
+  thanos:
+    enabled: true
+    thanosSpec:
+      externalAuthority: thanos.local
 
   prometheusOperator:
     admissionWebhooks:
@@ -102,6 +119,12 @@ kube-prometheus-stack:
 
   prometheus:
     prometheusSpec:
+      replicas: 2
+      shards: 2
+      volumes:
+        - name: object-storage
+          secret:
+            secretName: thanos-secret
       remoteWrite:
         - url: http://prometheus-kafka-adapter.sma.svc.cluster.local:80/receive
       image:
@@ -110,7 +133,12 @@ kube-prometheus-stack:
         tag: v2.41.0
       # Enable administrative HTTP API, 'cause why not?
       enableAdminAPI: true
-
+      thanos:
+        image: artifactory.algol60.net/csm-docker/stable/quay.io/thanos:v0.31.0
+        objectStorageConfigFile: /etc/conf/objstorage.yaml
+        volumeMounts:
+          - mountPath: /etc/conf/
+            name: object-storage
       # Configure external hostname for Istio ingress
       # externalAuthority: prometheus-kube.local
       # externalUrl: https://prometheus-kube.local/
@@ -234,6 +262,92 @@ kube-prometheus-stack:
         #   static_configs:
         #     - targets:
         #       - 'cray-ceph-monitoring-prometheus.ceph-monitoring:9090'
+    thanosService:
+      enabled: true
+      annotations: {}
+      labels: {}
+      externalTrafficPolicy: Cluster
+      type: ClusterIP
+      portName: grpc
+      port: 10901
+      targetPort: "grpc"
+      httpPortName: http
+      httpPort: 10902
+      targetHttpPort: "http"
+      clusterIP: ""
+      selector:
+        app.kubernetes.io/name: prometheus
+    thanosServiceMonitor:
+      enabled: true
+      interval:
+  thanosRuler:
+    enabled: true
+    annotations: {}
+    serviceAccount:
+      create: true
+      name: ""
+      annotations: {}
+    podDisruptionBudget:
+      enabled: true
+      minAvailable: 1
+      maxUnavailable: ""
+    service:
+      annotations: {}
+      labels: {}
+      clusterIP: ""
+      port: 10902
+      targetPort: 10902
+      loadBalancerIP: ""
+      loadBalancerSourceRanges: []
+      externalTrafficPolicy: Cluster
+      type: ClusterIP
+      additionalPorts:
+      - name: grpc
+        port: 10901
+        targetPort: 10901
+        protocol: TCP
+    serviceMonitor:
+      interval: ""
+      selfMonitor: true
+      sampleLimit: 0
+      targetLimit: 0
+      labelLimit: 0
+      labelNameLengthLimit: 0
+      labelValueLengthLimit: 0
+      proxyUrl: ""
+      scheme: ""
+      tlsConfig: {}
+      bearerTokenFile:
+    thanosRulerSpec:
+      portName: http
+      alertmanagersConfig:
+        key: alertmanager-thanos.yaml
+        name: thanos-cray-sysmgmt-health-alertmanager
+      podMetadata: {}
+      image:
+        registry: artifactory.algol60.net
+        repository: csm-docker/stable/quay.io/thanos
+        tag: v0.31.0
+        sha: ""
+      ruleNamespaceSelector: {}
+      ruleSelectorNilUsesHelmValues: true
+      ruleSelector:
+        matchLabels:
+          release: cray-sysmgmt-health
+      logFormat: logfmt
+      logLevel: info
+      replicas: 1
+      retention: 24h
+      evaluationInterval: ""
+      storage:
+        volumeClaimTemplate:
+          spec:
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 250Gi
+      queryEndpoints:
+        - dnssrv+_http._tcp.cray-sysmgmt-health-thanos-query.sysmgmt-health.svc.cluster.local
 
   alertmanager:
 
@@ -318,13 +432,16 @@ kube-prometheus-stack:
         defaultDatasourceEnabled: true
 
     datasources:
-      datasources.yaml:
+      datasource.yaml:
         apiVersion: 1
+        deleteDatasources:
+        - name: Prometheus
         datasources:
-        - name: istio-monitoring
+        - name: thanos
           type: prometheus
-          url: http://cray-sysmgmt-health-kube-p-prometheus:9090
+          url: http://cray-sysmgmt-health-thanos-query:9090
           access: proxy
+          isDefault: true
 
     testFramework:
       image: artifactory.algol60.net/csm-docker/stable/docker.io/bats/bats

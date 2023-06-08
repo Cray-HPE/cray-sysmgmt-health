@@ -68,6 +68,15 @@ Create the name of the service account to use
 {{- end -}}
 {{- end -}}
 
+{{/* Prometheus custom resource instance name */}}
+{{- define "kube-prometheus-stack.prometheus.crname" -}}
+{{- if .Values.cleanPrometheusOperatorObjectNames }}
+{{- include "kube-prometheus-stack.fullname" . }}
+{{- else }}
+{{- print (include "kube-prometheus-stack.fullname" .) "-prom" }}
+{{- end }}
+{{- end }}
+
 {{- define "cray-sysmgmt-health.kube-prometheus-stack.grafana.fullname" -}}
 {{- if (index .Values "kube-prometheus-stack" "grafana" "fullnameOverride") -}}
 {{- (index .Values "kube-prometheus-stack" "grafana" "fullnameOverride") | trunc 63 | trimSuffix "-" -}}
