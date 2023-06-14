@@ -42,10 +42,20 @@ spec:
     spec:
       containers:
         - name: canu-test
-          image: artifactory.algol60.net/csm-docker/stable/cray-canu/canu-test:1.6.35
+          image: artifactory.algol60.net/csm-docker/stable/cray-canu/canu-test:1.6.36
           env:
           - name: CRAYENV
             value: "k8s"
+          - name: USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "cray-sysmgmt-health.fullname" . }}-canu-test-secrets
+                key: USERNAME
+          - name: PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "cray-sysmgmt-health.fullname" . }}-canu-test-secrets
+                key: PASSWORD
           ports:
             - containerPort: 8080
           volumeMounts:
