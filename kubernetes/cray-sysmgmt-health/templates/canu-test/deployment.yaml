@@ -42,7 +42,8 @@ spec:
     spec:
       containers:
         - name: canu-test
-          image: artifactory.algol60.net/csm-docker/stable/cray-canu/canu-test:1.6.36
+          image: {{ .Values.canuTest.image.repository }}:{{ .Values.canuTest.image.tag }}
+          imagePullPolicy: {{ .Values.canuTest.image.pullPolicy }}
           env:
           - name: CRAYENV
             value: "k8s"
@@ -62,8 +63,8 @@ spec:
             - name: logs
               mountPath: /logs/
         - name: grok
-          image: artifactory.algol60.net/csm-docker/stable/docker.io/grok-exporter/grok-exporter:latest
-          imagePullPolicy: Always
+          image: {{ .Values.grokExporter.image.repository }}:{{ .Values.grokExporter.image.tag }}
+          imagePullPolicy: {{ .Values.grokExporter.image.pullPolicy }}
           ports:
             - name: http
               containerPort: 9144

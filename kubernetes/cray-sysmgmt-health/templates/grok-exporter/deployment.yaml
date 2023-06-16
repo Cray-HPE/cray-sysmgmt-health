@@ -73,8 +73,8 @@ spec:
             topologyKey: "kubernetes.io/hostname"
       containers:
         - name: grok-exporter
-          image: artifactory.algol60.net/csm-docker/stable/docker.io/grok-exporter/grok-exporter:latest
-          imagePullPolicy: Always
+          image: {{ .Values.grokExporter.image.repository }}:{{ .Values.grokExporter.image.tag }}
+          imagePullPolicy: {{ .Values.grokExporter.image.pullPolicy }}
           ports:
             - name: http
               containerPort: 9144
