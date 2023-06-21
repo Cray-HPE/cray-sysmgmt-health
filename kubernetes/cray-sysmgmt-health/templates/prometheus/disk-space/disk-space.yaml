@@ -113,14 +113,14 @@ spec:
     - alert: NodeCpuUsageWarning
       annotations:
         message: 'CPU usage for NCN is above 70% (instance "{{`{{ $labels.instance }}`}}") '
-      expr: 100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[10m]) * 100) * on(instance) group_left(nodename) (node_uname_info)) > 70
+      expr: 100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[10m]) * 100)) > 70
       for: 2m
       labels:
         severity: warning
     - alert: NodeCpuUsageTooHigh
       annotations:
         message: 'CPU usage for NCN is above 80% (instance "{{`{{ $labels.instance }}`}}")'
-      expr: 100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[10m]) * 100) * on(instance) group_left(nodename) (node_uname_info)) > 80
+      expr: 100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[10m]) * 100)) > 80
       for: 2m
       labels:
         severity: critical

@@ -42,11 +42,30 @@ thanosCompactor:
   resolution5m: 0d
   resolution1h: 0d
 
+canuTest:
+  image:
+    repository: artifactory.algol60.net/csm-docker/stable/cray-canu/canu-test
+    tag: 1.6.36
+    pullPolicy: IfNotPresent
+
+grokExporter:
+  image:
+    repository: artifactory.algol60.net/csm-docker/stable/docker.io/grok-exporter/grok-exporter
+    tag: latest
+    pullPolicy: IfNotPresent
+
 kubectl:
   image:
     repository: artifactory.algol60.net/csm-docker/stable/docker-kubectl
     tag: 1.19.15
     pullPolicy: IfNotPresent
+
+thanos:
+  image:
+    repository: artifactory.algol60.net/csm-docker/stable/quay.io/thanos
+    tag: v0.31.0
+    pullPolicy: IfNotPresent
+    sha: ""
 
 # Enable/Disable subcharts
 # grafana:

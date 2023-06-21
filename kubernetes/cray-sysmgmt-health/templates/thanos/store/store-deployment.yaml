@@ -45,7 +45,8 @@ spec:
     spec:
       containers:
       - name: thanos-store
-        image: artifactory.algol60.net/csm-docker/stable/quay.io/thanos:v0.31.0
+        image: {{ .Values.thanos.image.repository }}:{{ .Values.thanos.image.tag }}
+        imagePullPolicy: {{ .Values.thanos.image.pullPolicy }}
         args:
         - "store"
         - "--log.level=debug"
