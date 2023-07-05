@@ -98,6 +98,7 @@ kube-prometheus-stack:
 
   thanos:
     enabled: true
+    s3_endpoint: "rgw-vip.nmn"
     thanosSpec:
       externalAuthority: thanos.local
 
