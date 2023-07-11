@@ -68,7 +68,7 @@
       "asDropdown": true,
       "icon": "external link",
       "tags": [
-        "monitoring-services"
+        "kafka"
       ],
       "title": "Monitoring Services",
       "type": "dashboards"
@@ -6867,8 +6867,7 @@
   "schemaVersion": 37,
   "style": "dark",
   "tags": [
-    "monitoring-services",
-    "SIM"
+    "kafka"
   ],
   "templating": {
     "list": [

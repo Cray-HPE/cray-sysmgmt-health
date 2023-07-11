@@ -261,9 +261,11 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
+          "editorMode": "code",
           "expr": "zookeeper_outstandingrequests{job=\"sysmgmt-health/kafka-resources-metrics\"}",
           "interval": "",
           "legendFormat": "{{server_id}}:{{member_type}} ({{instance}})",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -343,9 +345,11 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
+          "editorMode": "code",
           "expr": "sum(zookeeper_numaliveconnections{job=\"sysmgmt-health/kafka-resources-metrics\"})",
           "interval": "",
           "legendFormat": "",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -549,7 +553,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "irate(process_cpu_seconds_total{job=\"sysmgmt-health/kafka-resources-metrics\"}[5m])*100",
+          "expr": "irate(process_cpu_seconds_total{job=\"sysmgmt-health/kafka-resources-metrics\", container=\"zookeeper\"}[5m])*100",
           "interval": "",
           "legendFormat": "{{instance}}",
           "range": true,
@@ -650,9 +654,11 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum without(area)(jvm_memory_bytes_used{job=\"sysmgmt-health/kafka-resources-metrics\"})",
+          "editorMode": "code",
+          "expr": "sum without(area)(jvm_memory_bytes_used{job=\"sysmgmt-health/kafka-resources-metrics\", container=\"zookeeper\"})",
           "interval": "",
           "legendFormat": "Used:{{instance}}",
+          "range": true,
           "refId": "A"
         },
         {
@@ -660,9 +666,11 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "jvm_memory_bytes_max{job=\"sysmgmt-health/kafka-resources-metrics\",area=\"heap\"}",
+          "editorMode": "code",
+          "expr": "jvm_memory_bytes_max{job=\"sysmgmt-health/kafka-resources-metrics\", container=\"zookeeper\", area=\"heap\"}",
           "interval": "",
           "legendFormat": "Max:{{instance}}",
+          "range": true,
           "refId": "B"
         }
       ],
@@ -761,9 +769,11 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum without(gc)(rate(jvm_gc_collection_seconds_sum{job=\"sysmgmt-health/kafka-resources-metrics\"}[5m]))",
+          "editorMode": "code",
+          "expr": "sum without(gc)(rate(jvm_gc_collection_seconds_sum{job=\"sysmgmt-health/kafka-resources-metrics\", container=\"zookeeper\"}[5m]))",
           "interval": "",
           "legendFormat": "{{instance}}",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -1090,14 +1100,13 @@
   "schemaVersion": 37,
   "style": "dark",
   "tags": [
-    "monitoring-services",
-    "SIM"
+    "kafka"
   ],
   "templating": {
     "list": [
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": "default",
           "value": "default"
         },
@@ -1136,6 +1145,6 @@
   "timezone": "",
   "title": "Zookeeper",
   "uid": "zookeeper",
-  "version": 5,
+  "version": 1,
   "weekStart": ""
 }
