@@ -360,6 +360,8 @@ prometheus-operator:
       keyFile: "/etc/prometheus/secrets/etcd-client-cert/etcd-client-key"
 
   prometheus-node-exporter:
+    podAnnotations:
+      container.apparmor.security.beta.kubernetes.io/node-exporter: "unconfined"
 
     image:
       repository: artifactory.algol60.net/csm-docker/stable/quay.io/prometheus/node-exporter
