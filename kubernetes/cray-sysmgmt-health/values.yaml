@@ -41,6 +41,27 @@ thanosCompactor:
   resolutionraw: 0d
   resolution5m: 0d
   resolution1h: 0d
+  resources:
+    limits:
+      memory: 4Gi
+    requests:
+      memory: 2Gi
+
+thanosQuery:
+  resources:
+    limits:
+      cpu: "6"
+      memory: 12Gi
+    requests:
+      cpu: "1"
+      memory: 6Gi
+
+thanosStore:
+  resources:
+    limits:
+      memory: 15Gi
+    requests:
+      memory: 2Gi
 
 canuTest:
   image:
@@ -168,7 +189,7 @@ kube-prometheus-stack:
         - etcd-client-cert
 
       # Adjust retention period consistent with provisioned storage (see next)
-      retention: 48h
+      retention: 6h
 
       # Configure persistent storage for Prometheus instances.
       storageSpec:
@@ -191,6 +212,10 @@ kube-prometheus-stack:
       ruleSelector:
         matchLabels:
           release: cray-sysmgmt-health
+      resources:
+        requests:
+          cpu: '0.2'
+          memory: 0.5Gi
 
       additionalScrapeConfigs:
         # Scrape containerd metrics
