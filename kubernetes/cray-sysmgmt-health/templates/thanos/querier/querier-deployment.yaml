@@ -60,4 +60,8 @@ spec:
           containerPort: 10901
         - name: cluster
           containerPort: 10900
+        {{- with .Values.thanosQuery.resources }}
+        resources:
+          {{- toYaml . | nindent 12 }}
+        {{- end }}
 

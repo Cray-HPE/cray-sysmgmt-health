@@ -59,6 +59,10 @@ spec:
         ports:
         - name: http
           containerPort: 10902
+        {{- with .Values.thanosCompactor.resources }}
+        resources:
+          {{- toYaml . | nindent 12 }}
+        {{- end }}
         volumeMounts:
         - name: object-storage
           mountPath: /etc/conf/
