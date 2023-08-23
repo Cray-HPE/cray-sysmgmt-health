@@ -540,8 +540,20 @@ kube-prometheus-stack:
       create: true
       pspEnabled: true
 
-    podAnnotations:
-      container.apparmor.security.beta.kubernetes.io/node-exporter: "unconfined"
+    # podAnnotations:
+      # container.apparmor.security.beta.kubernetes.io/node-exporter: "unconfined"
+
+    containerSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 65534
+    allowPrivilegeEscalation: true
+    capabilities:
+      add:
+      - SYS_MODULE
+      - NET_ADMIN
+      - SYS_ADMIN
+      - SYS_CHROOT
+      - SYS_PTRACE
 
     image:
       repository: artifactory.algol60.net/csm-docker/stable/quay.io/prometheus/node-exporter
