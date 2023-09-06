@@ -498,7 +498,7 @@ cephExporter:
     relabelings: {}
 
 uanNodeExporter:
-  enabled: true
+  enabled: false
   endpoints: []
   service:
     port: 9100
