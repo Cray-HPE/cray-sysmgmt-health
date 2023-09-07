@@ -707,6 +707,24 @@ cephExporter:
     metricsRelabelings: {}
     relabelings: {}
 
+uanNodeExporter:
+  enabled: false
+  endpoints: []
+  service:
+    port: 9100
+    targetPort: 9100
+  serviceMonitor:
+    interval: 30s
+    scheme: http
+    # honor_labels: false
+    # serverName: ""
+    # caFile: ""
+    # certFile: ""
+    # keyFile: ""
+    insecureSkipVerify: false
+    metricsRelabelings: {}
+    relabelings: {}
+
 cephNodeExporter:
   enabled: true
   endpoints: []
