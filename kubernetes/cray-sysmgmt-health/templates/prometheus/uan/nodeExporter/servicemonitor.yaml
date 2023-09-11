@@ -1,0 +1,75 @@
+#
+# MIT License
+#
+# (C) Copyright 2021-2022 Hewlett Packard Enterprise Development LP
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+#
+{{- if .Values.uanNodeExporter.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ template "cray-sysmgmt-health.fullname" . }}-uan-node-exporter
+  labels:
+    app: {{ template "cray-sysmgmt-health.name" . }}-uan-node-exporter
+    release: {{ template "cray-sysmgmt-health.name" . }}
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "cray-sysmgmt-health.name" . }}-uan-node-exporter
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace | quote }}
+  endpoints:
+  - port: http-metrics
+    {{- if .Values.uanNodeExporter.serviceMonitor.interval }}
+    interval: {{ .Values.uanNodeExporter.serviceMonitor.interval }}
+    {{- end }}
+    {{- if .Values.uanNodeExporter.serviceMonitor.honor_labels }}
+    honorLabels: {{ .Values.uanNodeExporter.serviceMonitor.honor_labels }}
+    {{- end }}
+    bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+    {{- if eq .Values.uanNodeExporter.serviceMonitor.scheme "https" }}
+    scheme: https
+    tlsConfig:
+      {{- if .Values.uanNodeExporter.serviceMonitor.serverName }}
+      serverName: {{ .Values.uanNodeExporter.serviceMonitor.serverName }}
+      {{- end }}
+      {{- if .Values.uanNodeExporter.serviceMonitor.caFile }}
+      caFile: {{ .Values.uanNodeExporter.serviceMonitor.caFile }}
+      {{- end }}
+      {{- if  .Values.uanNodeExporter.serviceMonitor.certFile }}
+      certFile: {{ .Values.uanNodeExporter.serviceMonitor.certFile }}
+      {{- end }}
+      {{- if .Values.uanNodeExporter.serviceMonitor.keyFile }}
+      keyFile: {{ .Values.uanNodeExporter.serviceMonitor.keyFile }}
+      {{- end}}
+      insecureSkipVerify: {{ .Values.uanNodeExporter.serviceMonitor.insecureSkipVerify }}
+    {{- end }}
+{{- if .Values.uanNodeExporter.serviceMonitor.metricRelabelings }}
+    metricRelabelings:
+{{ tpl (toYaml .Values.uanNodeExporter.serviceMonitor.metricRelabelings | indent 4) . }}
+{{- end }}
+{{- if .Values.uanNodeExporter.serviceMonitor.relabelings }}
+    relabelings:
+{{ toYaml .Values.uanNodeExporter.serviceMonitor.relabelings | indent 4 }}
+{{- end }}
+{{- end }}
