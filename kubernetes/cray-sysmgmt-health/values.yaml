@@ -333,7 +333,7 @@ kube-prometheus-stack:
       name: ""
       annotations: {}
     podDisruptionBudget:
-      enabled: true
+      enabled: false
       minAvailable: 1
       maxUnavailable: ""
     service:
