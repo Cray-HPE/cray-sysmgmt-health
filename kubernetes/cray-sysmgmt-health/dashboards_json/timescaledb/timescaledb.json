@@ -25,7 +25,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 69,
+  "id": 70,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -2938,7 +2938,7 @@
     "list": [
       {
         "current": {
-          "selected": false,
+          "selected": true,
           "text": "thanos",
           "value": "thanos"
         },
@@ -3085,9 +3085,9 @@
       },
       {
         "current": {
-          "selected": false,
-          "text": "gitea-vcs-postgres-1",
-          "value": "gitea-vcs-postgres-1"
+          "selected": true,
+          "text": "spire-postgres-1",
+          "value": "spire-postgres-1"
         },
         "datasource": {
           "type": "prometheus",
@@ -3095,8 +3095,8 @@
         },
         "definition": "label_values(pg_up, pod)",
         "hide": 0,
-        "includeAll": false,
-        "label": "Cluster",
+        "includeAll": true,
+        "label": "Pod",
         "multi": false,
         "name": "Cluster",
         "options": [],
@@ -3143,7 +3143,7 @@
   },
   "timezone": "",
   "title": "TimescaleDB",
-  "uid": "5r5TNiMSz",
-  "version": 4,
+  "uid": "c-BNy3MSk",
+  "version": 3,
   "weekStart": ""
 }
