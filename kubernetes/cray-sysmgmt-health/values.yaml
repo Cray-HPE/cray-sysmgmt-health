@@ -29,6 +29,20 @@ global:
     create: true
     pspEnabled: true
 
+logstash-exporter:
+  logstash:
+  ## @param logstash.url Logstash instance URL
+  ##
+    url: http://sma-logstash-sma-logstash-headless.sma.svc.cluster.local:9600
+
+  image:
+  ## @param image.repository Image repository
+  ##
+    repository: artifactory.algol60.net/csm-docker/stable/docker.io/kuskoman/logstash-exporter
+  ## @param image.tag Image tag, if not set the appVersion is used
+  ##
+    tag: v1.5.6
+
 thanosSecret:
   configThanos:
     alertmanagers:
@@ -699,6 +713,24 @@ cephExporter:
     interval: 30s
     scheme: http
     # honor_labels: true
+    # serverName: ""
+    # caFile: ""
+    # certFile: ""
+    # keyFile: ""
+    insecureSkipVerify: false
+    metricsRelabelings: {}
+    relabelings: {}
+
+logstashExporter:
+  enabled: true
+  endpoints: []
+  service:
+    port: 9198
+    targetPort: 9198
+  serviceMonitor:
+    interval: 30s
+    scheme: http
+    # honor_labels: false
     # serverName: ""
     # caFile: ""
     # certFile: ""
