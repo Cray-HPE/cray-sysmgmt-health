@@ -38,9 +38,9 @@ thanosSecret:
         api_version: v1
 
 thanosCompactor:
-  resolutionraw: 0d
-  resolution5m: 0d
-  resolution1h: 0d
+  resolutionraw: 15d
+  resolution5m: 15d
+  resolution1h: 15d
   resources:
     limits:
       memory: 4Gi
