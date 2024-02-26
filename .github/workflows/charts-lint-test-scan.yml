@@ -37,6 +37,8 @@ jobs:
       ct-config: |
         chart-dirs:
           - kubernetes
+        chart-repos:
+          - csm-algol60=https://artifactory.algol60.net/artifactory/csm-helm-charts
         validate-maintainers: false
       scan-chart-snyk-args: "--severity-threshold=high --policy-path=kubernetes/.snyk"
       scan-images: false
