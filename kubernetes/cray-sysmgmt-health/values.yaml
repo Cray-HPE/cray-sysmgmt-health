@@ -129,7 +129,20 @@ prometheus-snmp-exporter:
       - name: sw-spine-02
         target: 10.254.0.3
 
-kube-prometheus-stack:
+
+redfish-exporter:
+  serviceMonitor:
+    enabled: true
+    namespace: sysmgmt-health
+    selector:
+      prometheus: cray-sysmgmt-health-kube-p-prometheus
+      release: cray-sysmgmt-health
+
+    params:
+        target: ekjcf01n00.us.cray.com
+
+
+kube-promeheus-stack:
 
   thanos:
     enabled: true

@@ -50,6 +50,9 @@ dependencies:
 - name: logstash-exporter
   repository: https://artifactory.algol60.net/artifactory/csm-helm-charts
   version: 1.0.2
+- name: redfish-exporter
+  repository: https://artifactory.algol60.net/artifactory/csm-helm-charts
+  version: 0.1.1-20240304104318+b3b9bfb
 
 maintainers:
 - name: bklein
