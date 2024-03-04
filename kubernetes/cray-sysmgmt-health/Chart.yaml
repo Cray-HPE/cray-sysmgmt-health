@@ -47,6 +47,9 @@ dependencies:
 - name: prometheus-snmp-exporter
   repository: https://prometheus-community.github.io/helm-charts
   version: 1.1.0
+- name: redfish-exporter
+  repository: https://artifactory.algol60.net/artifactory/csm-helm-charts
+  version: 0.1.1-20240304104318+b3b9bfb
 maintainers:
 - name: bklein
 - name: brantk-hpe
