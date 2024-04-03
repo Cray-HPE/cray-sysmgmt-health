@@ -1,50 +1,4 @@
 {
-  "__inputs": [],
-  "__elements": {},
-  "__requires": [
-    {
-      "type": "panel",
-      "id": "gauge",
-      "name": "Gauge",
-      "version": ""
-    },
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "9.3.2"
-    },
-    {
-      "type": "panel",
-      "id": "heatmap",
-      "name": "Heatmap",
-      "version": ""
-    },
-    {
-      "type": "datasource",
-      "id": "prometheus",
-      "name": "Prometheus",
-      "version": "1.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "stat",
-      "name": "Stat",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "timeseries",
-      "name": "Time series",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "vonage-status-panel",
-      "name": "Status Panel",
-      "version": "1.0.11"
-    }
-  ],
   "annotations": {
     "list": [
       {
@@ -71,7 +25,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": null,
+  "id": 40,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -122,15 +76,14 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 3,
-        "w": 2,
+        "h": 4,
+        "w": 4,
         "x": 0,
         "y": 0
       },
       "hideTimeOverride": true,
       "id": 21,
       "interval": "1m",
-      "links": [],
       "maxDataPoints": 100,
       "options": {
         "colorMode": "background",
@@ -144,9 +97,11 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
-      "pluginVersion": "9.3.2",
+      "pluginVersion": "11.0.0",
       "targets": [
         {
           "datasource": {
@@ -164,33 +119,170 @@
       "type": "stat"
     },
     {
-      "colorMode": "Panel",
-      "colors": {
-        "crit": "rgb(255, 0, 0)",
-        "disable": "rgba(128, 128, 128, 0.9)",
-        "ok": "rgba(50, 128, 45, 0.9)",
-        "warn": "rgba(237, 129, 40, 0.9)"
-      },
-      "cornerRadius": 0,
       "datasource": {
         "uid": "$datasource"
       },
-      "displayName": "",
-      "flipCard": false,
-      "flipTime": 5,
-      "fontFormat": "Regular",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
       "gridPos": {
-        "h": 3,
-        "w": 2,
-        "x": 2,
+        "h": 4,
+        "w": 9,
+        "x": 4,
+        "y": 0
+      },
+      "id": 41,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "11.0.0",
+      "targets": [
+        {
+          "$$hashKey": "object:99",
+          "aggregation": "Last",
+          "alias": "In Quorum",
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "decimals": 2,
+          "displayAliasType": "Always",
+          "displayType": "Regular",
+          "displayValueWithAlias": "When Alias Displayed",
+          "expr": "sum(ceph_mon_quorum_status{instance=~\"$instance\"})",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "In Quorum",
+          "refId": "A",
+          "units": "none",
+          "valueHandler": "Text Only"
+        },
+        {
+          "$$hashKey": "object:100",
+          "aggregation": "Last",
+          "alias": "Total",
+          "crit": 1,
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "decimals": 2,
+          "displayAliasType": "Always",
+          "displayType": "Regular",
+          "displayValueWithAlias": "When Alias Displayed",
+          "expr": "count(ceph_mon_quorum_status{instance=~\"$instance\"})",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Total",
+          "refId": "B",
+          "units": "none",
+          "valueHandler": "Text Only",
+          "warn": 2
+        },
+        {
+          "$$hashKey": "object:101",
+          "aggregation": "Last",
+          "alias": "MONs out of Quorum",
+          "crit": 1.6,
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "decimals": 2,
+          "displayAliasType": "Warning / Critical",
+          "displayType": "Annotation",
+          "displayValueWithAlias": "Never",
+          "expr": "count(ceph_mon_quorum_status{instance=~\"$instance\"}) / sum(ceph_mon_quorum_status{instance=~\"$instance\"})",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "MONs out of Quorum",
+          "refId": "C",
+          "units": "none",
+          "valueHandler": "Number Threshold",
+          "warn": 1.1
+        }
+      ],
+      "title": "Monitors",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "uid": "$datasource"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 11,
+        "x": 13,
         "y": 0
       },
       "id": 43,
-      "isAutoScrollOnOverflow": false,
-      "isGrayOnNoData": false,
-      "isHideAlertsOnDisable": false,
-      "isIgnoreOKColors": false,
-      "links": [],
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "11.0.0",
       "targets": [
         {
           "$$hashKey": "object:189",
@@ -293,7 +385,7 @@
         }
       ],
       "title": "OSDs",
-      "type": "vonage-status-panel"
+      "type": "gauge"
     },
     {
       "datasource": {
@@ -341,14 +433,15 @@
       },
       "gridPos": {
         "h": 6,
-        "w": 4,
-        "x": 4,
-        "y": 0
+        "w": 6,
+        "x": 0,
+        "y": 4
       },
       "id": 47,
-      "links": [],
       "maxDataPoints": 100,
       "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
         "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
@@ -358,9 +451,10 @@
           "values": false
         },
         "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "showThresholdMarkers": true,
+        "sizing": "auto"
       },
-      "pluginVersion": "9.3.2",
+      "pluginVersion": "11.0.0",
       "targets": [
         {
           "datasource": {
@@ -383,9 +477,85 @@
       "fieldConfig": {
         "defaults": {
           "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 18,
+        "x": 6,
+        "y": 4
+      },
+      "id": 68,
+      "options": {
+        "displayMode": "gradient",
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "11.0.0",
+      "targets": [
+        {
+          "aggregation": "Last",
+          "alias": "Clients",
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "decimals": 2,
+          "displayAliasType": "Always",
+          "displayType": "Regular",
+          "displayValueWithAlias": "When Alias Displayed",
+          "expr": "ceph_mds_server_handle_client_session{instance=~\"$instance\"}",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Clients",
+          "refId": "A",
+          "units": "none",
+          "valueHandler": "Number Threshold"
+        }
+      ],
+      "title": "Client connections",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "uid": "$datasource"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -399,6 +569,148 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Avg Apply Latency"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#7eb26d",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 10
+      },
+      "id": 66,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "maxHeight": 600,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "9.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "expr": "quantile(0.95, ceph_osd_apply_latency_ms{instance=~\"$instance\"})",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Apply Latency P_95",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "expr": "quantile(0.95, ceph_osd_commit_latency_ms{instance=~\"$instance\"})",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Commit Latency P_95",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "expr": "avg(ceph_osd_apply_latency_ms{instance=~\"$instance\"})",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Avg Apply Latency",
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "expr": "avg(ceph_osd_commit_latency_ms{instance=~\"$instance\"})",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Avg Commit Latency",
+          "refId": "D"
+        }
+      ],
+      "title": "OSD Latencies",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "uid": "$datasource"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -567,13 +879,12 @@
         ]
       },
       "gridPos": {
-        "h": 6,
-        "w": 8,
-        "x": 8,
-        "y": 0
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 10
       },
       "id": 53,
-      "links": [],
       "options": {
         "legend": {
           "calcs": [],
@@ -582,6 +893,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
@@ -672,292 +984,7 @@
             "mode": "palette-classic"
           },
           "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "ms"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Avg Apply Latency"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "#7eb26d",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 8,
-        "x": 16,
-        "y": 0
-      },
-      "id": 66,
-      "links": [],
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "9.3.2",
-      "targets": [
-        {
-          "datasource": {
-            "uid": "$datasource"
-          },
-          "expr": "quantile(0.95, ceph_osd_apply_latency_ms{instance=~\"$instance\"})",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "Apply Latency P_95",
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "uid": "$datasource"
-          },
-          "expr": "quantile(0.95, ceph_osd_commit_latency_ms{instance=~\"$instance\"})",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "Commit Latency P_95",
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "uid": "$datasource"
-          },
-          "expr": "avg(ceph_osd_apply_latency_ms{instance=~\"$instance\"})",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "Avg Apply Latency",
-          "refId": "C"
-        },
-        {
-          "datasource": {
-            "uid": "$datasource"
-          },
-          "expr": "avg(ceph_osd_commit_latency_ms{instance=~\"$instance\"})",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "Avg Commit Latency",
-          "refId": "D"
-        }
-      ],
-      "title": "OSD Latencies",
-      "type": "timeseries"
-    },
-    {
-      "clusterName": "",
-      "colorMode": "Panel",
-      "colors": {
-        "crit": "rgba(245, 54, 54, 0.9)",
-        "disable": "rgba(128, 128, 128, 0.9)",
-        "ok": "rgba(50, 128, 45, 0.9)",
-        "warn": "rgba(237, 129, 40, 0.9)"
-      },
-      "cornerRadius": 1,
-      "datasource": {
-        "uid": "$datasource"
-      },
-      "displayName": "",
-      "flipCard": false,
-      "flipTime": 5,
-      "fontFormat": "Regular",
-      "gridPos": {
-        "h": 3,
-        "w": 2,
-        "x": 0,
-        "y": 3
-      },
-      "id": 41,
-      "isAutoScrollOnOverflow": false,
-      "isGrayOnNoData": false,
-      "isHideAlertsOnDisable": false,
-      "isIgnoreOKColors": false,
-      "links": [],
-      "targets": [
-        {
-          "$$hashKey": "object:99",
-          "aggregation": "Last",
-          "alias": "In Quorum",
-          "datasource": {
-            "uid": "$datasource"
-          },
-          "decimals": 2,
-          "displayAliasType": "Always",
-          "displayType": "Regular",
-          "displayValueWithAlias": "When Alias Displayed",
-          "expr": "sum(ceph_mon_quorum_status{instance=~\"$instance\"})",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "In Quorum",
-          "refId": "A",
-          "units": "none",
-          "valueHandler": "Text Only"
-        },
-        {
-          "$$hashKey": "object:100",
-          "aggregation": "Last",
-          "alias": "Total",
-          "crit": 1,
-          "datasource": {
-            "uid": "$datasource"
-          },
-          "decimals": 2,
-          "displayAliasType": "Always",
-          "displayType": "Regular",
-          "displayValueWithAlias": "When Alias Displayed",
-          "expr": "count(ceph_mon_quorum_status{instance=~\"$instance\"})",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "Total",
-          "refId": "B",
-          "units": "none",
-          "valueHandler": "Text Only",
-          "warn": 2
-        },
-        {
-          "$$hashKey": "object:101",
-          "aggregation": "Last",
-          "alias": "MONs out of Quorum",
-          "crit": 1.6,
-          "datasource": {
-            "uid": "$datasource"
-          },
-          "decimals": 2,
-          "displayAliasType": "Warning / Critical",
-          "displayType": "Annotation",
-          "displayValueWithAlias": "Never",
-          "expr": "count(ceph_mon_quorum_status{instance=~\"$instance\"}) / sum(ceph_mon_quorum_status{instance=~\"$instance\"})",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "MONs out of Quorum",
-          "refId": "C",
-          "units": "none",
-          "valueHandler": "Number Threshold",
-          "warn": 1.1
-        }
-      ],
-      "title": "Monitors",
-      "type": "vonage-status-panel"
-    },
-    {
-      "colorMode": "Disabled",
-      "colors": {
-        "crit": "rgba(245, 54, 54, 0.9)",
-        "disable": "rgba(128, 128, 128, 0.9)",
-        "ok": "rgba(50, 128, 45, 0.9)",
-        "warn": "rgba(237, 129, 40, 0.9)"
-      },
-      "cornerRadius": 0,
-      "datasource": {
-        "uid": "$datasource"
-      },
-      "displayName": "",
-      "flipCard": false,
-      "flipTime": 5,
-      "fontFormat": "Regular",
-      "gridPos": {
-        "h": 3,
-        "w": 2,
-        "x": 2,
-        "y": 3
-      },
-      "id": 68,
-      "isAutoScrollOnOverflow": false,
-      "isGrayOnNoData": false,
-      "isHideAlertsOnDisable": false,
-      "isIgnoreOKColors": false,
-      "links": [],
-      "targets": [
-        {
-          "aggregation": "Last",
-          "alias": "Clients",
-          "datasource": {
-            "uid": "$datasource"
-          },
-          "decimals": 2,
-          "displayAliasType": "Always",
-          "displayType": "Regular",
-          "displayValueWithAlias": "When Alias Displayed",
-          "expr": "ceph_mds_server_handle_client_session{instance=~\"$instance\"}",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "Clients",
-          "refId": "A",
-          "units": "none",
-          "valueHandler": "Number Threshold"
-        }
-      ],
-      "title": "Client connections",
-      "type": "vonage-status-panel"
-    },
-    {
-      "datasource": {
-        "uid": "$datasource"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "Read (-) / Write (+)",
@@ -971,6 +998,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -1022,10 +1050,9 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 6
+        "y": 19
       },
       "id": 45,
-      "links": [],
       "options": {
         "legend": {
           "calcs": [],
@@ -1034,6 +1061,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
@@ -1074,6 +1102,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": " Egress (-) / Ingress (+)",
@@ -1087,6 +1116,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -1125,10 +1155,9 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 6
+        "y": 19
       },
       "id": 62,
-      "links": [],
       "options": {
         "legend": {
           "calcs": [],
@@ -1137,6 +1166,7 @@
           "showLegend": false
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
@@ -1190,7 +1220,7 @@
         "h": 9,
         "w": 6,
         "x": 0,
-        "y": 15
+        "y": 28
       },
       "heatmap": {},
       "highlightCards": true,
@@ -1198,7 +1228,6 @@
       "legend": {
         "show": true
       },
-      "links": [],
       "options": {
         "calculate": true,
         "calculation": {},
@@ -1228,7 +1257,9 @@
         },
         "showValue": "never",
         "tooltip": {
-          "show": true,
+          "maxHeight": 600,
+          "mode": "single",
+          "showColorScale": false,
           "yHistogram": false
         },
         "yAxis": {
@@ -1237,7 +1268,7 @@
           "unit": "percentunit"
         }
       },
-      "pluginVersion": "9.3.2",
+      "pluginVersion": "11.0.0",
       "span": 12,
       "targets": [
         {
@@ -1303,7 +1334,7 @@
         "h": 9,
         "w": 6,
         "x": 6,
-        "y": 15
+        "y": 28
       },
       "heatmap": {},
       "highlightCards": true,
@@ -1311,7 +1342,6 @@
       "legend": {
         "show": true
       },
-      "links": [],
       "options": {
         "calculate": true,
         "calculation": {},
@@ -1341,7 +1371,9 @@
         },
         "showValue": "never",
         "tooltip": {
-          "show": true,
+          "maxHeight": 600,
+          "mode": "single",
+          "showColorScale": false,
           "yHistogram": false
         },
         "yAxis": {
@@ -1350,7 +1382,7 @@
           "unit": "none"
         }
       },
-      "pluginVersion": "9.3.2",
+      "pluginVersion": "11.0.0",
       "targets": [
         {
           "datasource": {
@@ -1389,6 +1421,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "Recovery Ops/s",
@@ -1402,6 +1435,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -1440,10 +1474,9 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 15
+        "y": 28
       },
       "id": 64,
-      "links": [],
       "options": {
         "legend": {
           "calcs": [],
@@ -1452,6 +1485,7 @@
           "showLegend": false
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
@@ -1473,9 +1507,8 @@
       "type": "timeseries"
     }
   ],
-  "refresh": "30s",
-  "schemaVersion": 37,
-  "style": "dark",
+  "refresh": "5m",
+  "schemaVersion": 39,
   "tags": [
     "ceph-exporter"
   ],
@@ -1483,7 +1516,7 @@
     "list": [
       {
         "current": {
-          "selected": false,
+          "selected": true,
           "text": "default",
           "value": "default"
         },
@@ -1504,9 +1537,9 @@
         "auto_count": 10,
         "auto_min": "1m",
         "current": {
-          "selected": false,
-          "text": "auto",
-          "value": "$__auto_interval_interval"
+          "selected": true,
+          "text": "10m",
+          "value": "10m"
         },
         "datasource": "$datasource",
         "hide": 0,
@@ -1516,7 +1549,7 @@
         "name": "interval",
         "options": [
           {
-            "selected": true,
+            "selected": false,
             "text": "auto",
             "value": "$__auto_interval_interval"
           },
@@ -1526,7 +1559,7 @@
             "value": "1m"
           },
           {
-            "selected": false,
+            "selected": true,
             "text": "10m",
             "value": "10m"
           },
@@ -1572,13 +1605,18 @@
           }
         ],
         "query": "1m,10m,30m,1h,6h,12h,1d,7d,14d,30d",
+        "queryValue": "",
         "refresh": 2,
         "skipUrlSync": false,
         "type": "interval"
       },
       {
         "allFormat": "glob",
-        "current": {},
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "$datasource"
@@ -1611,6 +1649,7 @@
     "from": "now-6h",
     "to": "now"
   },
+  "timeRangeUpdatedDuringEditOrView": false,
   "timepicker": {
     "refresh_intervals": [
       "5s",
@@ -1639,6 +1678,6 @@
   "timezone": "browser",
   "title": "Ceph - Cluster",
   "uid": "y6WZL2x4k",
-  "version": 2,
+  "version": 1,
   "weekStart": ""
 }

@@ -23,8 +23,8 @@
 #
 {{- range $key, $val := .Values.servicemonitors }}
 {{- if $val.enabled }}
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMServiceScrape
 metadata:
   {{- if $val.cluster }}
   name: {{ printf "%s-%s-%s-%s" (include "cray-sysmgmt-health.fullname" $)  $val.servicename $val.cluster "exporter"  | trunc 63 | trimSuffix "-"}}

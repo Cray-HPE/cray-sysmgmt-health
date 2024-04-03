@@ -25,9 +25,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 
 ---
-
-apiVersion: monitoring.coreos.com/v1
-kind: PodMonitor
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMPodScrape
 metadata:
   name: {{ template "cray-sysmgmt-health.fullname" . }}-kubernetes-pods
   labels:
@@ -39,7 +38,7 @@ spec:
     any: true
   selector: {}
   podMetricsEndpoints:
-  - relabelings:
+  - relabelConfigs:
 
     # This relabeling is needed because the operator adds the following
     # relabeling automatically and can't be told to not add it:

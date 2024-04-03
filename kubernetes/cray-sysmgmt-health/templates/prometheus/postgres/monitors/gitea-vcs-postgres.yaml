@@ -21,8 +21,8 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 #
-kind: ServiceMonitor
-apiVersion: monitoring.coreos.com/v1
+kind: VMServiceScrape
+apiVersion: operator.victoriametrics.com/v1beta1
 metadata:
   name: {{ template "cray-sysmgmt-health.fullname" . }}-gitea-vcs-postgres-exporter
   namespace: {{ .Values.giteaVcsPostgresExporter.serviceMonitor.namespace }}

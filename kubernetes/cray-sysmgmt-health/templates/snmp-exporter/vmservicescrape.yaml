@@ -1,0 +1,51 @@
+{{- if .Values.snmpExporter.enabled }}
+{{- range .Values.snmpExporter.params }}
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMServiceScrape
+metadata:
+  name: cray-sysmgmt-health-snmp-exporter-{{ .name }}
+  namespace: sysmgmt-health
+  labels:
+    helm.sh/chart: prometheus-snmp-exporter-1.1.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: metrics
+    app.kubernetes.io/part-of: prometheus-snmp-exporter
+    app.kubernetes.io/name: prometheus-snmp-exporter
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "0.19.0"
+    release: "cray-sysmgmt-health"
+spec:
+  endpoints:
+  - port: http
+    honorLabels: {{ $.Values.snmpExporter.honorLabels }}
+    path: {{ $.Values.snmpExporter.path }}
+    {{- if or .interval $.Values.snmpExporter.interval }}
+    interval: {{ .interval | default $.Values.snmpExporter.interval }}
+    {{- end }}
+    scrapeTimeout: {{ .scrapeTimeout | default $.Values.snmpExporter.scrapeTimeout }}
+    params:
+      module: {{ .module | default $.Values.snmpExporter.module }}
+      target:
+      - {{ .target }}
+    metricRelabelConfigs:
+      - sourceLabels: [instance]
+        targetLabel: instance
+        replacement: {{ .target }}
+      - sourceLabels: [target]
+        targetLabel: target
+        replacement: {{ .name }}
+        {{- range $targetLabel, $replacement := .additionalMetricsRelabels | default $.Values.snmpExporter.additionalMetricsRelabels }}
+      - targetLabel: {{ $targetLabel }}
+        replacement: {{ $replacement }}
+        {{- end }}
+    {{- if or .relabelings }}
+    relabelings: {{ toYaml .relabelings | default $.Values.snmpExporter.relabelings | nindent 8 }}
+    {{- end }}
+  jobLabel: "{{ $.Release.Name }}"
+  selector:
+    matchLabels:
+      {{- include "cray-sysmgmt-health.prometheus-snmp-exporter.selectorLabels" $ | indent 6 }}
+{{- end }}
+{{- end -}}
+

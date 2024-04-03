@@ -1,5 +1,5 @@
-apiVersion: monitoring.coreos.com/v1
-kind: PodMonitor
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMPodScrape
 metadata:
   name: cluster-operator-metrics
   labels:
@@ -16,8 +16,8 @@ spec:
   - path: /metrics
     port: http
 ---
-apiVersion: monitoring.coreos.com/v1
-kind: PodMonitor
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMPodScrape
 metadata:
   name: entity-operator-metrics
   labels:
@@ -35,8 +35,8 @@ spec:
     port: healthcheck
 
 ---
-apiVersion: monitoring.coreos.com/v1
-kind: PodMonitor
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMPodScrape
 metadata:
   name: kafka-resources-metrics
   labels:
@@ -54,7 +54,7 @@ spec:
   podMetricsEndpoints:
   - path: /metrics
     port: tcp-prometheus
-    relabelings:
+    relabelConfigs:
     - separator: ;
       regex: __meta_kubernetes_pod_label_(strimzi_io_.+)
       replacement: $1
