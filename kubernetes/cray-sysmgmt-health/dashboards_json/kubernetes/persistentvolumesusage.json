@@ -24,7 +24,8 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 21,
+  "id": 11,
+  "iteration": 1712242073505,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -51,8 +52,6 @@
             "mode": "palette-classic"
           },
           "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -214,7 +213,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "9.3.2",
+      "pluginVersion": "8.5.9",
       "targets": [
         {
           "datasource": {
@@ -240,8 +239,6 @@
             "mode": "palette-classic"
           },
           "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -403,7 +400,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "9.3.2",
+      "pluginVersion": "8.5.9",
       "targets": [
         {
           "datasource": {
@@ -435,7 +432,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PC96415006F908B67"
+        "uid": "${datasource}"
       },
       "fieldConfig": {
         "defaults": {
@@ -443,8 +440,6 @@
             "mode": "palette-classic"
           },
           "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -519,7 +514,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PC96415006F908B67"
+            "uid": "${datasource}"
           },
           "editorMode": "code",
           "expr": "(  sum without(instance, node) (kubelet_volume_stats_capacity_bytes{cluster=\"\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=\"nexus\", persistentvolumeclaim=\"nexus-data\"})  -  sum without(instance, node) (kubelet_volume_stats_available_bytes{cluster=\"\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=\"nexus\", persistentvolumeclaim=\"nexus-data\"}))",
@@ -530,7 +525,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PC96415006F908B67"
+            "uid": "${datasource}"
           },
           "editorMode": "code",
           "expr": "sum without(instance, node) (kubelet_volume_stats_available_bytes{cluster=\"\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=\"nexus\", persistentvolumeclaim=\"nexus-data\"})",
@@ -546,7 +541,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PC96415006F908B67"
+        "uid": "${datasource}"
       },
       "fieldConfig": {
         "defaults": {
@@ -606,12 +601,12 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "9.3.2",
+      "pluginVersion": "8.5.9",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PC96415006F908B67"
+            "uid": "${datasource}"
           },
           "editorMode": "code",
           "expr": "(  kubelet_volume_stats_capacity_bytes{cluster=\"\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=\"nexus\", persistentvolumeclaim=\"nexus-data\"}  -  kubelet_volume_stats_available_bytes{cluster=\"\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=\"nexus\", persistentvolumeclaim=\"nexus-data\"})/kubelet_volume_stats_capacity_bytes{cluster=\"\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=\"nexus\", persistentvolumeclaim=\"nexus-data\"}* 100",
@@ -624,8 +619,8 @@
       "type": "gauge"
     }
   ],
-  "refresh": "30m",
-  "schemaVersion": 37,
+  "refresh": "10s",
+  "schemaVersion": 36,
   "style": "dark",
   "tags": [
     "kubernetes-mixin"
@@ -683,8 +678,8 @@
       {
         "current": {
           "selected": false,
-          "text": "vault",
-          "value": "vault"
+          "text": "sysmgmt-health",
+          "value": "sysmgmt-health"
         },
         "datasource": {
           "type": "prometheus",
@@ -714,8 +709,8 @@
       {
         "current": {
           "selected": false,
-          "text": "vault-raft-cray-vault-0",
-          "value": "vault-raft-cray-vault-0"
+          "text": "prometheus-cray-sysmgmt-health-promet-prometheus-db-prometheus-cray-sysmgmt-health-promet-prometheus-0",
+          "value": "prometheus-cray-sysmgmt-health-promet-prometheus-db-prometheus-cray-sysmgmt-health-promet-prometheus-0"
         },
         "datasource": {
           "type": "prometheus",
@@ -744,7 +739,7 @@
     ]
   },
   "time": {
-    "from": "now-30m",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {
