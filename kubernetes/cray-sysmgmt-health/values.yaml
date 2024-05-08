@@ -173,8 +173,6 @@ kube-prometheus-stack:
         - name: object-storage
           secret:
             secretName: thanos-secret
-      remoteWrite:
-        - url: http://prometheus-kafka-adapter.sma.svc.cluster.local:80/receive
       image:
         registry: artifactory.algol60.net
         repository: csm-docker/stable/quay.io/prometheus/prometheus
@@ -576,6 +574,8 @@ kube-prometheus-stack:
       # tcpstat has potential performance impact
       - --collector.tcpstat
       - --collector.textfile.directory=/var/lib/node_exporter
+      - --collector.netstat.fields=^(.*_(InErrors|InErrs)|Ip_(Forwarding|DefaultTTL|InReceives|InHdrErrors|InAddrErrors|ForwDatagrams|InUnknownProtos|InDiscards|InDelivers|OutRequests|OutDiscards|OutNoRoutes|ReasmTimeout|ReasmReqds|ReasmOKs|ReasmFails|FragOKs|FragFails|FragCreates)|Ip(6|Ext)_(InOctets|OutOctets)|Icmp6?_(InMsgs|OutMsgs|InMsgs|InCsumErrors|InDestUnreachs|InTimeExcds|InParmProbs|InSrcQuenchs|InRedirects|InEchos|InEchoReps|InTimestamps|InTimestampReps|InAddrMasks|InAddrMaskReps|OutErrors|OutDestUnreachs|OutTimeExcds|OutParmProbs|OutSrcQuenchs|OutRedirects|OutEchos|OutEchoReps|OutTimestamps|OutTimestampReps|OutAddrMasks|OutAddrMaskReps)|IcmpMsg_(InType0|InType3|InType8|OutType0|OutType3|OutType8)|TcpExt_(Listen.*|Syncookies.*|TCPSynRetrans|TCPTimeouts)|Tcp_(ActiveOpens|InSegs|OutSegs|OutRsts|PassiveOpens|RetransSegs|CurrEstab|RtoAlgorithm|RtoMin|RtoMax|MaxConn|AttemptFails|EstabResets|InCsumErrors)|Udp(6|Lite)?_(InDatagrams|OutDatagrams|NoPorts|RcvbufEr|SndbufErrors|InCsumErrors|IgnoredMulti|MemErrors))$
+
     extraHostVolumeMounts:
       - mountPath: /var/run/dbus/system_bus_socket
         name: system-dbus-socket

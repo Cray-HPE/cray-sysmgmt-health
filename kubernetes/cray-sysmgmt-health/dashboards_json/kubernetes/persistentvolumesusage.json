@@ -1,32 +1,4 @@
 {
-  "__inputs": [],
-  "__elements": {},
-  "__requires": [
-    {
-      "type": "panel",
-      "id": "gauge",
-      "name": "Gauge",
-      "version": ""
-    },
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "9.3.2"
-    },
-    {
-      "type": "datasource",
-      "id": "prometheus",
-      "name": "Prometheus",
-      "version": "1.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "timeseries",
-      "name": "Time series",
-      "version": ""
-    }
-  ],
   "annotations": {
     "list": [
       {
@@ -52,10 +24,23 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": null,
+  "id": 21,
   "links": [],
   "liveNow": false,
   "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 11,
+      "panels": [],
+      "title": "Volume Space / Inodes Usage (Except Nexus)",
+      "type": "row"
+    },
     {
       "datasource": {
         "uid": "$datasource"
@@ -118,7 +103,7 @@
         "h": 7,
         "w": 18,
         "x": 0,
-        "y": 0
+        "y": 1
       },
       "id": 2,
       "links": [],
@@ -191,7 +176,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "rgba(50, 172, 45, 0.97)",
+                "color": "#32ac2df7",
                 "value": null
               },
               {
@@ -212,7 +197,7 @@
         "h": 7,
         "w": 6,
         "x": 18,
-        "y": 0
+        "y": 1
       },
       "id": 3,
       "links": [],
@@ -307,7 +292,7 @@
         "h": 7,
         "w": 18,
         "x": 0,
-        "y": 7
+        "y": 8
       },
       "id": 4,
       "links": [],
@@ -380,7 +365,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "rgba(50, 172, 45, 0.97)",
+                "color": "#2da029f7",
                 "value": null
               },
               {
@@ -401,7 +386,7 @@
         "h": 7,
         "w": 6,
         "x": 18,
-        "y": 7
+        "y": 8
       },
       "id": 5,
       "links": [],
@@ -433,9 +418,213 @@
       ],
       "title": "Volume inodes Usage",
       "type": "gauge"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 15
+      },
+      "id": 13,
+      "panels": [],
+      "title": "Nexus Volume Space Usage",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PC96415006F908B67"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 18,
+        "x": 0,
+        "y": 16
+      },
+      "id": 7,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "lastNotNull",
+            "max",
+            "min"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PC96415006F908B67"
+          },
+          "editorMode": "code",
+          "expr": "(  sum without(instance, node) (kubelet_volume_stats_capacity_bytes{cluster=\"\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=\"nexus\", persistentvolumeclaim=\"nexus-data\"})  -  sum without(instance, node) (kubelet_volume_stats_available_bytes{cluster=\"\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=\"nexus\", persistentvolumeclaim=\"nexus-data\"}))",
+          "legendFormat": "Used Space",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PC96415006F908B67"
+          },
+          "editorMode": "code",
+          "expr": "sum without(instance, node) (kubelet_volume_stats_available_bytes{cluster=\"\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=\"nexus\", persistentvolumeclaim=\"nexus-data\"})",
+          "hide": false,
+          "legendFormat": "Free Space",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "title": "Nexus Volume Space Usage",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PC96415006F908B67"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "null": {
+                  "index": 0,
+                  "text": "NA"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#32ac2df7",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 80
+              },
+              {
+                "color": "red",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 18,
+        "y": 16
+      },
+      "id": 9,
+      "options": {
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "9.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PC96415006F908B67"
+          },
+          "editorMode": "code",
+          "expr": "(  kubelet_volume_stats_capacity_bytes{cluster=\"\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=\"nexus\", persistentvolumeclaim=\"nexus-data\"}  -  kubelet_volume_stats_available_bytes{cluster=\"\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=\"nexus\", persistentvolumeclaim=\"nexus-data\"})/kubelet_volume_stats_capacity_bytes{cluster=\"\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=\"nexus\", persistentvolumeclaim=\"nexus-data\"}* 100",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Nexus Volume Space Usage",
+      "type": "gauge"
     }
   ],
-  "refresh": "10s",
+  "refresh": "30m",
   "schemaVersion": 37,
   "style": "dark",
   "tags": [
@@ -461,7 +650,12 @@
         "type": "datasource"
       },
       {
-        "current": {},
+        "current": {
+          "isNone": true,
+          "selected": false,
+          "text": "None",
+          "value": ""
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "$datasource"
@@ -487,12 +681,17 @@
         "useTags": false
       },
       {
-        "current": {},
+        "current": {
+          "selected": false,
+          "text": "vault",
+          "value": "vault"
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "$datasource"
         },
         "definition": "",
+        "description": "",
         "hide": 0,
         "includeAll": false,
         "label": "Namespace",
@@ -504,7 +703,7 @@
           "refId": "Prometheus-namespace-Variable-Query"
         },
         "refresh": 2,
-        "regex": "",
+        "regex": "^(?!nexus$).*",
         "skipUrlSync": false,
         "sort": 1,
         "tagValuesQuery": "",
@@ -513,7 +712,11 @@
         "useTags": false
       },
       {
-        "current": {},
+        "current": {
+          "selected": false,
+          "text": "vault-raft-cray-vault-0",
+          "value": "vault-raft-cray-vault-0"
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "$datasource"
@@ -541,7 +744,7 @@
     ]
   },
   "time": {
-    "from": "now-7d",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {
