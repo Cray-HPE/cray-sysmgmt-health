@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cray-sysmgmt-health-redfish
+  namespace: sysmgmt-health
+  labels:
+    app.kubernetes.io/instance: cray-sysmgmt-health
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: redfish-exporter
+    app.kubernetes.io/version: 0.11.0
+    release: cray-sysmgmt-health
+data:
+  fetch_health.sh: |
+    #!/bin/bash
+
+    TARGET=abc100.hpc.amslabs.hpecorp.net
+    curl -o /tmp/redfish-smart-1.prom cray-sysmgmt-health-redfish-exporter.sysmgmt-health.svc:9220/health?target=${TARGET}
