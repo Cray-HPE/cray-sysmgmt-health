@@ -13,5 +13,5 @@ data:
   fetch_health.sh: |
     #!/bin/bash
 
-    TARGET=abc100.hpc.amslabs.hpecorp.net
+    TARGET=""
     curl -o /tmp/redfish-smart-1.prom cray-sysmgmt-health-redfish-exporter.sysmgmt-health.svc:9220/health?target=${TARGET}
