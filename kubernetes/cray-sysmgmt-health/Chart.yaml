@@ -54,7 +54,7 @@ dependencies:
 maintainers:
 - name: rambabubolla
 - name: shreniagrawal
-appVersion: 45.1.1
+appVersion: 0.17.5
 annotations:
   artifacthub.io/images: |
     - name: alertmanager

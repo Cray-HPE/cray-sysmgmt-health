@@ -61,12 +61,12 @@ grokExporter:
 kubectl:
   image:
     repository: artifactory.algol60.net/csm-docker/stable/docker-kubectl
-    tag: 1.19.15
+    tag: 1.24.17
     pullPolicy: IfNotPresent
 
 logstash-exporter:
   logstash:
-    url: http://sma-logstash-sma-logstash-headless.sma.svc.cluster.local:9600
+    url: http://sma-logstash-headless.sma.svc.cluster.local:9600
   image:
     repository: artifactory.algol60.net/csm-docker/stable/docker.io/kuskoman/logstash-exporter
     tag: v1.5.6
@@ -687,6 +687,24 @@ cephExporter:
     interval: 30s
     scheme: http
     # honor_labels: true
+    # serverName: ""
+    # caFile: ""
+    # certFile: ""
+    # keyFile: ""
+    insecureSkipVerify: false
+    metricsRelabelings: {}
+    relabelings: {}
+
+logstashExporter:
+  enabled: true
+  endpoints: []
+  service:
+    port: 9198
+    targetPort: 9198
+  serviceMonitor:
+    interval: 30s
+    scheme: http
+    # honor_labels: false
     # serverName: ""
     # caFile: ""
     # certFile: ""
