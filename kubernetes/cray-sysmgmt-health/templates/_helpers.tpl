@@ -55,33 +55,59 @@ Create the name of the service account to use
 {{- end -}}
 {{- end -}}
 
-{{- define "cray-sysmgmt-health.kube-prometheus-stack.fullname" -}}
-{{- if (index .Values "kube-prometheus-stack" "fullnameOverride") -}}
-{{- (index .Values "kube-prometheus-stack" "fullnameOverride") | trunc 26 | trimSuffix "-" -}}
+{{- define "cray-sysmgmt-health.victoria-metrics-k8s-stack.fullname" -}}
+{{- if (index .Values "victoria-metrics-k8s-stack" "fullnameOverride") -}}
+{{- (index .Values "victoria-metrics-k8s-stack" "fullnameOverride") | trunc 20 | trimSuffix "-" -}}
 {{- else -}}
-{{- $name := default "kube-prometheus-stack" (index .Values "kube-prometheus-stack" "nameOverride") -}}
+{{- $name := default "victoria-metrics-k8s-stack" (index .Values "victoria-metrics-k8s-stack" "nameOverride") -}}
 {{- if contains $name .Release.Name -}}
-{{- .Release.Name | trunc 26 | trimSuffix "-" -}}
+{{- .Release.Name | trunc 20 | trimSuffix "-" -}}
 {{- else -}}
-{{- printf "%s-%s" .Release.Name $name | trunc 26 | trimSuffix "-" -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 20 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}
+
+{{- define "cray-sysmgmt-health.prometheus-snmp-exporter.fullname" -}}
+{{- if (index .Values "prometheus-snmp-exporter" "fullnameOverride") -}}
+{{- (index .Values "prometheus-snmp-exporter" "fullnameOverride") | trunc 20 | trimSuffix "-" -}}
+{{- else -}}
+{{- $name := default "prometheus-snmp-exporter" (index .Values "prometheus-snmp-exporter" "nameOverride") -}}
+{{- if contains $name .Release.Name -}}
+{{- .Release.Name | trunc 20 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 20 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- define "cray-sysmgmt-health.prometheus-snmp-exporter.labels" -}}
+app.kubernetes.io/name: {{ include "cray-sysmgmt-health.prometheus-snmp-exporter.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end -}}
+
+{{- define "cray-sysmgmt-health.prometheus-snmp-exporter.selectorLabels" }}
+app.kubernetes.io/name: {{ include "cray-sysmgmt-health.prometheus-snmp-exporter.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
 
 {{/* Prometheus custom resource instance name */}}
-{{- define "kube-prometheus-stack.prometheus.crname" -}}
+{{- define "victoria-metrics-k8s-stack.prometheus.crname" -}}
 {{- if .Values.cleanPrometheusOperatorObjectNames }}
-{{- include "kube-prometheus-stack.fullname" . }}
+{{- include "victoria-metrics-k8s-stack.fullname" . }}
 {{- else }}
-{{- print (include "kube-prometheus-stack.fullname" .) "-prom" }}
+{{- print (include "victoria-metrics-k8s-stack.fullname" .) "-prom" }}
 {{- end }}
 {{- end }}
 
-{{- define "cray-sysmgmt-health.kube-prometheus-stack.grafana.fullname" -}}
-{{- if (index .Values "kube-prometheus-stack" "grafana" "fullnameOverride") -}}
-{{- (index .Values "kube-prometheus-stack" "grafana" "fullnameOverride") | trunc 63 | trimSuffix "-" -}}
+{{- define "cray-sysmgmt-health.victoria-metrics-k8s-stack.grafana.fullname" -}}
+{{- if (index .Values "victoria-metrics-k8s-stack" "grafana" "fullnameOverride") -}}
+{{- (index .Values "victoria-metrics-k8s-stack" "grafana" "fullnameOverride") | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
-{{- $name := default "grafana" (index .Values "kube-prometheus-stack" "grafana" "nameOverride") -}}
+{{- $name := default "grafana" (index .Values "victoria-metrics-k8s-stack" "grafana" "nameOverride") -}}
 {{- if contains $name .Release.Name -}}
 {{- .Release.Name | trunc 63 | trimSuffix "-" -}}
 {{- else -}}

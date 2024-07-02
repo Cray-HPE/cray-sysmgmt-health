@@ -21,14 +21,14 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 #
-{{- if (index .Values "kube-prometheus-stack" "thanos" "enabled") }}
+{{- if (index .Values "victoria-metrics-k8s-stack" "vmcluster" "enabled") }}
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: {{ template "cray-sysmgmt-health.fullname" . }}-thanos-query
+  name: {{ template "cray-sysmgmt-health.fullname" . }}-vm-select
   labels:
-    app: {{ template "cray-sysmgmt-health.name" . }}-thanos-query
+    app: {{ template "cray-sysmgmt-health.name" . }}-vm-select
 {{ include "cray-sysmgmt-health.labels" . | indent 4 }}
 spec:
   {{- with .Values.global.authGateways }}
@@ -36,26 +36,26 @@ spec:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   hosts:
-  - {{ (index .Values "kube-prometheus-stack" "thanos" "thanosSpec" "externalAuthority") }}
+  - {{ (index .Values "victoria-metrics-k8s-stack" "vmselect" "vmselectSpec" "externalAuthority") }}
   http:
   - match:
     - authority:
-        exact: {{ (index .Values "kube-prometheus-stack" "thanos" "thanosSpec" "externalAuthority") }}
+        exact: {{ (index .Values "victoria-metrics-k8s-stack" "vmselect" "vmselectSpec" "externalAuthority") }}
     route:
     - destination:
-        host: {{ template "cray-sysmgmt-health.fullname" . }}-thanos-query
+        host: vmselect-vms
         port:
-          number: 9090
+          number: 8481
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: {{ template "cray-sysmgmt-health.fullname" . }}-thanos-query
+  name: {{ template "cray-sysmgmt-health.fullname" . }}-vm-select
   labels:
-    app: {{ template "cray-sysmgmt-health.name" . }}-thanos-query
+    app: {{ template "cray-sysmgmt-health.name" . }}-vm-select
 {{ include "cray-sysmgmt-health.labels" . | indent 4 }}
 spec:
-  host: {{ template "cray-sysmgmt-health.fullname" . }}-thanos-query
+  host: {{ template "cray-sysmgmt-health.fullname" . }}-vm-select
   trafficPolicy:
     tls:
       mode: DISABLE

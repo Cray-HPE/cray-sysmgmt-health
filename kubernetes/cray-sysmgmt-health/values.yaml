@@ -21,6 +21,7 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 #
+
 global:
   authGateways:
   - services/services-gateway
@@ -29,54 +30,22 @@ global:
     create: true
     pspEnabled: true
 
-logstash-exporter:
-  logstash:
-  ## @param logstash.url Logstash instance URL
-  ##
-    url: http://sma-logstash-sma-logstash-headless.sma.svc.cluster.local:9600
-
-  image:
-  ## @param image.repository Image repository
-  ##
-    repository: artifactory.algol60.net/csm-docker/stable/docker.io/kuskoman/logstash-exporter
-  ## @param image.tag Image tag, if not set the appVersion is used
-  ##
-    tag: v1.5.6
-
-thanosSecret:
-  configThanos:
-    alertmanagers:
-      - static_configs: ["cray-sysmgmt-health-kube-p-alertmanager.sysmgmt-health.svc.cluster.local:9093"]
-        scheme: http
-        timeout: 30s
-        api_version: v1
-
-thanosCompactor:
-  resolutionraw: 15d
-  resolution5m: 15d
-  resolution1h: 15d
-  resources:
-    limits:
-      memory: 4Gi
-    requests:
-      memory: 2Gi
-
-thanosQuery:
-  resources:
-    limits:
-      cpu: "6"
-      memory: 12Gi
-    requests:
-      cpu: "1"
-      memory: 6Gi
-
-thanosStore:
-  resources:
-    limits:
-      memory: 15Gi
-    requests:
-      memory: 2Gi
-
+alertmanagerSecret:
+  configAlertmanager:
+    global:
+      resolve_timeout: 5m
+    receivers:
+    - name: "null"
+    route:
+      group_by:
+      - job
+      group_interval: 5m
+      group_wait: 30s
+      receiver: "null"
+      repeat_interval: 12h
+      routes:
+      - match:
+          alertname: Watchdog
 canuTest:
   image:
     repository: artifactory.algol60.net/csm-docker/stable/cray-canu/canu-test
@@ -95,20 +64,32 @@ kubectl:
     tag: 1.24.17
     pullPolicy: IfNotPresent
 
-thanos:
+logstash-exporter:
+  logstash:
+    url: http://sma-logstash-headless.sma.svc.cluster.local:9600
   image:
-    repository: artifactory.algol60.net/csm-docker/stable/quay.io/thanos
-    tag: v0.31.0
-    pullPolicy: IfNotPresent
-    sha: ""
+    repository: artifactory.algol60.net/csm-docker/stable/docker.io/kuskoman/logstash-exporter
+    tag: v1.5.6
 
-# Enable/Disable subcharts
-# grafana:
-#   enabled: true
-# kubeStateMetrics:
-#   enabled: false
-# nodeExporter:
-#   enabled: true
+snmpExporter:
+  enabled: true
+  namespace: sysmgmt-health
+  honorabels: true
+  intervel: 30s
+  scrapeTimeout: 10s
+  path: /snmp
+  module:
+    - if_mib
+  additionalMetricsRelabels: {}
+  relabelings: []
+  selector:
+    prometheus: cray-sysmgmt-health-kube-p-prometheus
+    release: cray-sysmgmt-health
+  params:
+    - name: sw-spine-01
+      target: 10.254.0.2
+    - name: sw-spine-02
+      target: 10.254.0.3
 
 prometheus-snmp-exporter:
   image:
@@ -117,119 +98,131 @@ prometheus-snmp-exporter:
     pullPolicy: IfNotPresent
 
   serviceMonitor:
-    enabled: true
+    enabled: false
     namespace: sysmgmt-health
     selector:
       prometheus: cray-sysmgmt-health-kube-p-prometheus
       release: cray-sysmgmt-health
 
-    params:
-      - name: sw-spine-01
-        target: 10.254.0.2
-      - name: sw-spine-02
-        target: 10.254.0.3
+victoria-metrics-k8s-stack:
+  nameOverride: "vms"
+  fullnameOverride: "vms"
+  namespace: sysmgmt-health
+  labels:
+    release: cray-sysmgmt-health
+  vmselect:
+    vmselectSpec:
+      externalAuthority: vmselect.local
 
-kube-prometheus-stack:
-
-  thanos:
+  victoria-metrics-operator:
     enabled: true
-    s3_endpoint: "rgw-vip.nmn"
-    thanosSpec:
-      externalAuthority: thanos.local
-
-  prometheusOperator:
-    admissionWebhooks:
-      patch:
-        enabled: true
-        image:
-          registry: artifactory.algol60.net
-          repository: csm-docker/stable/registry.k8s.io/ingress-nginx/kube-webhook-certgen
-          tag: v1.3.0
-          pullPolicy: IfNotPresent
-
     image:
-      registry: artifactory.algol60.net
-      repository: csm-docker/stable/docker.io/bitnami/prometheus-operator
-      tag: v0.63.0
+      repository: artifactory.algol60.net/csm-docker/stable/docker.io/victoriametrics/operator
+      tag: v0.35.1
       pullPolicy: IfNotPresent
+    env:
+      - name: VM_VMAGENTDEFAULT_CONFIGRELOADIMAGE
+        value: arti.hpc.amslabs.hpecorp.net/csm-docker-remote/stable/docker.io/prom/prometheus-config-reloader:v0.62.0
+      - name: VM_VMALERTDEFAULT_CONFIGRELOADIMAGE
+        value: arti.hpc.amslabs.hpecorp.net/csm-docker-remote/stable/docker.io/jimmidyson/configmap-reload:v0.3.0
+  # -- Tells helm to remove CRD after chart remove
+    cleanupCRD: true
+    cleanupImage:
+      repository: artifactory.algol60.net/csm-docker/stable/gcr.io/google_containers/hyperkube
+      tag: v1.18.0
+      pullPolicy: IfNotPresent
+    createCRD: false
+    operator:
+    # -- By default, operator converts prometheus-operator objects.
+      disable_prometheus_converter: true
+  vmsingle:
+    enabled: false
+  vmcluster:
+    enabled: true
+    spec:
+      retentionPeriod: "2d"
+      replicationFactor: 2
+      vmstorage:
+        image:
+          repository: artifactory.algol60.net/csm-docker/stable/docker.io/victoriametrics/vmstorage
+          tag: v1.93.1-cluster
+        replicaCount: 2
+        resources:
+          limits:
+            cpu: '2'
+            memory: 5Gi
+          requests:
+            cpu: '1'
+            memory: 2Gi
+        storage:
+          volumeClaimTemplate:
+            spec:
+              resources:
+                requests:
+                  storage: 200Gi
 
-    prometheusConfigReloader:
+      vmselect:
+        image:
+          repository: artifactory.algol60.net/csm-docker/stable/docker.io/victoriametrics/vmselect
+          tag: v1.93.1-cluster
+        replicaCount: 2
+        resources:
+          limits:
+            cpu: '2'
+            memory: 2Gi
+          requests:
+            cpu: '0.5m'
+            memory: 1Gi
+        storage:
+          volumeClaimTemplate:
+            spec:
+              resources:
+                requests:
+                  storage: 10Gi
+
+      vminsert:
+        image:
+          repository: artifactory.algol60.net/csm-docker/stable/docker.io/victoriametrics/vminsert
+          tag: v1.93.1-cluster
+        replicaCount: 2
+        resources:
+          limits:
+            cpu: '2'
+            memory: 2Gi
+          requests:
+            cpu: '0.5m'
+            memory: 1Gi
+
+  vmalert:
+    enabled: true
+    spec:
       image:
-        registry: artifactory.algol60.net
-        repository: csm-docker/stable/docker.io/prom/prometheus-config-reloader
-        tag: v0.62.0
+        repository: artifactory.algol60.net/csm-docker/stable/docker.io/victoriametrics/vmalert
+        tag: v1.93.1
 
-    # Resources for config-reloader side car, these are the same for requests and limits.
-    # configReloaderCpu: 100m (default)
-    # configReloaderMemory: 100m (default)
-    configReloaderCpu: 300m
-
-    tlsProxy:
+  vmagent:
+    enabled: true]
+    spec:
+      selectAllByDefault: true
       image:
-        repository: artifactory.algol60.net/csm-docker/stable/docker.io/ghostunnel/ghostunnel
-        tag: v1.6.0
-
-    configmapReloadImage:
-      repository: artifactory.algol60.net/csm-docker/stable/docker.io/jimmidyson/configmap-reload
-
-  prometheus:
-    prometheusSpec:
-      replicas: 2
-      shards: 2
-      volumes:
-        - name: object-storage
-          secret:
-            secretName: thanos-secret
-      image:
-        registry: artifactory.algol60.net
-        repository: csm-docker/stable/quay.io/prometheus/prometheus
-        tag: v2.41.0
-      # Enable administrative HTTP API, 'cause why not?
-      enableAdminAPI: true
-      thanos:
-        image: artifactory.algol60.net/csm-docker/stable/quay.io/thanos:v0.31.0
-        objectStorageConfigFile: /etc/conf/objstorage.yaml
-        volumeMounts:
-          - mountPath: /etc/conf/
-            name: object-storage
-      # Configure external hostname for Istio ingress
-      # externalAuthority: prometheus-kube.local
-      # externalUrl: https://prometheus-kube.local/
-
+        repository: artifactory.algol60.net/csm-docker/stable/docker.io/victoriametrics/vmagent
+        tag: v1.93.1
       secrets:
-        # Client certificate in order to scrape Etcd (see kubeEtcd below)
         - etcd-client-cert
-
-      # Adjust retention period consistent with provisioned storage (see next)
-      retention: 6h
-
-      # Configure persistent storage for Prometheus instances.
-      storageSpec:
-        volumeClaimTemplate:
-          spec:
-            accessModes: ["ReadWriteOnce"]
-            resources:
-              requests:
-                storage: 200Gi
-
-      # Managed as per environment basis
-      # resources:
-      #   limits:
-      #     cpu: '3'
-      #     memory: 12Gi
-      #   requests:
-      #     cpu: '1'
-      #     memory: 9Gi
-
-      ruleSelector:
-        matchLabels:
-          release: cray-sysmgmt-health
       resources:
+        limits:
+          cpu: '2'
+          memory: 5Gi
         requests:
-          cpu: '0.2'
-          memory: 0.5Gi
+          cpu: '1'
+          memory: 2Gi
+      scrapeInterval: 25s
+      externalLabels:
+        cluster: cluster-name
+      shardCount: 2
+      replicaCount: 2
 
-      additionalScrapeConfigs:
+      inlineScrapeConfig: |
         # Scrape containerd metrics
         - job_name: 'containerd'
           metrics_path: '/v1/metrics'
@@ -294,129 +287,26 @@ kube-prometheus-stack:
           tls_config:
             insecure_skip_verify: true
 
-        # Federate metrics from Istio's Prometheus instance
-        # - job_name: 'federate-istio'
-        #   scrape_timeout: 45s
-        #   scrape_interval: 1m
-        #   honor_labels: true
-        #   metrics_path: '/federate'
-        #   params:
-        #     'match[]':
-        #       - '{__name__=~".+"}'
-        #   static_configs:
-        #     - targets:
-        #       - 'prometheus.istio-system:9090'
-
-        # Federate metrics from Ceph's Prometheus instance
-        # - job_name: 'federate-ceph'
-        #   scrape_timeout: 45s
-        #   scrape_interval: 1m
-        #   honor_labels: true
-        #   metrics_path: '/federate'
-        #   params:
-        #     'match[]':
-        #       - '{__name__=~".+"}'
-        #   static_configs:
-        #     - targets:
-        #       - 'cray-ceph-monitoring-prometheus.ceph-monitoring:9090'
-    thanosService:
-      enabled: true
-      annotations: {}
-      labels: {}
-      externalTrafficPolicy: Cluster
-      type: ClusterIP
-      portName: grpc
-      port: 10901
-      targetPort: "grpc"
-      httpPortName: http
-      httpPort: 10902
-      targetHttpPort: "http"
-      clusterIP: ""
-      selector:
-        app.kubernetes.io/name: prometheus
-    thanosServiceMonitor:
-      enabled: true
-      interval:
-  thanosRuler:
-    enabled: true
-    annotations: {}
-    serviceAccount:
-      create: true
-      name: ""
-      annotations: {}
-    podDisruptionBudget:
-      enabled: false
-      minAvailable: 1
-      maxUnavailable: ""
-    service:
-      annotations: {}
-      labels: {}
-      clusterIP: ""
-      port: 10902
-      targetPort: 10902
-      loadBalancerIP: ""
-      loadBalancerSourceRanges: []
-      externalTrafficPolicy: Cluster
-      type: ClusterIP
-      additionalPorts:
-      - name: grpc
-        port: 10901
-        targetPort: 10901
-        protocol: TCP
-    serviceMonitor:
-      interval: ""
-      selfMonitor: true
-      sampleLimit: 0
-      targetLimit: 0
-      labelLimit: 0
-      labelNameLengthLimit: 0
-      labelValueLengthLimit: 0
-      proxyUrl: ""
-      scheme: ""
-      tlsConfig: {}
-      bearerTokenFile:
-    thanosRulerSpec:
-      portName: http
-      alertmanagersConfig:
-        key: alertmanager-thanos.yaml
-        name: thanos-cray-sysmgmt-health-alertmanager
-      podMetadata: {}
-      image:
-        registry: artifactory.algol60.net
-        repository: csm-docker/stable/quay.io/thanos
-        tag: v0.31.0
-        sha: ""
-      ruleNamespaceSelector: {}
-      ruleSelectorNilUsesHelmValues: true
-      ruleSelector:
-        matchLabels:
-          release: cray-sysmgmt-health
-      logFormat: logfmt
-      logLevel: info
-      replicas: 1
-      retention: 24h
-      evaluationInterval: ""
-      storage:
-        volumeClaimTemplate:
-          spec:
-            accessModes: ["ReadWriteOnce"]
-            resources:
-              requests:
-                storage: 250Gi
-      queryEndpoints:
-        - dnssrv+_http._tcp.cray-sysmgmt-health-thanos-query.sysmgmt-health.svc.cluster.local
+      extraArgs:
+        promscrape.cluster.replicationFactor: "2"
+        promscrape.streamParse: "true"
+        remoteWrite.forcePromProto: "true"
 
   alertmanager:
-
-    alertmanagerSpec:
+    enabled: true
+    monzoTemplate:
+      enabled: false
+    spec:
       image:
-        registry: artifactory.algol60.net
-        repository: csm-docker/stable/quay.io/prometheus/alertmanager
+        repository: artifactory.algol60.net/csm-docker/stable/quay.io/prometheus/alertmanager
         tag: v0.25.0
-
-      # Adjust retention period consistent with provisioned storage (see next)
+      containers:
+      - name: config-reloader
+        image: arti.hpc.amslabs.hpecorp.net/csm-docker-remote/stable/docker.io/jimmidyson/configmap-reload:v0.3.0
       retention: 48h
-      # Configure storage for alertmanager instances
+      logLevel: debug
+      replicaCount: 2
+      configSecret: alertmanager-config
       storage:
         volumeClaimTemplate:
           spec:
@@ -424,7 +314,6 @@ kube-prometheus-stack:
             resources:
               requests:
                 storage: 50Gi
-
       resources:
         requests:
           cpu: 100m
@@ -432,17 +321,33 @@ kube-prometheus-stack:
         limits:
           cpu: 500m
           memory: 128Mi
-
       # Configure external hostname for Istio ingress
       # Setup with Ansible
       # externalAuthority: alertmanager-shs.local
       # externalUrl: https://alertmanager-shs.local/
+  vmServiceScrape:
+    # wheter we should create a service scrape resource for grafana
+    enabled: true
 
   grafana:
-
+    enabled: true
+    rbac:
+      create: true
+      pspEnabled: true
+    ingress:
+      enabled: false
+      hosts:
+        - grafana.domain.com
     image:
       repository: artifactory.algol60.net/csm-docker/stable/docker.io/grafana/grafana
-      tag: 9.3.3
+      tag: 11.0.0
+    downloadDashboards:
+      securityContext: {}
+    downloadDashboardsImage:
+      repository: artifactory.algol60.net/csm-docker/stable/docker.io/curlimages/curl
+      tag: 7.81.0
+      sha: ""
+      pullPolicy: IfNotPresent
     env:
       GF_PATHS_PLUGINS: /var/lib/grafana-plugins
 
@@ -452,6 +357,7 @@ kube-prometheus-stack:
 
     # Note: We are using our own templates while OPA-istio-plugin is fixed CASMPET-2788
     defaultDashboardsEnabled: false
+    containerSecurityContext: {}
 
     # persistence:
     #  enabled: true
@@ -484,24 +390,33 @@ kube-prometheus-stack:
         tag: 0.1.151
       dashboards:
         enabled: true
+        label: grafana_dashboard
+        labelValue: "1"
       datasources:
         enabled: true
         defaultDatasourceEnabled: true
+        isDefaultDatasource: true
+        uid: prometheus
+        createPrometheusReplicasDatasources: false
+        label: grafana_datasource
+        labelValue: "1"
+      securityContext: {}
 
     datasources:
       datasource.yaml:
         apiVersion: 1
         deleteDatasources:
-        - name: Prometheus
-        datasources:
         - name: thanos
+        datasources:
+        - name: victorismetrics
           type: prometheus
-          url: http://cray-sysmgmt-health-thanos-query:9090
+          url: http://vmselect-vms.sysmgmt-health.svc.cluster.local:8481/select/0/prometheus
           access: proxy
           isDefault: true
 
     testFramework:
-      image: artifactory.algol60.net/csm-docker/stable/docker.io/bats/bats
+      image:
+        repository: artifactory.algol60.net/csm-docker/stable/docker.io/bats/bats
 
   # Exporters
   kubelet:
@@ -514,6 +429,19 @@ kube-prometheus-stack:
       resourcePath: "/metrics/resource"
 
   kubeControllerManager:
+    enabled: true
+    spec:
+      jobLabel: jobLabel
+      endpoints:
+        - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+          # bearerTokenSecret:
+          #   key: ""
+          port: http-metrics
+          scheme: https
+          tlsConfig:
+            caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+            serverName: kubernetes
+            insecureSkipVerify: true
     service:
       https: true
       port: 10257
@@ -523,6 +451,18 @@ kube-prometheus-stack:
       insecureSkipVerify: true
 
   kubeScheduler:
+    enabled: true
+    spec:
+      jobLabel: jobLabel
+      endpoints:
+        - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+          # bearerTokenSecret:
+          #   key: ""
+          port: http-metrics
+          scheme: https
+          tlsConfig:
+            caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+            insecureSkipVerify: true
     service:
       https: true
       port: 10259
@@ -534,6 +474,18 @@ kube-prometheus-stack:
   kubeEtcd:
     # Configure secure access to the etcd cluster via the key and certs
     # defined in the `etcd-client-cert` secret (see below).
+    enabled: true
+    spec:
+      jobLabel: jobLabel
+      endpoints:
+        - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+          port: http-metrics
+          scheme: https
+          tlsConfig:
+            caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+            certFile: /etc/vm/secrets/etcd-client-cert/etcd-client
+            keyFile: /etc/vm/secrets/etcd-client-cert/etcd-client-key
+            insecureSkipVerify: true
     service:
       enabled: true
       port: 2379
@@ -543,11 +495,9 @@ kube-prometheus-stack:
       scheme: https
       insecureSkipVerify: false
       serverName: ""
-      caFile: "/etc/prometheus/secrets/etcd-client-cert/etcd-ca"
-      certFile: "/etc/prometheus/secrets/etcd-client-cert/etcd-client"
-      keyFile: "/etc/prometheus/secrets/etcd-client-cert/etcd-client-key"
 
   prometheus-node-exporter:
+    enabled: true
     rbac:
       create: true
       pspEnabled: true
@@ -581,8 +531,6 @@ kube-prometheus-stack:
       # tcpstat has potential performance impact
       - --collector.tcpstat
       - --collector.textfile.directory=/var/lib/node_exporter
-      - --collector.netstat.fields=^(.*_(InErrors|InErrs)|Ip_(Forwarding|DefaultTTL|InReceives|InHdrErrors|InAddrErrors|ForwDatagrams|InUnknownProtos|InDiscards|InDelivers|OutRequests|OutDiscards|OutNoRoutes|ReasmTimeout|ReasmReqds|ReasmOKs|ReasmFails|FragOKs|FragFails|FragCreates)|Ip(6|Ext)_(InOctets|OutOctets)|Icmp6?_(InMsgs|OutMsgs|InMsgs|InCsumErrors|InDestUnreachs|InTimeExcds|InParmProbs|InSrcQuenchs|InRedirects|InEchos|InEchoReps|InTimestamps|InTimestampReps|InAddrMasks|InAddrMaskReps|OutErrors|OutDestUnreachs|OutTimeExcds|OutParmProbs|OutSrcQuenchs|OutRedirects|OutEchos|OutEchoReps|OutTimestamps|OutTimestampReps|OutAddrMasks|OutAddrMaskReps)|IcmpMsg_(InType0|InType3|InType8|OutType0|OutType3|OutType8)|TcpExt_(Listen.*|Syncookies.*|TCPSynRetrans|TCPTimeouts)|Tcp_(ActiveOpens|InSegs|OutSegs|OutRsts|PassiveOpens|RetransSegs|CurrEstab|RtoAlgorithm|RtoMin|RtoMax|MaxConn|AttemptFails|EstabResets|InCsumErrors)|Udp(6|Lite)?_(InDatagrams|OutDatagrams|NoPorts|RcvbufEr|SndbufErrors|InCsumErrors|IgnoredMulti|MemErrors))$
-
     extraHostVolumeMounts:
       - mountPath: /var/run/dbus/system_bus_socket
         name: system-dbus-socket
@@ -605,6 +553,20 @@ kube-prometheus-stack:
 
   # Compatibility with dashboards and rules templates
   kube-state-metrics:
+    enabled: true
+    podSecurityPolicy:
+      enabled: true
+      annotations:
+        seccomp.security.alpha.kubernetes.io/allowedProfileNames: 'docker/default,runtime/default'
+        seccomp.security.alpha.kubernetes.io/defaultProfileName: 'docker/default'
+      additionalVolumes:
+        - 'configMap'
+        - 'emptyDir'
+        - 'projected'
+        - 'csi'
+        - 'secret'
+        - 'downwardAPI'
+        - 'persistentVolumeClaim'
     image:
       repository: artifactory.algol60.net/csm-docker/stable/docker.io/bitnami/kube-state-metrics
       tag: v2.8.0
@@ -641,7 +603,19 @@ kube-prometheus-stack:
 
   kubeStateMetrics:
     enabled: true
-
+  kubeProxy:
+    enabled: true
+    spec:
+      jobLabel: jobLabel
+      endpoints:
+        - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+          # bearerTokenSecret:
+          #   key: ""
+          port: http-metrics
+          scheme: http
+          tlsConfig:
+            caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+            insecureSkipVerify: true
 
 customRules:
   create: true

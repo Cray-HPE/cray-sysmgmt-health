@@ -1,0 +1,13 @@
+{{- if (index .Values "victoria-metrics-k8s-stack" "alertmanager" "enabled") }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: alertmanager-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/component: {{ include "victoria-metrics-k8s-stack.name" $ }}-alertmanager
+{{ include "victoria-metrics-k8s-stack.labels" . | indent 4 }}
+stringData:
+  alertmanager.yaml: {{ toYaml .Values.alertmanagerSecret.configAlertmanager  | quote }}
+{{- end }}

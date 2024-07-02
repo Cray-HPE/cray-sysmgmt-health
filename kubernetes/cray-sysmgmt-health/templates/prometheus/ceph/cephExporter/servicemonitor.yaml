@@ -22,8 +22,8 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 #
 {{- if .Values.cephExporter.enabled }}
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMServiceScrape
 metadata:
   name: {{ template "cray-sysmgmt-health.fullname" . }}-ceph-exporter
   labels:

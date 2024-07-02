@@ -21,7 +21,7 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 #
-{{- if (index .Values "kube-prometheus-stack" "grafana" "enabled") }}
+{{- if (index .Values "victoria-metrics-k8s-stack" "grafana" "enabled") }}
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -36,14 +36,14 @@ spec:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   hosts:
-  - {{ (index .Values "kube-prometheus-stack" "grafana" "externalAuthority") }}
+  - {{ (index .Values "victoria-metrics-k8s-stack" "grafana" "externalAuthority") }}
   http:
   - match:
     - authority:
-        exact: {{ (index .Values "kube-prometheus-stack" "grafana" "externalAuthority") }}
+        exact: {{ (index .Values "victoria-metrics-k8s-stack" "grafana" "externalAuthority") }}
     route:
     - destination:
-        host: {{ template "cray-sysmgmt-health.kube-prometheus-stack.grafana.fullname" . }}
+        host: {{ template "cray-sysmgmt-health.victoria-metrics-k8s-stack.grafana.fullname" . }}
         port:
           number: 80
       headers:
@@ -65,7 +65,7 @@ metadata:
     app: {{ template "cray-sysmgmt-health.name" . }}-grafana
 {{ include "cray-sysmgmt-health.labels" . | indent 4 }}
 spec:
-  host: {{ template "cray-sysmgmt-health.kube-prometheus-stack.grafana.fullname" . }}
+  host: {{ template "cray-sysmgmt-health.victoria-metrics-k8s-stack.grafana.fullname" . }}
   trafficPolicy:
     tls:
       mode: DISABLE

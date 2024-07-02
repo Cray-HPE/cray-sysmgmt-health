@@ -21,8 +21,8 @@ OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 */}}
-apiVersion: monitoring.coreos.com/v1
-kind: PrometheusRule
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
 metadata:
   name: {{ printf "%s-%s" (include "cray-sysmgmt-health.fullname" .) "disk-space.rules" | trunc 63 | trimSuffix "-" }}
   namespace: {{ .Release.Namespace }}
