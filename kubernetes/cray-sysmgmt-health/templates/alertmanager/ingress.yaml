@@ -21,7 +21,7 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 #
-{{- if (index .Values "kube-prometheus-stack" "alertmanager" "enabled") }}
+{{- if (index .Values "victoria-metrics-k8s-stack" "alertmanager" "enabled") }}
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -36,14 +36,14 @@ spec:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   hosts:
-  - {{ (index .Values "kube-prometheus-stack" "alertmanager" "alertmanagerSpec" "externalAuthority") }}
+  - {{ (index .Values "victoria-metrics-k8s-stack" "alertmanager" "externalAuthority") }}
   http:
   - match:
     - authority:
-        exact: {{ (index .Values "kube-prometheus-stack" "alertmanager" "alertmanagerSpec" "externalAuthority") }}
+        exact: {{ (index .Values "victoria-metrics-k8s-stack" "alertmanager" "externalAuthority") }}
     route:
     - destination:
-        host: {{ template "cray-sysmgmt-health.kube-prometheus-stack.fullname" . }}-alertmanager
+        host: vmalertmanager-vms
         port:
           number: 9093
 ---
@@ -55,8 +55,9 @@ metadata:
     app: {{ template "cray-sysmgmt-health.name" . }}-alertmanager
 {{ include "cray-sysmgmt-health.labels" . | indent 4 }}
 spec:
-  host: {{ template "cray-sysmgmt-health.kube-prometheus-stack.fullname" . }}-alertmanager
+  host: {{ template "cray-sysmgmt-health.victoria-metrics-k8s-stack.fullname" . }}-alertmanager
   trafficPolicy:
     tls:
       mode: DISABLE
 {{- end }}
+

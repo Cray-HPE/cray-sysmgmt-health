@@ -22,8 +22,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 */}}
 {{- if and (index .Values "customRules" "create") (index .Values "customRules" "rules" "postgresql") }}
-apiVersion: monitoring.coreos.com/v1
-kind: PrometheusRule
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
 metadata:
   name: {{ printf "%s-%s" (include "cray-sysmgmt-health.fullname" .) "postgresql-prometheus-alert.rules" | trunc 63 | trimSuffix "-" }}
   namespace: {{ .Release.Namespace }}
