@@ -122,9 +122,9 @@ victoria-metrics-k8s-stack:
       pullPolicy: IfNotPresent
     env:
       - name: VM_VMAGENTDEFAULT_CONFIGRELOADIMAGE
-        value: arti.hpc.amslabs.hpecorp.net/csm-docker-remote/stable/docker.io/prom/prometheus-config-reloader:v0.62.0
+        value: artifactory.algol60.net/csm-docker/stable/docker.io/prom/prometheus-config-reloader:v0.62.0
       - name: VM_VMALERTDEFAULT_CONFIGRELOADIMAGE
-        value: arti.hpc.amslabs.hpecorp.net/csm-docker-remote/stable/docker.io/jimmidyson/configmap-reload:v0.3.0
+        value: artifactory.algol60.net/csm-docker/stable/docker.io/jimmidyson/configmap-reload:v0.3.0
   # -- Tells helm to remove CRD after chart remove
     cleanupCRD: true
     cleanupImage:
@@ -302,7 +302,7 @@ victoria-metrics-k8s-stack:
         tag: v0.25.0
       containers:
       - name: config-reloader
-        image: arti.hpc.amslabs.hpecorp.net/csm-docker-remote/stable/docker.io/jimmidyson/configmap-reload:v0.3.0
+        image: artifactory.algol60.net/csm-docker/stable/docker.io/jimmidyson/configmap-reload:v0.3.0
       retention: 48h
       logLevel: debug
       replicaCount: 2
@@ -415,8 +415,8 @@ victoria-metrics-k8s-stack:
           isDefault: true
 
     testFramework:
-      image:
-        repository: artifactory.algol60.net/csm-docker/stable/docker.io/bats/bats
+      image: artifactory.algol60.net/csm-docker/stable/docker.io/bats/bats
+      tag: v1.4.1
 
   # Exporters
   kubelet:
