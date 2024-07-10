@@ -144,7 +144,7 @@ victoria-metrics-k8s-stack:
       replicationFactor: 2
       vmstorage:
         image:
-          repository: victoriametrics/vmstorage
+          repository: artifactory.algol60.net/csm-docker/stable/docker.io/victoriametrics/vmstorage
           tag: v1.93.1-cluster
         replicaCount: 2
         resources:
@@ -163,7 +163,7 @@ victoria-metrics-k8s-stack:
 
       vmselect:
         image:
-          repository: victoriametrics/vmselect
+          repository: artifactory.algol60.net/csm-docker/stable/docker.io/victoriametrics/vmselect
           tag: v1.93.1-cluster
         replicaCount: 2
         resources:
@@ -182,7 +182,7 @@ victoria-metrics-k8s-stack:
 
       vminsert:
         image:
-          repository: victoriametrics/vminsert
+          repository: artifactory.algol60.net/csm-docker/stable/docker.io/victoriametrics/vminsert
           tag: v1.93.1-cluster
         replicaCount: 2
         resources:
@@ -197,7 +197,7 @@ victoria-metrics-k8s-stack:
     enabled: true
     spec:
       image:
-        repository: victoriametrics/vmalert
+        repository: artifactory.algol60.net/csm-docker/stable/docker.io/victoriametrics/vmalert
         tag: v1.93.1
 
   vmagent:
@@ -205,7 +205,7 @@ victoria-metrics-k8s-stack:
     spec:
       selectAllByDefault: true
       image:
-        repository: victoriametrics/vmagent
+        repository: artifactory.algol60.net/csm-docker/stable/docker.io/victoriametrics/vmagent
         tag: v1.93.1
       secrets:
         - etcd-client-cert
