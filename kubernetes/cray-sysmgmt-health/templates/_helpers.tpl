@@ -90,7 +90,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{- define "cray-sysmgmt-health.prometheus-snmp-exporter.selectorLabels" }}
-app.kubernetes.io/name: {{ include "cray-sysmgmt-health.prometheus-snmp-exporter.fullname" . }}
+app.kubernetes.io/name: prometheus-snmp-exporter
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
