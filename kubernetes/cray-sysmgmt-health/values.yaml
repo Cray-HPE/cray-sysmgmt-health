@@ -1075,7 +1075,62 @@ servicemonitors:
       scheme: http
       metricsRelabelings: {}
       relabelings: {}
-
+  dnsUnbound:
+    enabled: true
+    servicename: cray-dns-unbound
+    serviceMonitor:
+      namespace: sysmgmt-health
+      port: exporter
+      matchNamespace:
+      - services
+      matchLabels:
+        service: cray-dns-unbound-dns-unbound-exporter
+      interval: 1m
+      scheme: http
+      metricsRelabelings: {}
+      relabelings: {}
+  powerDns:
+    enabled: true
+    servicename: powerdns
+    serviceMonitor:
+      namespace: sysmgmt-health
+      port: dns-api
+      matchNamespace:
+      - services
+      matchLabels:
+        service: cray-dns-powerdns-api
+      interval: 1m
+      scheme: http
+      metricsRelabelings: {}
+      relabelings: {}
+  cray-spire:
+    enabled: true
+    servicename: cray-spire
+    serviceMonitor:
+      namespace: sysmgmt-health
+      port: metrics
+      matchNamespace:
+      - cray-spire
+      matchLabels:
+        app.kubernetes.io/name: cray-spire-server
+      interval: 1m
+      scheme: http
+      metricsRelabelings: {}
+      relabelings: {}
+  spire:
+    enabled: true
+    servicename: spire
+    serviceMonitor:
+      namespace: sysmgmt-health
+      port: metrics
+      matchNamespace:
+      - spire
+      matchLabels:
+        app.kubernetes.io/name: spire-server
+      interval: 1m
+      scheme: http
+      metricsRelabelings: {}
+      relabelings: {}
   iufExporter:
     enabled: true
     servicename: argo-only-argo-workflows-workflow-controller
