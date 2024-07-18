@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: "{{ include "cray-sysmgmt-health.fullname" . }}-node-exporter-iscsi"
+  labels:
+    app.kubernetes.io/name: node-exporter-iscsi
+    iscsi: sbps
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      iscsi: sbps
+  template:
+    metadata:
+       name: node-exporter-iscsi
+       labels:
+         iscsi: sbps
+    spec:
+      containers:
+      - name: iscsi-container
+        image: {{ .Values.iscsimetrics.image.repository }}:{{ .Values.iscsimetrics.image.tag }}  
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            memory: 200Mi 
+          requests:
+            cpu: 100m
+            memory: 200Mi
+        volumeMounts:
+        - mountPath: /iscsi
+          name: sysfs
+          readOnly: true
+        - mountPath: /etc/target/saveconfig.json 
+          name: saveconfig
+          readOnly: true
+        - mountPath: /var/lib/node_exporter
+          name: host-textfile
+          readOnly: false
+      terminationGracePeriodSeconds: 5
+      volumes:
+      - name: sysfs
+        hostPath:
+          path: /sys/kernel/config/target/iscsi/
+      - name: saveconfig
+        hostPath:
+          path: /etc/target/saveconfig.json
+      - name: host-textfile
+        hostPath:
+          path: /var/lib/node_exporter
