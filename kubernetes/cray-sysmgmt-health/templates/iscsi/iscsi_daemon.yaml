@@ -19,7 +19,11 @@ spec:
       containers:
       - name: iscsi-container
         image: {{ .Values.iscsimetrics.image.repository }}:{{ .Values.iscsimetrics.image.tag }}  
+        {{-if .Values.iscsimetrics.image.pullPolicy }}
+        imagePullPolicy: {{ .Values.iscsimetrics.image.pullPolicy }}
+        {{- else }}
         imagePullPolicy: IfNotPresent
+        {{- end -}}
         resources:
           limits:
             memory: 200Mi 
