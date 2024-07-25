@@ -1192,3 +1192,10 @@ smartmetrics:
     repository: artifactory.algol60.net/csm-docker/stable/quay.io/galexrt/node-exporter-smartmon
     tag: v0.1.1
     pullPolicy: IfNotPresent
+
+iscsimetrics:
+  enabled: true
+  image:
+    repository: artifactory.algol60.net/csm-docker/stable/iscsi-metrics
+    tag: v1.0.0
+    pullPolicy: IfNotPresent
