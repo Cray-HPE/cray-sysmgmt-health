@@ -556,7 +556,7 @@ victoria-metrics-k8s-stack:
       # tcpstat has potential performance impact
       - --collector.tcpstat
       - --collector.textfile.directory=/var/lib/node_exporter
-    #using same etcd secrets for node exporter https port
+    # using same etcd secrets for node exporter https port
     secrets:
       - name: etcd-client-cert
         mountPath: /etc/secrets
