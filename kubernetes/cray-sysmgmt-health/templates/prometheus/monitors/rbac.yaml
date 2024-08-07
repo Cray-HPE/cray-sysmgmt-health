@@ -33,8 +33,8 @@ rules:
   - apiGroups: [""]
     resources: [pods]
     verbs: [list, get, delete]
-  - apiGroups: ["monitoring.coreos.com"]
-    resources: [servicemonitors, prometheusrules]
+  - apiGroups: ["operator.victoriametrics.com"]
+    resources: [vmservicescrapes, vmrules]
     verbs: [get, patch]
 ---
 kind: ClusterRoleBinding

@@ -58,5 +58,7 @@ data:
     kubectl get vmrules.operator.victoriametrics.com -n sysmgmt-health vms-kubernetes-system-apiserver -o yaml > $mfile
     sed -i 's/604800/7776000/' $mfile
     sed -i 's/86400/1209600/' $mfile
+    sed -i 's/less than 24.0 hours/less than 14.0 days/' $mfile
+    sed -i 's/less than 7.0 days/less than 90.0 days/' $mfile
     kubectl -n sysmgmt-health apply -f $mfile
 
