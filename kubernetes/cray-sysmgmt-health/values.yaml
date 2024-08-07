@@ -128,8 +128,8 @@ victoria-metrics-k8s-stack:
   # -- Tells helm to remove CRD after chart remove
     cleanupCRD: true
     cleanupImage:
-      repository: artifactory.algol60.net/csm-docker/stable/gcr.io/google_containers/hyperkube
-      tag: v1.18.0
+      repository: artifactory.algol60.net/csm-docker/stable/docker-kubectl
+      tag: 1.24.17
       pullPolicy: IfNotPresent
     createCRD: false
     operator:
@@ -515,7 +515,32 @@ victoria-metrics-k8s-stack:
       requests:
         cpu: "1"
         memory: 1Gi
+    ## Liveness probe
+    ##
+    livenessProbe:
+      failureThreshold: 3
+      httpGet:
+        httpHeaders: []
+        scheme: https
+      initialDelaySeconds: 0
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 1
+
+   ## Readiness probe
+   ##
+    readinessProbe:
+      failureThreshold: 3
+      httpGet:
+        httpHeaders: []
+        scheme: https
+      initialDelaySeconds: 0
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 1
+
     extraArgs:
+      - --web.config.file=/etc/configmap/web.yml
       - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|run|var\/lib\/containerd.+|run/.+)($|/)  # containerd puts container fs's in /run/containerd/
       - --collector.filesystem.fs-types-exclude=^(autofs|binfmt_misc|cgroup|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|mqueue|proc|procfs|pstore|rpc_pipefs|securityfs|sysfs|tracefs)$
       - --no-collector.netclass
@@ -531,6 +556,13 @@ victoria-metrics-k8s-stack:
       # tcpstat has potential performance impact
       - --collector.tcpstat
       - --collector.textfile.directory=/var/lib/node_exporter
+    # using same etcd secrets for node exporter https port
+    secrets:
+      - name: etcd-client-cert
+        mountPath: /etc/secrets
+    configmaps:
+      - name: web-config
+        mountPath: /etc/configmap
     extraHostVolumeMounts:
       - mountPath: /var/run/dbus/system_bus_socket
         name: system-dbus-socket
@@ -550,7 +582,24 @@ victoria-metrics-k8s-stack:
         readOnly: true
         mountPropagation: HostToContainer
 
+    vmServiceScrape:
+    # wheter we should create a service scrape resource for node-exporter
+      enabled: true
 
+    # spec for VMServiceScrape crd
+    # https://docs.victoriametrics.com/operator/api.html#vmservicescrapespec
+      spec:
+        jobLabel: jobLabel
+        endpoints:
+          - port: metrics
+            scheme: https
+            tlsConfig:
+              caFile: /etc/vm/secrets/etcd-client-cert/etcd-ca
+              insecureSkipVerify: true
+            metricRelabelConfigs:
+              - action: drop
+                source_labels: [mountpoint]
+                regex: "/var/lib/kubelet/pods.+"
   # Compatibility with dashboards and rules templates
   kube-state-metrics:
     enabled: true
