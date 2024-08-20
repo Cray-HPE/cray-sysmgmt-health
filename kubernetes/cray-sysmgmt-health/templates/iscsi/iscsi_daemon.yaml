@@ -17,6 +17,8 @@ spec:
          iscsi: sbps
     spec:
       containers:
+        nodeSelector:
+          iscsi: sbps
       - name: iscsi-container
         image: {{ .Values.iscsimetrics.image.repository }}:{{ .Values.iscsimetrics.image.tag }}  
         imagePullPolicy: {{ .Values.iscsimetrics.image.pullPolicy }}
