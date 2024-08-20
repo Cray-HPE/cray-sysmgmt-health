@@ -17,8 +17,6 @@ spec:
          iscsi: sbps
     spec:
       containers:
-        nodeSelector:
-          iscsi: sbps
       - name: iscsi-container
         image: {{ .Values.iscsimetrics.image.repository }}:{{ .Values.iscsimetrics.image.tag }}  
         imagePullPolicy: {{ .Values.iscsimetrics.image.pullPolicy }}
@@ -38,6 +36,8 @@ spec:
         - mountPath: /var/lib/node_exporter
           name: host-textfile
           readOnly: false
+      nodeSelector:
+        iscsi: sbps
       terminationGracePeriodSeconds: 5
       volumes:
       - name: sysfs
