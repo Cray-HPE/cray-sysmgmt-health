@@ -183,7 +183,7 @@ victoria-metrics-k8s-stack:
       vminsert:
         image:
           repository: artifactory.algol60.net/csm-docker/stable/docker.io/victoriametrics/vminsert
-          tag: v1.93.1-cluster
+          tag: v1.96.0-cluster
         replicaCount: 2
         resources:
           limits:
@@ -198,10 +198,10 @@ victoria-metrics-k8s-stack:
     spec:
       image:
         repository: artifactory.algol60.net/csm-docker/stable/docker.io/victoriametrics/vmalert
-        tag: v1.93.1
+        tag: v1.102.0
 
   vmagent:
-    enabled: true]
+    enabled: true
     spec:
       selectAllByDefault: true
       image:
