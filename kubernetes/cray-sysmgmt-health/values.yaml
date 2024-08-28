@@ -33,7 +33,7 @@ global:
 alertmanagerSecret:
   configAlertmanager:
     global:
-      resolve_timeout: 5m
+      resolve_timeout: 5h
     receivers:
     - name: "null"
     route:
@@ -120,7 +120,6 @@ victoria-metrics-k8s-stack:
   vmselect:
     vmselectSpec:
       externalAuthority: vmselect.local
-
   victoria-metrics-operator:
     enabled: true
     image:
@@ -209,6 +208,8 @@ victoria-metrics-k8s-stack:
 
   vmagent:
     enabled: true
+    vmagentSpec:
+      externalAuthority: vmagent.local
     spec:
       selectAllByDefault: true
       image:
@@ -312,7 +313,7 @@ victoria-metrics-k8s-stack:
         image: artifactory.algol60.net/csm-docker/stable/docker.io/jimmidyson/configmap-reload:v0.3.0
       retention: 48h
       logLevel: debug
-      replicaCount: 2
+      replicaCount: 1
       configSecret: alertmanager-config
       storage:
         volumeClaimTemplate:
