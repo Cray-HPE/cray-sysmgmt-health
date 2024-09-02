@@ -30,7 +30,7 @@ spec:
       annotations:
         message: '"{{`{{ $labels.job }}`}}" - MetalLB "{{`{{ $labels.container }}`}}" on "{{`{{ $labels.pod
           }}`}}" has exhausted address pool "{{`{{ $labels.pool }}`}}" for > 1 minute'
-      expr: metallb_allocator_addresses_in_use_total >= on(pool) metallb_allocator_addresses_total
+      expr: metallb_allocator_addresses_in_use_total >= on(pool,job) metallb_allocator_addresses_total
       for: 1m
       labels:
         severity: alert
@@ -38,7 +38,7 @@ spec:
       annotations:
         message: '"{{`{{ $labels.job }}`}}" - MetalLB "{{`{{ $labels.container }}`}}" on "{{`{{ $labels.pod
           }}`}}" has address pool "{{`{{ $labels.pool }}`}}" past 75% usage for > 1 minute'
-      expr: ( metallb_allocator_addresses_in_use_total / on(pool) metallb_allocator_addresses_total
+      expr: ( metallb_allocator_addresses_in_use_total / on(pool,job) metallb_allocator_addresses_total
         ) * 100 > 75
       labels:
         severity: warning
@@ -46,7 +46,7 @@ spec:
       annotations:
         message: '"{{`{{ $labels.job }}`}}" - MetalLB "{{`{{ $labels.container }}`}}" on "{{`{{ $labels.pod
           }}`}}" has address pool "{{`{{ $labels.pool }}`}}" past 85% usage for > 1 minute'
-      expr: ( metallb_allocator_addresses_in_use_total / on(pool) metallb_allocator_addresses_total
+      expr: ( metallb_allocator_addresses_in_use_total / on(pool,job) metallb_allocator_addresses_total
         ) * 100 > 85
       labels:
         severity: warning
@@ -54,7 +54,7 @@ spec:
       annotations:
         message: '"{{`{{ $labels.job }}`}}" - MetalLB "{{`{{ $labels.container }}`}}" on "{{`{{ $labels.pod
           }}`}}" has address pool "{{`{{ $labels.pool }}`}}" past 95% usage for > 1 minute'
-      expr: ( metallb_allocator_addresses_in_use_total / on(pool) metallb_allocator_addresses_total
+      expr: ( metallb_allocator_addresses_in_use_total / on(pool,job) metallb_allocator_addresses_total
         ) * 100 > 95
       labels:
         severity: alert

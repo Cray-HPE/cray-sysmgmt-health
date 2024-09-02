@@ -117,6 +117,7 @@ victoria-metrics-k8s-stack:
   namespace: sysmgmt-health
   labels:
     release: cray-sysmgmt-health
+  defaultDashboardsEnabled: false
   vmselect:
     vmselectSpec:
       externalAuthority: vmselect.local
@@ -400,6 +401,20 @@ victoria-metrics-k8s-stack:
         enabled: true
         label: grafana_dashboard
         labelValue: "1"
+        default:
+          nodes:
+            datasource: VictoriaMetrics
+      dashboardproviders.yaml:
+        apiVersion: 1
+        providers:
+          - name: "default"
+            orgId: 1
+            folder: ""
+            type: file
+            disableDeletion: false
+            editable: true
+            options:
+              path: /tmp/dashboards
       datasources:
         enabled: true
         defaultDatasourceEnabled: true
