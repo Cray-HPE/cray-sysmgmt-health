@@ -111,7 +111,34 @@ prometheus-snmp-exporter:
       prometheus: cray-sysmgmt-health-kube-p-prometheus
       release: cray-sysmgmt-health
 
-victoria-metrics-k8s-stack:
+victoria-metrics-k8s-stack: 
+  defaultRules:
+    create: false
+    rules:
+      etcd: true
+      general: true
+      k8s: true
+      kubeApiserver: true
+      kubeApiserverAvailability: true
+      kubeApiserverBurnrate: true
+      kubeApiserverHistogram: true
+      kubeApiserverSlos: true
+      kubelet: true
+      kubePrometheusGeneral: true
+      kubePrometheusNodeRecording: true
+      kubernetesApps: true
+      kubernetesResources: true
+      kubernetesStorage: true
+      kubernetesSystem: true
+      kubeScheduler: true
+      kubeStateMetrics: true
+      network: true
+      node: true
+      vmagent: true
+      vmsingle: true
+      vmhealth: true
+      alertmanager: true
+
   nameOverride: "vms"
   fullnameOverride: "vms"
   namespace: sysmgmt-health

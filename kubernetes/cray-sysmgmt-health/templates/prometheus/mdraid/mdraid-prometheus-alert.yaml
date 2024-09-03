@@ -46,6 +46,7 @@ spec:
       for: 5m
       labels:
         severity: critical
+        group: prometheus
       annotations:
         description: 'MD RAID array "{{`{{ $labels.device }}`}}" on (instance "{{`{{ $labels.instance }}`}}") is in Inactive state'
         summary: 'An MD RAID array is in Inactive state'
@@ -55,6 +56,7 @@ spec:
       for: 5m
       labels:
         severity: critical
+        group: prometheus
       annotations:
         description: 'At least one device in MD RAID array "{{`{{ $labels.device }}`}}" on "{{`{{ $labels.instance }}`}}" has failed'
         summary: 'An MD RAID has failed'
@@ -65,6 +67,7 @@ spec:
       for: 1m
       labels:
         severity: critical
+        group: prometheus
       annotations:
         description: 'An MD RAID array "{{`{{ $labels.device }}`}}" on "{{`{{ $labels.instance }}`}}" is in Degraded state: {{`{{ $value }}`}} disks failed'
         summary: 'An MD RAID array is in Degraded state'
@@ -76,6 +79,7 @@ spec:
       for: 15m
       labels:
         severity: critical
+        group: prometheus
       annotations:
         description: 'An MD RAID array "{{`{{ $labels.device }}`}}" on "{{`{{ $labels.instance }}`}}" is in degraded state due to failure of {{`{{ $value }}`}} disks.'
         summary: 'An MD RAID array is in Degraded state'
