@@ -1,0 +1,104 @@
+#
+# MIT License
+#
+# (C) Copyright 2021-2022 Hewlett Packard Enterprise Development LP
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+#
+{{- if and (index .Values "customRules" "create") (index .Values "customRules" "rules" "kube-state-metrics") }}
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: {{ printf "%s-%s" (include "cray-sysmgmt-health.fullname" .) "kube-state-metrics" | trunc 63 | trimSuffix "-" }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "cray-sysmgmt-health.name" . }}
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+{{- if (index .Values "customRules" "labels") }}
+{{ toYaml (index .Values "customRules" "labels") | indent 4 }}
+{{- end }}
+{{- if (index .Values "customRules" "annotations") }}
+  annotations:
+{{ toYaml (index .Values "customRules" "annotations") | indent 4 }}
+{{- end }}
+spec:
+  groups:
+  - name: kube-state-metrics
+    rules:
+    - alert: KubeStateMetricsListErrors
+      annotations:
+        description: >
+          kube-state-metrics is experiencing errors at an elevated rate
+          in list operations. This is likely causing it to not be able to expose metrics
+          about Kubernetes objects correctly or at all.
+        summary: kube-state-metrics is experiencing errors in list operations.
+      expr: |-
+        (sum(rate(kube_state_metrics_list_total{job="kube-state-metrics",result="error"}[5m]))
+          /
+        sum(rate(kube_state_metrics_list_total{job="kube-state-metrics"}[5m])))
+        > 0.01
+      for: 15m
+      labels:
+        severity: critical
+        group: prometheus
+    - alert: KubeStateMetricsWatchErrors
+      annotations:
+        description: >
+          kube-state-metrics is experiencing errors at an elevated rate
+          in watch operations. This is likely causing it to not be able to expose
+          metrics about Kubernetes objects correctly or at all.
+        summary: kube-state-metrics is experiencing errors in watch operations.
+      expr: |-
+        (sum(rate(kube_state_metrics_watch_total{job="kube-state-metrics",result="error"}[5m]))
+          /
+        sum(rate(kube_state_metrics_watch_total{job="kube-state-metrics"}[5m])))
+        > 0.01
+      for: 15m
+      labels:
+        severity: critical
+        group: prometheus
+    - alert: KubeStateMetricsShardingMismatch
+      annotations: 
+        description: >
+          kube-state-metrics pods are running with different --total-shards
+          configuration, some Kubernetes objects may be exposed multiple times or
+          not exposed at all.
+        summary: kube-state-metrics sharding is misconfigured.
+      expr: stdvar (kube_state_metrics_total_shards{job="kube-state-metrics"}) !=
+        0
+      for: 15m
+      labels:
+        severity: critical
+        group: prometheus
+    - alert: KubeStateMetricsShardsMissing
+      annotations:
+        description: >
+          kube-state-metrics shards are missing, some Kubernetes objects
+          are not being exposed.
+        summary: kube-state-metrics shards are missing.
+      expr: |-
+        2^max(kube_state_metrics_total_shards{job="kube-state-metrics"}) - 1
+          -
+        sum( 2 ^ max by (shard_ordinal) (kube_state_metrics_shard_ordinal{job="kube-state-metrics"}) )
+        != 0
+      for: 15m
+      labels:
+        severity: critical
+        group: prometheus
+{{- end }}

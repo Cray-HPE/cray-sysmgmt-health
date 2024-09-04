@@ -1,0 +1,305 @@
+#
+# MIT License
+#
+# (C) Copyright 2021-2022 Hewlett Packard Enterprise Development LP
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+#
+{{- if and (index .Values "customRules" "create") (index .Values "customRules" "rules" "kubernetes-apps") }}
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: {{ printf "%s-%s" (include "cray-sysmgmt-health.fullname" .) "kubernetes-apps" | trunc 63 | trimSuffix "-" }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "cray-sysmgmt-health.name" . }}
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+{{- if (index .Values "customRules" "labels") }}
+{{ toYaml (index .Values "customRules" "labels") | indent 4 }}
+{{- end }}
+{{- if (index .Values "customRules" "annotations") }}
+  annotations:
+{{ toYaml (index .Values "customRules" "annotations") | indent 4 }}
+{{- end }}
+spec:
+  groups:
+  - name: kubernetes-apps
+    rules:
+    - alert: KubePodCrashLooping
+      annotations:
+        description: 'Pod "{{`{{ $labels.namespace }}`}}/"{{`{{ $labels.pod }}`}}" is in waiting state (reason: "CrashLoopBackOff").'
+        summary: Pod is crash looping.
+      expr: max_over_time(kube_pod_container_status_waiting_reason{reason="CrashLoopBackOff",
+        job="kube-state-metrics", namespace=~".*"}[5m]) >= 1
+      for: 15m
+      labels:
+        severity: warning
+        group: prometheus
+    - alert: KubePodNotReady
+      annotations:
+        description: >
+          Pod "{{`{{ $labels.namespace }}`}}"/"{{`{{ $labels.pod }}`}}" has been in a non-ready
+          state for longer than 15 minutes.
+        summary: Pod has been in a non-ready state for more than 15 minutes.
+      expr: |-
+        sum by (namespace, pod, cluster) (
+          max by(namespace, pod, cluster) (
+            kube_pod_status_phase{job="kube-state-metrics", namespace=~".*", phase=~"Pending|Unknown|Failed"}
+          ) * on(namespace, pod, cluster) group_left(owner_kind) topk by(namespace, pod, cluster) (
+            1, max by(namespace, pod, owner_kind, cluster) (kube_pod_owner{owner_kind!="Job"})
+          )
+        ) > 0
+      for: 15m
+      labels:
+        severity: warning
+        group: prometheus
+    - alert: KubeDeploymentGenerationMismatch
+      annotations:
+        description: >
+          Deployment generation for "{{`{{ $labels.namespace }}`}}"/"{{`{{ $labels.deployment}}`}}" 
+          does not match, this indicates that the Deployment has failed but has
+          not been rolled back.
+        summary: Deployment generation mismatch due to possible roll-back
+      expr: |-
+        kube_deployment_status_observed_generation{job="kube-state-metrics", namespace=~".*"}
+          !=
+        kube_deployment_metadata_generation{job="kube-state-metrics", namespace=~".*"}
+      for: 15m
+      labels:
+        severity: warning
+        group: prometheus
+    - alert: KubeDeploymentReplicasMismatch
+      annotations:
+        description: >
+          Deployment "{{`{{ $labels.namespace }}`}}"/"{{`{{ $labels.deployment }}`}}" has
+          not matched the expected number of replicas for longer than 15 minutes.
+        summary: Deployment has not matched the expected number of replicas.
+      expr: |-
+        (
+          kube_deployment_spec_replicas{job="kube-state-metrics", namespace=~".*"}
+            >
+          kube_deployment_status_replicas_available{job="kube-state-metrics", namespace=~".*"}
+        ) and (
+          changes(kube_deployment_status_replicas_updated{job="kube-state-metrics", namespace=~".*"}[10m])
+            ==
+          0
+        )
+      for: 15m
+      labels:
+        severity: warning
+        group: prometheus
+    - alert: KubeStatefulSetReplicasMismatch
+      annotations:
+        description: >
+          StatefulSet "{{`{{ $labels.namespace }}`}}"/"{{`{{ $labels.statefulset }}`}}"
+          has not matched the expected number of replicas for longer than 15 minutes.
+        summary: Deployment has not matched the expected number of replicas.
+      expr: |-
+        (
+          kube_statefulset_status_replicas_ready{job="kube-state-metrics", namespace=~".*"}
+            !=
+          kube_statefulset_status_replicas{job="kube-state-metrics", namespace=~".*"}
+        ) and (
+          changes(kube_statefulset_status_replicas_updated{job="kube-state-metrics", namespace=~".*"}[10m])
+            ==
+          0
+        )
+      for: 15m
+      labels:
+        severity: warning
+        group: prometheus
+    - alert: KubeStatefulSetGenerationMismatch
+      annotations:
+        description: >
+          StatefulSet generation for "{{`{{ $labels.namespace }}`}}"/"{{`{{ $labels.statefulset}}`}}" 
+          does not match, this indicates that the StatefulSet has failed but has
+          not been rolled back.
+        summary: StatefulSet generation mismatch due to possible roll-back
+      expr: |-
+        kube_statefulset_status_observed_generation{job="kube-state-metrics", namespace=~".*"}
+          !=
+        kube_statefulset_metadata_generation{job="kube-state-metrics", namespace=~".*"}
+      for: 15m
+      labels:
+        severity: warning
+        group: prometheus
+    - alert: KubeStatefulSetUpdateNotRolledOut
+      annotations:
+        description: >
+          StatefulSet "{{`{{ $labels.namespace }}`}}"/"{{`{{ $labels.statefulset }}`}}""
+          update has not been rolled out.
+        summary: StatefulSet update has not been rolled out.
+      expr: |-
+        (
+          max without (revision) (
+            kube_statefulset_status_current_revision{job="kube-state-metrics", namespace=~".*"}
+              unless
+            kube_statefulset_status_update_revision{job="kube-state-metrics", namespace=~".*"}
+          )
+            *
+          (
+            kube_statefulset_replicas{job="kube-state-metrics", namespace=~".*"}
+              !=
+            kube_statefulset_status_replicas_updated{job="kube-state-metrics", namespace=~".*"}
+          )
+        )  and (
+          changes(kube_statefulset_status_replicas_updated{job="kube-state-metrics", namespace=~".*"}[5m])
+            ==
+          0
+        )
+      for: 15m
+      labels:
+        severity: warning
+        group: prometheus
+    - alert: KubeDaemonSetRolloutStuck
+      annotations:
+        description: >
+          DaemonSet "{{`{{ $labels.namespace }}`}}"/"{{`{{ $labels.daemonset }}`}}" has
+          not finished or progressed for at least 15 minutes.
+        summary: DaemonSet rollout is stuck.
+      expr: |-
+        (
+          (
+            kube_daemonset_status_current_number_scheduled{job="kube-state-metrics", namespace=~".*"}
+             !=
+            kube_daemonset_status_desired_number_scheduled{job="kube-state-metrics", namespace=~".*"}
+          ) or (
+            kube_daemonset_status_number_misscheduled{job="kube-state-metrics", namespace=~".*"}
+             !=
+            0
+          ) or (
+            kube_daemonset_status_updated_number_scheduled{job="kube-state-metrics", namespace=~".*"}
+             !=
+            kube_daemonset_status_desired_number_scheduled{job="kube-state-metrics", namespace=~".*"}
+          ) or (
+            kube_daemonset_status_number_available{job="kube-state-metrics", namespace=~".*"}
+             !=
+            kube_daemonset_status_desired_number_scheduled{job="kube-state-metrics", namespace=~".*"}
+          )
+        ) and (
+          changes(kube_daemonset_status_updated_number_scheduled{job="kube-state-metrics", namespace=~".*"}[5m])
+            ==
+          0
+        )
+      for: 15m
+      labels:
+        severity: warning
+        group: prometheus
+    - alert: KubeContainerWaiting
+      annotations:
+        description: >
+          Pod "{{`{{ $labels.pod }}`}}" in namespace "{{`{{ $labels.namespace }}`}}" on
+          container "{{`{{ $labels.container }}`}}" has been in waiting state for longer than
+          1 hour.
+        summary: Pod container waiting longer than 1 hour
+      expr: sum by (namespace, pod, container, cluster) (kube_pod_container_status_waiting_reason{job="kube-state-metrics",
+        namespace=~".*"}) > 0
+      for: 1h
+      labels:
+        severity: warning
+        group: prometheus
+    - alert: KubeDaemonSetNotScheduled
+      annotations:
+        description: >
+          "{{`{{ $value }}`}}" Pods of DaemonSet "{{`{{ $labels.namespace }}`}}"/"{{`{{ $labels.daemonset }}`}}" 
+          are not scheduled.
+        summary: DaemonSet pods are not scheduled.
+      expr: |-
+        kube_daemonset_status_desired_number_scheduled{job="kube-state-metrics", namespace=~".*"}
+          -
+        kube_daemonset_status_current_number_scheduled{job="kube-state-metrics", namespace=~".*"} > 0
+      for: 10m
+      labels:
+        severity: warning
+        group: prometheus
+    - alert: KubeDaemonSetMisScheduled
+      annotations: 
+        description: > 
+          "{{`{{ $value }}`}}" Pods of DaemonSet "{{`{{ $labels.namespace }}`}}"/"{{`{{ $labels.daemonset}}`}}" 
+          are running where they are not supposed to run.
+        summary: DaemonSet pods are misscheduled.
+      expr: kube_daemonset_status_number_misscheduled{job="kube-state-metrics", namespace=~".*"}
+        > 0
+      for: 15m
+      labels:
+        severity: warning
+        group: prometheus
+    - alert: KubeJobNotCompleted
+      annotations:
+        description: >
+          Job "{{`{{ $labels.namespace }}`}}"/"{{`{{ $labels.job_name }}`}}" is taking
+          more than "{{`{{ "43200" | humanizeDuration }}`}}" to complete.
+        summary: Job did not complete in time
+      expr: |-
+        time() - max by(namespace, job_name, cluster) (kube_job_status_start_time{job="kube-state-metrics", namespace=~".*"}
+          and
+        kube_job_status_active{job="kube-state-metrics", namespace=~".*"} > 0) > 43200
+      labels:
+        severity: warning
+        group: prometheus
+    - alert: KubeJobFailed
+      annotations: 
+        description: >
+          Job "{{`{{ $labels.namespace }}`}}"/"{{`{{ $labels.job_name }}`}}" failed to
+          complete. Removing failed job after investigation should clear this alert.
+        summary: Job failed to complete.
+      expr: kube_job_failed{job="kube-state-metrics", namespace=~".*"}  > 0
+      for: 15m
+      labels:
+        severity: warning
+        group: prometheus
+    - alert: KubeHpaReplicasMismatch
+      annotations:
+        description: >
+          HPA "{{`{{ $labels.namespace }}`}}"/"{{`{{ $labels.horizontalpodautoscaler }}`}}"
+          has not matched the desired number of replicas for longer than 15 minutes.
+        summary: HPA has not matched desired number of replicas.
+      expr: |-
+        (kube_horizontalpodautoscaler_status_desired_replicas{job="kube-state-metrics", namespace=~".*"}
+          !=
+        kube_horizontalpodautoscaler_status_current_replicas{job="kube-state-metrics", namespace=~".*"})
+          and
+        (kube_horizontalpodautoscaler_status_current_replicas{job="kube-state-metrics", namespace=~".*"}
+          >
+        kube_horizontalpodautoscaler_spec_min_replicas{job="kube-state-metrics", namespace=~".*"})
+          and
+        (kube_horizontalpodautoscaler_status_current_replicas{job="kube-state-metrics", namespace=~".*"}
+          <
+        kube_horizontalpodautoscaler_spec_max_replicas{job="kube-state-metrics", namespace=~".*"})
+          and
+        changes(kube_horizontalpodautoscaler_status_current_replicas{job="kube-state-metrics", namespace=~".*"}[15m]) == 0
+      for: 15m
+      labels:
+        severity: warning
+        group: prometheus
+    - alert: KubeHpaMaxedOut
+      annotations:
+        description: >
+          HPA "{{`{{ $labels.namespace }}`}}"/"{{`{{ $labels.horizontalpodautoscaler }}`}}"
+          has been running at max replicas for longer than 15 minutes.
+        summary: HPA is running at max replicas
+      expr: |-
+        kube_horizontalpodautoscaler_status_current_replicas{job="kube-state-metrics", namespace=~".*"}
+          ==
+        kube_horizontalpodautoscaler_spec_max_replicas{job="kube-state-metrics", namespace=~".*"}
+      for: 15m
+      labels:
+        severity: warning
+        group: prometheus
+{{- end }}

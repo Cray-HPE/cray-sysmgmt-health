@@ -42,8 +42,7 @@ spec:
     rules:
     - alert: RootVolumeFull
       annotations:
-        description: 'Available space on mountpoint / is less than "{{`{{ $value | printf "%.2f" }}`}}" % '
-        summary: 'Available space on mountpoint root is less than "{{`{{ $value | printf "%.2f" }}`}}" %'
+        description: ' Available space on mountpoint / is less than "{{`{{ $value | printf "%.2f" }}`}}" % '
       expr: node_filesystem_avail_bytes{mountpoint="/",job="node-exporter"} / node_filesystem_size_bytes{mountpoint="/",job="node-exporter"} < 0.05
       for: 1h
       labels:
@@ -52,7 +51,6 @@ spec:
     - alert: ContainerdVolumeFull
       annotations:
         description: ' Available space on mountpoint /var/lib/containerd is less than "{{`{{ $value | printf "%.2f" }}`}}" % '
-        summary: ' Available space on mountpoint /var/lib/containerd is less than "{{`{{ $value | printf "%.2f" }}`}}" % '
       expr: node_filesystem_avail_bytes{mountpoint="/var/lib/containerd",job="node-exporter"} / node_filesystem_size_bytes{mountpoint="/var/lib/containerd",job="node-exporter"} < 0.05
       for: 1h
       labels:
@@ -61,7 +59,6 @@ spec:
     - alert: ContainersVolumeFull
       annotations:
         description: 'Available space on mountpoint /rootfs/var/lib/containers is less than "{{`{{ $value | printf "%.2f" }}`}}" % '
-        summary: 'Available space on mountpoint /rootfs/var/lib/containers is less than "{{`{{ $value | printf "%.2f" }}`}}" % '
       expr: node_filesystem_avail_bytes{mountpoint="/rootfs/var/lib/containers",job="cray-sysmgmt-health-ceph-node-exporter"} / node_filesystem_size_bytes{mountpoint="/rootfs/var/lib/containers",job="cray-sysmgmt-health-ceph-node-exporter"} < 0.05
       for: 1h
       labels:
@@ -70,7 +67,6 @@ spec:
     - alert: KubeletVolumeFull
       annotations:
         description: 'Available space on mountpoint /var/lib/kubelet is less than "{{`{{ $value | printf "%.2f" }}`}}" % '
-        summary: 'Available space on mountpoint /var/lib/kubelet is less than "{{`{{ $value | printf "%.2f" }}`}}" % '
       expr: node_filesystem_avail_bytes{mountpoint="/var/lib/kubelet",job="node-exporter"} / node_filesystem_size_bytes{mountpoint="/var/lib/kubelet",job="node-exporter"} < 0.05
       for: 1h
       labels:
@@ -79,7 +75,6 @@ spec:
     - alert: CephVolumeFull
       annotations:
         description: 'Available space on mountpoint /rootfs/var/lib/ceph is less than "{{`{{ $value | printf "%.2f" }}`}}" % '
-        summary: 'Available space on mountpoint /rootfs/var/lib/ceph is less than "{{`{{ $value | printf "%.2f" }}`}}" % '
       expr: node_filesystem_avail_bytes{mountpoint="/rootfs/var/lib/ceph",job="cray-sysmgmt-health-ceph-node-exporter"} / node_filesystem_size_bytes{mountpoint="/rootfs/var/lib/ceph",job="cray-sysmgmt-health-ceph-node-exporter"} < 0.05
       for: 1h
       labels:
@@ -88,7 +83,6 @@ spec:
     - alert: DiskWillFillIn30Mins
       annotations:
         description: ' Host disk will fill in less than 30 min (instance "{{`{{ $labels.instance }}`}}") '
-        summary: ' Host disk will fill in less than 30 min (instance "{{`{{ $labels.instance }}`}}") '
       expr: predict_linear(node_filesystem_free_bytes{job="node-exporter"}[5m], 60 * 30) < 0 and on(instance) up{job="node-exporter"}
       for: 15m
       labels:
@@ -97,7 +91,6 @@ spec:
     - alert: PodCpuUsageWarning
       annotations:
         description: ' Pod CPU usage is above 70% (instance "{{`{{ $labels.instance }}`}}") '
-        summary: ' Pod CPU usage is above 70% (instance "{{`{{ $labels.instance }}`}}") '
       expr: (sum by (pod) (rate(container_cpu_usage_seconds_total{name!=""}[3m])) / sum by (pod) (kube_pod_container_resource_limits{resource="cpu"} > 0) * 100) > 70
       for: 2m
       labels:
@@ -106,7 +99,6 @@ spec:
     - alert: PodCpuUsageTooHigh
       annotations:
         description: ' Pod CPU usage is above 85% (instance "{{`{{ $labels.instance }}`}}") '
-        summary: ' Pod CPU usage is above 85% (instance "{{`{{ $labels.instance }}`}}") '
       expr: (sum by (pod) (rate(container_cpu_usage_seconds_total{name!=""}[3m])) / sum by (pod) (kube_pod_container_resource_limits{resource="cpu"} > 0) * 100) > 85
       for: 2m
       labels:
@@ -115,7 +107,6 @@ spec:
     - alert: PodMemoryUsageWarning
       annotations:
         description: ' Pod memory usage is above 70% (instance "{{`{{ $labels.instance }}`}}") '
-        summary: ' Pod memory usage is above 70% (instance "{{`{{ $labels.instance }}`}}") '
       expr: (sum(container_memory_working_set_bytes{name!=""}) BY (instance, namespace, pod) / sum(container_spec_memory_limit_bytes > 0) BY (instance, namespace, pod) * 100)  > 70
       for: 2m
       labels:
@@ -124,7 +115,6 @@ spec:
     - alert: PodMemoryUsageTooHigh
       annotations:
         description: ' Pod memory usage is above 85% (instance "{{`{{ $labels.instance }}`}}") '
-        summary: ' Pod memory usage is above 85% (instance "{{`{{ $labels.instance }}`}}") '
       expr: (sum(container_memory_working_set_bytes{name!=""}) BY (instance, namespace, pod) / sum(container_spec_memory_limit_bytes > 0) BY (instance, namespace, pod) * 100)  > 85
       for: 2m
       labels:
@@ -133,7 +123,6 @@ spec:
     - alert: NodeCpuUsageWarning
       annotations:
         description: 'CPU usage for NCN is above 70% (instance "{{`{{ $labels.instance }}`}}") '
-        summary: 'CPU usage for NCN is above 70% (instance "{{`{{ $labels.instance }}`}}") '
       expr: 100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[10m]) * 100)) > 70
       for: 2m
       labels:
@@ -142,7 +131,6 @@ spec:
     - alert: NodeCpuUsageTooHigh
       annotations:
         description: 'CPU usage for NCN is above 80% (instance "{{`{{ $labels.instance }}`}}")'
-        summary: 'CPU usage for NCN is above 80% (instance "{{`{{ $labels.instance }}`}}")'
       expr: 100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[10m]) * 100)) > 80
       for: 2m
       labels:
@@ -151,7 +139,6 @@ spec:
     - alert: NodeMemoryUsageWarning
       annotations:
         description: ' Memory usage for NCN is above 70% (instance "{{`{{ $labels.instance }}`}}") '
-        summary: ' Memory usage for NCN is above 70% (instance "{{`{{ $labels.instance }}`}}") '
       expr: 100 * (1 - ((avg_over_time(node_memory_MemFree_bytes[1h]) + avg_over_time(node_memory_Cached_bytes[1h]) + avg_over_time(node_memory_Buffers_bytes[1h])) / avg_over_time(node_memory_MemTotal_bytes[1h]))) > 70
       for: 2m
       labels:
@@ -160,7 +147,6 @@ spec:
     - alert: NodeMemoryUsageTooHigh
       annotations:
         description: ' Memory usage for NCN is above 80% (instance "{{`{{ $labels.instance }}`}}") '
-        summary: ' Memory usage for NCN is above 80% (instance "{{`{{ $labels.instance }}`}}") '
       expr: 100 * (1 - ((avg_over_time(node_memory_MemFree_bytes[1h]) + avg_over_time(node_memory_Cached_bytes[1h]) + avg_over_time(node_memory_Buffers_bytes[1h])) / avg_over_time(node_memory_MemTotal_bytes[1h]))) >80
       for: 2m
       labels:
@@ -169,7 +155,6 @@ spec:
     - alert: OpensearchPVCVolumeFullCritical
       annotations:
         description: 'Opensearch PVC Volume claimed by {{`{{ $labels.persistentvolumeclaim }}`}} in Namespace {{`{{ $labels.namespace }}`}} is 90% full.  Percentage of PVC volume available is VALUE = "{{`{{ $value }}`}}"  LABELS: "{{`{{ $labels }}`}}"'
-        summary: 'Opensearch PVC Volume claimed by {{`{{ $labels.persistentvolumeclaim }}`}} is 90% full.
       expr: kubelet_volume_stats_available_bytes{persistentvolumeclaim=~"data-opensearch-masters-[0-9]",job="kubelet"}/kubelet_volume_stats_capacity_bytes{persistentvolumeclaim=~"data-opensearch-masters-[0-9]",job="kubelet"} <0.1
       for: 1h
       labels:
@@ -178,7 +163,6 @@ spec:
     - alert: OpensearchPVCVolumeFullWarning
       annotations:
         description: 'Opensearch PVC Volume claimed by {{`{{ $labels.persistentvolumeclaim }}`}} in Namespace {{`{{ $labels.namespace }}`}} is 85% full.  Percentage of PVC volume available is VALUE = "{{`{{ $value }}`}}"  LABELS: "{{`{{ $labels }}`}}"'
-        summary: 'Opensearch PVC Volume claimed by {{`{{ $labels.persistentvolumeclaim }}`}} is 85% full.
       expr: kubelet_volume_stats_available_bytes{persistentvolumeclaim=~"data-opensearch-masters-[0-9]",job="kubelet"}/kubelet_volume_stats_capacity_bytes{persistentvolumeclaim=~"data-opensearch-masters-[0-9]",job="kubelet"} <0.15
       for: 1h
       labels:

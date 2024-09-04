@@ -46,6 +46,7 @@ spec:
       for: 5m
       labels:
         severity: critical
+        group: prometheus
       annotations:
         summary: 'Postgresql down (instance "{{`{{ $labels.instance }}`}}")'
         description: 'Postgresql instance is down  VALUE = "{{`{{ $value }}`}}"  LABELS: "{{`{{ $labels }}`}}"'
@@ -54,6 +55,7 @@ spec:
       for: 5m
       labels:
         severity: warning
+        group: prometheus
       annotations:
         summary: 'Postgresql exporter error (instance "{{`{{ $labels.instance }}`}}")'
         description: 'Postgresql exporter is showing errors. A query may be buggy in query.yaml  VALUE = "{{`{{ $value }}`}}"  LABELS: "{{`{{ $labels }}`}}"'
@@ -62,6 +64,7 @@ spec:
       for: 5m
       labels:
         severity: warning
+        group: prometheus
       annotations:
         summary: 'Postgresql too many connections (instance "{{`{{ $labels.instance }}`}}")'
         description: 'PostgreSQL instance has too many connections  VALUE = "{{`{{ $value }}`}}"  LABELS: "{{`{{ $labels }}`}}"'
@@ -70,6 +73,7 @@ spec:
       for: 5m
       labels:
         severity: warning
+        group: prometheus
       annotations:
         summary: 'Postgresql not enough connections (instance "{{`{{ $labels.instance }}`}}")'
         description: 'PostgreSQL instance should have more connections (> 5)  VALUE = "{{`{{ $value }}`}}"  LABELS: "{{`{{ $labels }}`}}"'
@@ -78,6 +82,7 @@ spec:
       for: 5m
       labels:
         severity: warning
+        group: prometheus
       annotations:
         summary: 'Postgresql dead locks (instance "{{`{{ $labels.instance }}`}}")'
         description: 'PostgreSQL has dead-locks  VALUE = "{{`{{ $value }}`}}"  LABELS: "{{`{{ $labels }}`}}"'
@@ -86,6 +91,7 @@ spec:
       for: 5m
       labels:
         severity: warning
+        group: prometheus
       annotations:
         summary: 'Postgresql high rollback rate (instance "{{`{{ $labels.instance }}`}}")'
         description: 'Ratio of transactions being aborted compared to committed is > 2 %  VALUE = "{{`{{ $value }}`}}"  LABELS: "{{`{{ $labels }}`}}"'
@@ -94,6 +100,7 @@ spec:
       for: 5m
       labels:
         severity: critical
+        group: prometheus
       annotations:
         summary: 'Postgresql too many locks acquired (instance "{{`{{ $labels.instance }}`}}")'
         description: 'Too many locks acquired on the database. If this alert happens frequently, we may need to increase the postgres setting max_locks_per_transaction.  VALUE = "{{`{{ $value }}`}}"  LABELS: "{{`{{ $labels }}`}}"'
@@ -102,6 +109,7 @@ spec:
       for: 5m
       labels:
         severity: warning
+        group: prometheus
       annotations:
         description: 'Replication Slot "{{`{{ $labels.slot_name }}`}}" is not active which may cause this replica to be out of sync with master.'
         summary: 'Postgresql replication slot is inactive.'
@@ -110,6 +118,7 @@ spec:
       for: 5m
       labels:
         severity: warning
+        group: prometheus
       annotations:
         description: 'Replica "{{`{{ $labels.application_name }}`}}" is lagging behind master "{{`{{ $labels.pod }}`}}" by "{{`{{ $value }}`}}" bytes.'
         summary: 'Postgresql replication lag on replica "{{`{{ $labels.application_name }}`}}"'
@@ -118,6 +127,7 @@ spec:
       for: 5m
       labels:
         severity: warning
+        group: prometheus
       annotations:
         description: 'Replica "{{`{{ $labels.application_name }}`}}" is lagging behind master "{{`{{ $labels.pod }}`}}" by "{{`{{ $value }}`}}" bytes.'
         summary: 'Postgresql replication lag on replica "{{`{{ $labels.application_name }}`}}"'
@@ -126,6 +136,7 @@ spec:
       for: 5m
       labels:
         severity: warning
+        group: prometheus
       annotations:
         description: 'Replica from follower "{{`{{ $labels.application_name }}`}}" is lagging behind master "{{`{{ $labels.pod }}`}}" by "{{`{{ $value }}`}}" bytes.'
         summary: 'Postgresql replication lag from follower on replica "{{`{{ $labels.application_name }}`}}"'
@@ -134,6 +145,7 @@ spec:
       for: 5m
       labels:
         severity: warning
+        group: prometheus
       annotations:
         description: 'Replica from follower "{{`{{ $labels.application_name }}`}}" is lagging behind master "{{`{{ $labels.pod }}`}}" by "{{`{{ $value }}`}}" bytes.'
         summary: 'Postgresql replication lag from follower on replica "{{`{{ $labels.application_name }}`}}"'
@@ -142,6 +154,7 @@ spec:
       for: 1h
       labels:
         severity: critical
+        group: prometheus
       annotations:
         description: 'Postgresql PVC Volume claimed by {{`{{ $labels.persistentvolumeclaim }}`}} in Namespace {{`{{ $labels.namespace }}`}} is less than 5%.  VALUE = "{{`{{ $value }}`}}"  LABELS: "{{`{{ $labels }}`}}"'
         summary: 'Postgresql PVC Volume Full (instance "{{`{{ $labels.instance }}`}}")'

@@ -1,0 +1,152 @@
+#
+# MIT License
+#
+# (C) Copyright 2021-2022 Hewlett Packard Enterprise Development LP
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+#
+{{- if and (index .Values "customRules" "create") (index .Values "customRules" "rules" "kubernetes-storage") }}
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: {{ printf "%s-%s" (include "cray-sysmgmt-health.fullname" .) "kubernetes-storage" | trunc 63 | trimSuffix "-" }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "cray-sysmgmt-health.name" . }}
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+{{- if (index .Values "customRules" "labels") }}
+{{ toYaml (index .Values "customRules" "labels") | indent 4 }}
+{{- end }}
+{{- if (index .Values "customRules" "annotations") }}
+  annotations:
+{{ toYaml (index .Values "customRules" "annotations") | indent 4 }}
+{{- end }}
+spec:
+  groups:
+  - name: kubernetes-storage
+    rules:
+    - alert: KubePersistentVolumeFillingUp
+      annotations:
+        description: >
+          The PersistentVolume claimed by "{{`{{ $labels.persistentvolumeclaim }}`}}" 
+          in Namespace "{{`{{ $labels.namespace }}`}}" is only "{{`{{ $value | humanizePercentage }}`}}" free.
+        summary: PersistentVolume is filling up.
+      expr: |-
+        (
+          kubelet_volume_stats_available_bytes{job="kubelet", namespace=~".*", metrics_path="/metrics"}
+            /
+          kubelet_volume_stats_capacity_bytes{job="kubelet", namespace=~".*", metrics_path="/metrics"}
+        ) < 0.03
+        and
+        kubelet_volume_stats_used_bytes{job="kubelet", namespace=~".*", metrics_path="/metrics"} > 0
+        unless on(namespace, persistentvolumeclaim)
+        kube_persistentvolumeclaim_access_mode{ access_mode="ReadOnlyMany"} == 1
+        unless on(namespace, persistentvolumeclaim)
+        kube_persistentvolumeclaim_labels{label_excluded_from_alerts="true"} == 1
+      for: 1m
+      labels:
+        severity: critical
+        group: prometheus
+    - alert: KubePersistentVolumeFillingUp
+      annotations:
+        description: >
+          Based on recent sampling, the PersistentVolume claimed by 
+          "{{`{{ $labels.persistentvolumeclaim }}`}}" in Namespace "{{`{{ $labels.namespace }}`}}" is
+          expected to fill up within four days. Currently "{{`{{ $value | humanizePercentage }}`}}" is available.
+        summary: PersistentVolume is filling up.
+      expr: |-
+        (
+          kubelet_volume_stats_available_bytes{job="kubelet", namespace=~".*", metrics_path="/metrics"}
+            /
+          kubelet_volume_stats_capacity_bytes{job="kubelet", namespace=~".*", metrics_path="/metrics"}
+        ) < 0.15
+        and
+        kubelet_volume_stats_used_bytes{job="kubelet", namespace=~".*", metrics_path="/metrics"} > 0
+        and
+        predict_linear(kubelet_volume_stats_available_bytes{job="kubelet", namespace=~".*", metrics_path="/metrics"}[6h], 4 * 24 * 3600) < 0
+        unless on(namespace, persistentvolumeclaim)
+        kube_persistentvolumeclaim_access_mode{ access_mode="ReadOnlyMany"} == 1
+        unless on(namespace, persistentvolumeclaim)
+        kube_persistentvolumeclaim_labels{label_excluded_from_alerts="true"} == 1
+      for: 1h
+      labels:
+        severity: warning
+        group: prometheus
+    - alert: KubePersistentVolumeInodesFillingUp
+      annotations:
+        description: >
+          The PersistentVolume claimed by "{{`{{ $labels.persistentvolumeclaim}}`}}"
+          in Namespace "{{`{{ $labels.namespace }}`}}" only has "{{`{{ $value | humanizePercentage}}`}}"
+          free inodes.
+        summary: PersistentVolumeInodes are filling up.
+      expr: |-
+        (
+          kubelet_volume_stats_inodes_free{job="kubelet", namespace=~".*", metrics_path="/metrics"}
+            /
+          kubelet_volume_stats_inodes{job="kubelet", namespace=~".*", metrics_path="/metrics"}
+        ) < 0.03
+        and
+        kubelet_volume_stats_inodes_used{job="kubelet", namespace=~".*", metrics_path="/metrics"} > 0
+        unless on(namespace, persistentvolumeclaim)
+        kube_persistentvolumeclaim_access_mode{ access_mode="ReadOnlyMany"} == 1
+        unless on(namespace, persistentvolumeclaim)
+        kube_persistentvolumeclaim_labels{label_excluded_from_alerts="true"} == 1
+      for: 1m
+      labels:
+        severity: critical
+        group: prometheus
+    - alert: KubePersistentVolumeInodesFillingUp
+      annotations:
+        description: >
+          Based on recent sampling, the PersistentVolume claimed by 
+          "{{`{{ $labels.persistentvolumeclaim }}`}}" in Namespace "{{`{{ $labels.namespace }}`}}" is
+          expected to run out of inodes within four days. Currently "{{`{{ $value | humanizePercentage}}`}}"
+          of its inodes are free.
+        summary: PersistentVolumeInodes are filling up.
+      expr: |-
+        (
+          kubelet_volume_stats_inodes_free{job="kubelet", namespace=~".*", metrics_path="/metrics"}
+            /
+          kubelet_volume_stats_inodes{job="kubelet", namespace=~".*", metrics_path="/metrics"}
+        ) < 0.15
+        and
+        kubelet_volume_stats_inodes_used{job="kubelet", namespace=~".*", metrics_path="/metrics"} > 0
+        and
+        predict_linear(kubelet_volume_stats_inodes_free{job="kubelet", namespace=~".*", metrics_path="/metrics"}[6h], 4 * 24 * 3600) < 0
+        unless on(namespace, persistentvolumeclaim)
+        kube_persistentvolumeclaim_access_mode{ access_mode="ReadOnlyMany"} == 1
+        unless on(namespace, persistentvolumeclaim)
+        kube_persistentvolumeclaim_labels{label_excluded_from_alerts="true"} == 1
+      for: 1h
+      labels:
+        severity: warning
+        group: prometheus
+    - alert: KubePersistentVolumeErrors
+      annotations:
+        description: >
+          The persistent volume "{{`{{ $labels.persistentvolume }}`}}" has status
+          "{{`{{ $labels.phase }}`}}".
+        summary: PersistentVolume is having issues with provisioning.
+      expr: kube_persistentvolume_status_phase{phase=~"Failed|Pending",job="kube-state-metrics"}
+        > 0
+      for: 5m
+      labels:
+        severity: critical
+        group: prometheus
+{{- end }}

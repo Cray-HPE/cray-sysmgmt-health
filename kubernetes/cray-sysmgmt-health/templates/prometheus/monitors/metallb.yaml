@@ -12,7 +12,7 @@ spec:
     rules:
     - alert: MetalLBStaleConfig
       annotations:
-        message: '"{{`{{ $labels.job }}`}}" - MetalLB "{{`{{ $labels.container }}`}}" on "{{`{{ $labels.pod
+        description: '"{{`{{ $labels.job }}`}}" - MetalLB "{{`{{ $labels.container }}`}}" on "{{`{{ $labels.pod
           }}`}}" has a stale config for > 1 minute'
         summary: 'MetalLB "{{`{{ $labels.container }}`}}" on "{{`{{ $labels.pod}}`}}" has a stale config for > 1 minute'
       expr: metallb_k8s_client_config_stale_bool{job="metallb"} == 1
@@ -22,7 +22,7 @@ spec:
         group: prometheus
     - alert: MetalLBConfigNotLoaded
       annotations:
-        message: '"{{`{{ $labels.job }}`}}" - MetalLB "{{`{{ $labels.container }}`}}" on "{{`{{ $labels.pod
+        description: '"{{`{{ $labels.job }}`}}" - MetalLB "{{`{{ $labels.container }}`}}" on "{{`{{ $labels.pod
           }}`}}" has not loaded for > 1 minute'
       expr: metallb_k8s_client_config_loaded_bool{job="metallb"} == 0
       for: 1m
@@ -31,36 +31,36 @@ spec:
         group: prometheus
     - alert: MetalLBAddressPoolExhausted
       annotations:
-        message: '"{{`{{ $labels.job }}`}}" - MetalLB "{{`{{ $labels.container }}`}}" on "{{`{{ $labels.pod
+        description: '"{{`{{ $labels.job }}`}}" - MetalLB "{{`{{ $labels.container }}`}}" on "{{`{{ $labels.pod
           }}`}}" has exhausted address pool "{{`{{ $labels.pool }}`}}" for > 1 minute'
-      expr: metallb_allocator_addresses_in_use_total >= on(pool) metallb_allocator_addresses_total
+      expr: metallb_allocator_addresses_in_use_total >= on(pool,job) metallb_allocator_addresses_total
       for: 1m
       labels:
         severity: alert
         group: prometheus
     - alert: MetalLBAddressPoolUsage75Percent
       annotations:
-        message: '"{{`{{ $labels.job }}`}}" - MetalLB "{{`{{ $labels.container }}`}}" on "{{`{{ $labels.pod
+        description: '"{{`{{ $labels.job }}`}}" - MetalLB "{{`{{ $labels.container }}`}}" on "{{`{{ $labels.pod
           }}`}}" has address pool "{{`{{ $labels.pool }}`}}" past 75% usage for > 1 minute'
-      expr: ( metallb_allocator_addresses_in_use_total / on(pool) metallb_allocator_addresses_total
+      expr: ( metallb_allocator_addresses_in_use_total / on(pool,job) metallb_allocator_addresses_total
         ) * 100 > 75
       labels:
         severity: warning
         group: prometheus
     - alert: MetalLBAddressPoolUsage85Percent
       annotations:
-        message: '"{{`{{ $labels.job }}`}}" - MetalLB "{{`{{ $labels.container }}`}}" on "{{`{{ $labels.pod
+        description: '"{{`{{ $labels.job }}`}}" - MetalLB "{{`{{ $labels.container }}`}}" on "{{`{{ $labels.pod
           }}`}}" has address pool "{{`{{ $labels.pool }}`}}" past 85% usage for > 1 minute'
-      expr: ( metallb_allocator_addresses_in_use_total / on(pool) metallb_allocator_addresses_total
+      expr: ( metallb_allocator_addresses_in_use_total / on(pool,job) metallb_allocator_addresses_total
         ) * 100 > 85
       labels:
         severity: warning
         group: prometheus
     - alert: MetalLBAddressPoolUsage95Percent
       annotations:
-        message: '"{{`{{ $labels.job }}`}}" - MetalLB "{{`{{ $labels.container }}`}}" on "{{`{{ $labels.pod
+        description: '"{{`{{ $labels.job }}`}}" - MetalLB "{{`{{ $labels.container }}`}}" on "{{`{{ $labels.pod
           }}`}}" has address pool "{{`{{ $labels.pool }}`}}" past 95% usage for > 1 minute'
-      expr: ( metallb_allocator_addresses_in_use_total / on(pool) metallb_allocator_addresses_total
+      expr: ( metallb_allocator_addresses_in_use_total / on(pool,job) metallb_allocator_addresses_total
         ) * 100 > 95
       labels:
         severity: critical
