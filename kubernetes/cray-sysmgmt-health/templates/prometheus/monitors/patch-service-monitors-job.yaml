@@ -44,7 +44,7 @@ spec:
             - '/bin/sh'
           args:
             - '-c'
-            - 'until kubectl get vmservicescrapes.operator.victoriametrics.com  -n sysmgmt-health vms-kube-scheduler > /dev/null 2>&1; do echo "Waiting for vms-kube-scheduler service monitor to be created"; sleep 5; done; /usr/local/sbin/fix-kubelet-target-down-alert.sh; /usr/local/sbin/disable-alerts.sh; /usr/local/sbin/update-api-alerts.sh'
+            - 'until kubectl get vmservicescrapes.operator.victoriametrics.com  -n sysmgmt-health vms-kube-scheduler > /dev/null 2>&1; do echo "Waiting for vms-kube-scheduler service monitor to be created"; sleep 5; done; /usr/local/sbin/fix-kube-proxy-target-down-alert.sh; /usr/local/sbin/disable-alerts.sh; /usr/local/sbin/update-api-alerts.sh'
           volumeMounts:
           - mountPath: /usr/local/sbin
             name: patch-service-monitors
