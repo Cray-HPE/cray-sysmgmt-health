@@ -1,4 +1,32 @@
 {
+  "__inputs": [],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "panel",
+      "id": "gauge",
+      "name": "Gauge",
+      "version": ""
+    },
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "11.0.0"
+    },
+    {
+      "type": "datasource",
+      "id": "prometheus",
+      "name": "Prometheus",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
   "annotations": {
     "list": [
       {
@@ -24,7 +52,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 21,
+  "id": null,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -51,6 +79,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -64,6 +93,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -106,7 +136,6 @@
         "y": 1
       },
       "id": 2,
-      "links": [],
       "options": {
         "legend": {
           "calcs": [
@@ -120,6 +149,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -200,9 +230,10 @@
         "y": 1
       },
       "id": 3,
-      "links": [],
       "maxDataPoints": 100,
       "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
         "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
@@ -212,9 +243,10 @@
           "values": false
         },
         "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "showThresholdMarkers": true,
+        "sizing": "auto"
       },
-      "pluginVersion": "9.3.2",
+      "pluginVersion": "11.0.0",
       "targets": [
         {
           "datasource": {
@@ -240,6 +272,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -253,6 +286,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -295,7 +329,6 @@
         "y": 8
       },
       "id": 4,
-      "links": [],
       "options": {
         "legend": {
           "calcs": [
@@ -309,6 +342,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -389,9 +423,10 @@
         "y": 8
       },
       "id": 5,
-      "links": [],
       "maxDataPoints": 100,
       "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
         "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
@@ -401,9 +436,10 @@
           "values": false
         },
         "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "showThresholdMarkers": true,
+        "sizing": "auto"
       },
-      "pluginVersion": "9.3.2",
+      "pluginVersion": "11.0.0",
       "targets": [
         {
           "datasource": {
@@ -435,7 +471,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PC96415006F908B67"
+        "uid": "$datasource"
       },
       "fieldConfig": {
         "defaults": {
@@ -443,6 +479,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -456,6 +493,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -511,6 +549,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
@@ -518,8 +557,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "PC96415006F908B67"
+            "uid": "$datasource"
           },
           "editorMode": "code",
           "expr": "(  sum without(instance, node) (kubelet_volume_stats_capacity_bytes{cluster=\"\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=\"nexus\", persistentvolumeclaim=\"nexus-data\"})  -  sum without(instance, node) (kubelet_volume_stats_available_bytes{cluster=\"\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=\"nexus\", persistentvolumeclaim=\"nexus-data\"}))",
@@ -529,11 +567,10 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "PC96415006F908B67"
+            "uid": "$datasource"
           },
           "editorMode": "code",
-          "expr": "sum without(instance, node) (kubelet_volume_stats_available_bytes{cluster=\"\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=\"nexus\", persistentvolumeclaim=\"nexus-data\"})",
+          "expr": "sum without(instance, node) (kubelet_volume_stats_available_bytes{job=\"kubelet\", metrics_path=\"/metrics\", namespace=\"nexus\", persistentvolumeclaim=\"nexus-data\"})",
           "hide": false,
           "legendFormat": "Free Space",
           "range": true,
@@ -546,7 +583,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PC96415006F908B67"
+        "uid": "$datasource"
       },
       "fieldConfig": {
         "defaults": {
@@ -595,6 +632,8 @@
       },
       "id": 9,
       "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
         "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
@@ -604,17 +643,17 @@
           "values": false
         },
         "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "showThresholdMarkers": true,
+        "sizing": "auto"
       },
-      "pluginVersion": "9.3.2",
+      "pluginVersion": "11.0.0",
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "PC96415006F908B67"
+            "uid": "$datasource"
           },
           "editorMode": "code",
-          "expr": "(  kubelet_volume_stats_capacity_bytes{cluster=\"\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=\"nexus\", persistentvolumeclaim=\"nexus-data\"}  -  kubelet_volume_stats_available_bytes{cluster=\"\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=\"nexus\", persistentvolumeclaim=\"nexus-data\"})/kubelet_volume_stats_capacity_bytes{cluster=\"\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=\"nexus\", persistentvolumeclaim=\"nexus-data\"}* 100",
+          "expr": "(  kubelet_volume_stats_capacity_bytes{job=\"kubelet\", metrics_path=\"/metrics\", namespace=\"nexus\", persistentvolumeclaim=\"nexus-data\"}  -  kubelet_volume_stats_available_bytes{job=\"kubelet\", metrics_path=\"/metrics\", namespace=\"nexus\", persistentvolumeclaim=\"nexus-data\"})/kubelet_volume_stats_capacity_bytes{job=\"kubelet\", metrics_path=\"/metrics\", namespace=\"nexus\", persistentvolumeclaim=\"nexus-data\"}* 100",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -625,8 +664,7 @@
     }
   ],
   "refresh": "30m",
-  "schemaVersion": 37,
-  "style": "dark",
+  "schemaVersion": 39,
   "tags": [
     "kubernetes-mixin"
   ],
@@ -650,12 +688,7 @@
         "type": "datasource"
       },
       {
-        "current": {
-          "isNone": true,
-          "selected": false,
-          "text": "None",
-          "value": ""
-        },
+        "current": {},
         "datasource": {
           "type": "prometheus",
           "uid": "$datasource"
@@ -681,11 +714,7 @@
         "useTags": false
       },
       {
-        "current": {
-          "selected": false,
-          "text": "vault",
-          "value": "vault"
-        },
+        "current": {},
         "datasource": {
           "type": "prometheus",
           "uid": "$datasource"
@@ -712,11 +741,7 @@
         "useTags": false
       },
       {
-        "current": {
-          "selected": false,
-          "text": "vault-raft-cray-vault-0",
-          "value": "vault-raft-cray-vault-0"
-        },
+        "current": {},
         "datasource": {
           "type": "prometheus",
           "uid": "$datasource"
@@ -747,6 +772,7 @@
     "from": "now-30m",
     "to": "now"
   },
+  "timeRangeUpdatedDuringEditOrView": false,
   "timepicker": {
     "refresh_intervals": [
       "5s",
@@ -774,7 +800,7 @@
   },
   "timezone": "",
   "title": "Kubernetes / Persistent Volumes",
-  "uid": "919b92a8e8041bd567af9edab12c840c",
-  "version": 1,
+  "uid": "919b92a8e8041bd567af9edab12c840ca",
+  "version": 2,
   "weekStart": ""
 }

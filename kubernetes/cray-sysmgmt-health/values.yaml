@@ -219,6 +219,8 @@ victoria-metrics-k8s-stack:
           repository: artifactory.algol60.net/csm-docker/stable/docker.io/victoriametrics/vminsert
           tag: v1.96.0-cluster
         replicaCount: 2
+        extraArgs:
+          maxLabelsPerTimeseries: "100"
         resources:
           limits:
             cpu: '2'
