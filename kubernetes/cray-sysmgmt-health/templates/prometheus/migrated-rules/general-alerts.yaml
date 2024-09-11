@@ -1,0 +1,85 @@
+#
+# MIT License
+#
+# (C) Copyright 2021-2022 Hewlett Packard Enterprise Development LP
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+#
+{{- if and (index .Values "customRules" "create") (index .Values "customRules" "rules" "general") }}
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: {{ printf "%s-%s" (include "cray-sysmgmt-health.fullname" .) "general.rules" | trunc 63 | trimSuffix "-" }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "cray-sysmgmt-health.name" . }}
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+{{- if (index .Values "customRules" "labels") }}
+{{ toYaml (index .Values "customRules" "labels") | indent 4 }}
+{{- end }}
+{{- if (index .Values "customRules" "annotations") }}
+  annotations:
+{{ toYaml (index .Values "customRules" "annotations") | indent 4 }}
+{{- end }}
+spec:
+  groups:
+  - name: general.rules
+    rules:
+    - alert: TargetDown
+      annotations:
+        description: >
+          "{{`{{ printf "%.4g" $value }}`}}"% of the "{{`{{ $labels.job }}`}}"/"{{`{{ $labels.service
+          }}`}}" targets in "{{`{{ $labels.namespace }}`}}" namespace are down.'
+        summary: One or more targets are unreachable.
+      expr: 100 * (count(up == 0) BY (job, namespace, service) / count(up) BY (job,
+        namespace, service)) > 10
+      for: 10m
+      labels:
+        severity: warning
+        group: prometheus
+    - alert: Watchdog
+      annotations:
+        description: >
+          This is an alert meant to ensure that the entire alerting pipeline is functional.
+          This alert is always firing, therefore it should always be firing in Alertmanager
+          and always fire against a receiver. There are integrations with various notification
+          mechanisms that send a notification when this alert is not firing. For example the
+          "DeadMansSnitch" integration in PagerDuty.
+        summary: An alert that should always be firing to certify that Alertmanager
+          is working properly.
+      expr: vector(1)
+      labels:
+        severity: none
+        group: prometheus
+    - alert: InfoInhibitor
+      annotations:
+        description: >
+          This is an alert that is used to inhibit info alerts.
+          By themselves, the info-level alerts are sometimes very noisy, but they are relevant when combined with
+          other alerts.
+          This alert fires whenever there's a severity="info" alert, and stops firing when another alert with a
+          severity of 'warning' or 'critical' starts firing on the same namespace.
+          This alert should be routed to a null receiver and configured to inhibit alerts with severity="info".
+        summary: Info-level alert inhibition.
+      expr: ALERTS{severity = "info"} == 1 unless on(namespace) ALERTS{alertname !=
+        "InfoInhibitor", severity =~ "warning|critical", alertstate="firing"} == 1
+      labels:
+        severity: warning
+        group: prometheus
+{{- end }}

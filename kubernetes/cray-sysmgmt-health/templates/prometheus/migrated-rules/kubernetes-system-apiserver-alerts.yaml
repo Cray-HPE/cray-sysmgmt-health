@@ -1,0 +1,118 @@
+#
+# MIT License
+#
+# (C) Copyright 2021-2022 Hewlett Packard Enterprise Development LP
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+#
+{{- if and (index .Values "customRules" "create") (index .Values "customRules" "rules" "kubernetes-system-apiserver") }}
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: {{ printf "%s-%s" (include "cray-sysmgmt-health.fullname" .) "kubernetes-system-apiserver" | trunc 63 | trimSuffix "-" }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "cray-sysmgmt-health.name" . }}
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+{{- if (index .Values "customRules" "labels") }}
+{{ toYaml (index .Values "customRules" "labels") | indent 4 }}
+{{- end }}
+{{- if (index .Values "customRules" "annotations") }}
+  annotations:
+{{ toYaml (index .Values "customRules" "annotations") | indent 4 }}
+{{- end }}
+spec:
+  groups:
+  - name: kubernetes-system-apiserver
+    rules:
+    - alert: KubeClientCertificateExpiration
+      annotations:
+        description: >
+          'A client certificate used to authenticate to kubernetes apiserver
+          is expiring in less than 90.0 days.'
+        summary: Client certificate is about to expire.
+      expr: apiserver_client_certificate_expiration_seconds_count{job="apiserver"}
+        > 0 and on(job) histogram_quantile(0.01, sum by (job, le) (rate(apiserver_client_certificate_expiration_seconds_bucket{job="apiserver"}[5m])))
+        < 7776000
+      for: 5m
+      labels:
+        severity: warning
+        group: prometheus
+    - alert: KubeClientCertificateExpiration
+      annotations:
+        description: >
+          'A client certificate used to authenticate to kubernetes apiserver
+          is expiring in less than 14.0 days.'
+        summary: Client certificate is about to expire.
+      expr: apiserver_client_certificate_expiration_seconds_count{job="apiserver"}
+        > 0 and on(job) histogram_quantile(0.01, sum by (job, le) (rate(apiserver_client_certificate_expiration_seconds_bucket{job="apiserver"}[5m])))
+        < 1209600
+      for: 5m
+      labels:
+        severity: critical
+        group: prometheus
+    - alert: KubeAggregatedAPIErrors
+      annotations:
+        description: >
+          Kubernetes aggregated API "{{`{{ $labels.name }}`}}"/"{{`{{ $labels.namespace }}`}}"
+          has reported errors. It has appeared unavailable "{{`{{ $value | humanize}}`}}"
+          times averaged over the past 10m.
+        summary: Kubernetes aggregated API has reported errors.
+      expr: sum by(name, namespace, cluster)(increase(aggregator_unavailable_apiservice_total[10m]))
+        > 4
+      labels:
+        severity: warning
+        group: prometheus
+    - alert: KubeAggregatedAPIDown
+      annotations:
+        description: >
+          Kubernetes aggregated API "{{`{{ $labels.name }}`}}"/"{{`{{ $labels.namespace }}`}}"
+          has been only "{{`{{ $value | humanize }}`}}"% available over the last 10m.
+        summary: Kubernetes aggregated API is down.
+      expr: (1 - max by(name, namespace, cluster)(avg_over_time(aggregator_unavailable_apiservice[10m])))
+        * 100 < 85
+      for: 5m
+      labels:
+        severity: warning
+        group: prometheus
+    - alert: KubeAPIDown
+      annotations:
+        description: 'KubeAPI has disappeared from Prometheus target discovery.'
+        summary: 'Target disappeared from Prometheus target discovery.'
+      expr: absent(up{job="apiserver"} == 1)
+      for: 15m
+      labels:
+        severity: critical
+        group: prometheus
+    - alert: KubeAPITerminatedRequests
+      annotations:
+        description: >
+          The kubernetes apiserver has terminated "{{`{{ $value | humanizePercentage }}`}}"
+          of its incoming requests.
+        summary: >
+          The kubernetes apiserver has terminated "{{`{{ $value | humanizePercentage }}`}}" 
+          of its incoming requests.
+      expr: sum(rate(apiserver_request_terminations_total{job="apiserver"}[10m]))  /
+        (  sum(rate(apiserver_request_total{job="apiserver"}[10m])) + sum(rate(apiserver_request_terminations_total{job="apiserver"}[10m]))
+        ) > 0.20
+      for: 5m
+      labels:
+        severity: warning
+        group: prometheus
+{{- end }}

@@ -1,0 +1,159 @@
+#
+# MIT License
+#
+# (C) Copyright 2021-2022 Hewlett Packard Enterprise Development LP
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+#
+{{- if and (index .Values "customRules" "create") (index .Values "customRules" "rules" "kubernetes-resources") }}
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: {{ printf "%s-%s" (include "cray-sysmgmt-health.fullname" .) "kubernetes-resources" | trunc 63 | trimSuffix "-" }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ template "cray-sysmgmt-health.name" . }}
+{{ include "cray-sysmgmt-health.labels" . | indent 4 }}
+{{- if (index .Values "customRules" "labels") }}
+{{ toYaml (index .Values "customRules" "labels") | indent 4 }}
+{{- end }}
+{{- if (index .Values "customRules" "annotations") }}
+  annotations:
+{{ toYaml (index .Values "customRules" "annotations") | indent 4 }}
+{{- end }}
+spec:
+  groups:
+  - name: kubernetes-resources
+    rules:
+    - alert: KubeCPUOvercommit
+      annotations:
+        description: >
+          Cluster has overcommitted CPU resource requests for Pods by "{{`{{$value }}`}}"
+          CPU shares and cannot tolerate node failure.
+        summary: Cluster has overcommitted CPU resource requests.
+      expr: |-
+        sum(namespace_cpu:kube_pod_container_resource_requests:sum{}) - (sum(kube_node_status_allocatable{resource="cpu"}) - max(kube_node_status_allocatable{resource="cpu"})) > 0
+        and
+        (sum(kube_node_status_allocatable{resource="cpu"}) - max(kube_node_status_allocatable{resource="cpu"})) > 0
+      for: 10m
+      labels:
+        severity: warning
+        group: prometheus
+    - alert: KubeMemoryOvercommit
+      annotations:
+        description: >
+          Cluster has overcommitted memory resource requests for Pods by
+          "{{`{{ $value | humanize }}`}}" bytes and cannot tolerate node failure.
+        summary: Cluster has overcommitted memory resource requests.
+      expr: |-
+        sum(namespace_memory:kube_pod_container_resource_requests:sum{}) - (sum(kube_node_status_allocatable{resource="memory"}) - max(kube_node_status_allocatable{resource="memory"})) > 0
+        and
+        (sum(kube_node_status_allocatable{resource="memory"}) - max(kube_node_status_allocatable{resource="memory"})) > 0
+      for: 10m
+      labels:
+        severity: warning
+        group: prometheus
+    - alert: KubeCPUQuotaOvercommit
+      annotations:
+        description: 'Cluster has overcommitted CPU resource requests for Namespaces.'
+        summary: Cluster has overcommitted CPU resource requests.
+      expr: |-
+        sum(min without(resource) (kube_resourcequota{job="kube-state-metrics", type="hard", resource=~"(cpu|requests.cpu)"}))
+          /
+        sum(kube_node_status_allocatable{resource="cpu", job="kube-state-metrics"})
+          > 1.5
+      for: 5m
+      labels:
+        severity: warning
+        group: prometheus
+    - alert: KubeMemoryQuotaOvercommit
+      annotations:
+        description: 'Cluster has overcommitted memory resource requests for Namespaces.'
+        summary: Cluster has overcommitted memory resource requests.
+      expr: |-
+        sum(min without(resource) (kube_resourcequota{job="kube-state-metrics", type="hard", resource=~"(memory|requests.memory)"}))
+          /
+        sum(kube_node_status_allocatable{resource="memory", job="kube-state-metrics"})
+          > 1.5
+      for: 5m
+      labels:
+        severity: warning
+        group: prometheus
+    - alert: KubeQuotaAlmostFull
+      annotations:
+        description: >
+          Namespace "{{`{{ $labels.namespace }}`}}" is using 
+          "{{`{{ $value | humanizePercentage }}`}}" of its "{{`{{ $labels.resource }}`}}" quota.
+        summary: Namespace quota is going to be full.
+      expr: |-
+        kube_resourcequota{job="kube-state-metrics", type="used"}
+          / ignoring(instance, job, type)
+        (kube_resourcequota{job="kube-state-metrics", type="hard"} > 0)
+          > 0.9 < 1
+      for: 15m
+      labels:
+        severity: info
+        group: prometheus
+    - alert: KubeQuotaFullyUsed
+      annotations:
+        description: >
+          Namespace "{{`{{ $labels.namespace }}`}}" is using 
+          "{{`{{ $value | humanizePercentage }}`}}" of its "{{`{{ $labels.resource }}`}}" quota.
+        summary: Namespace quota is fully used.
+      expr: |-
+        kube_resourcequota{job="kube-state-metrics", type="used"}
+          / ignoring(instance, job, type)
+        (kube_resourcequota{job="kube-state-metrics", type="hard"} > 0)
+          == 1
+      for: 15m
+      labels:
+        severity: info
+        group: prometheus
+    - alert: KubeQuotaExceeded
+      annotations:
+        description: >
+          Namespace "{{`{{ $labels.namespace }}`}}" is using "{{`{{ $value | humanizePercentage}}`}}"
+          of its "{{`{{ $labels.resource }}`}}" quota.
+        summary: Namespace quota has exceeded the limits.
+      expr: |-
+        kube_resourcequota{job="kube-state-metrics", type="used"}
+          / ignoring(instance, job, type)
+        (kube_resourcequota{job="kube-state-metrics", type="hard"} > 0)
+          > 1
+      for: 15m
+      labels:
+        severity: warning
+        group: prometheus
+    - alert: CPUThrottlingHigh
+      annotations:
+        description: >
+          "{{`{{ $value | humanizePercentage }}`}}" throttling of CPU in namespace
+          "{{`{{ $labels.namespace }}`}}" for container "{{`{{ $labels.container }}`}}" in pod 
+          "{{`{{ $labels.pod }}`}}".
+        summary: Processes experience elevated CPU throttling.
+      expr: |-
+        sum(increase(container_cpu_cfs_throttled_periods_total{container!="", }[5m])) by (container, pod, namespace)
+          /
+        sum(increase(container_cpu_cfs_periods_total{}[5m])) by (container, pod, namespace)
+          > ( 25 / 100 )
+      for: 15m
+      labels:
+        severity: info
+        group: prometheus
+{{- end }}

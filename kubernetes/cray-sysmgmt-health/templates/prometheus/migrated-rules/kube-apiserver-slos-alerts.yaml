@@ -21,11 +21,11 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 #
-{{- if and (index .Values "customRules" "create") (index .Values "customRules" "rules" "mdraid") }}
+{{- if and (index .Values "customRules" "create") (index .Values "customRules" "rules" "kube-apiserver-slos") }}
 apiVersion: operator.victoriametrics.com/v1beta1
 kind: VMRule
 metadata:
-  name: {{ printf "%s-%s" (include "cray-sysmgmt-health.fullname" .) "mdraid-prometheus-alert.rules" | trunc 63 | trimSuffix "-" }}
+  name: {{ printf "%s-%s" (include "cray-sysmgmt-health.fullname" .) "kube-apiserver-slos" | trunc 63 | trimSuffix "-" }}
   namespace: {{ .Release.Namespace }}
   labels:
     app: {{ template "cray-sysmgmt-health.name" . }}
@@ -39,48 +39,62 @@ metadata:
 {{- end }}
 spec:
   groups:
-  - name: MD RAID Arrays
+  - name: kube-apiserver-slos
     rules:
-    - alert: MdRaidArrayGotInactive
-      expr: node_md_state{state="inactive"} > 0
-      for: 5m
-      labels:
-        severity: critical
-        group: prometheus
+    - alert: KubeAPIErrorBudgetBurn
       annotations:
-        description: 'MD RAID array "{{`{{ $labels.device }}`}}" on (instance "{{`{{ $labels.instance }}`}}") is in Inactive state'
-        summary: 'An MD RAID array is in Inactive state'
-
-    - alert: MdRaidDiskFailure
-      expr: node_md_disks{state="failed"} > 0
-      for: 5m
+        description: The API server is burning too much error budget.
+        summary: The API server is burning too much error budget.
+      expr: |-
+        sum(apiserver_request:burnrate1h) > (14.40 * 0.01000)
+        and
+        sum(apiserver_request:burnrate5m) > (14.40 * 0.01000)
+      for: 2m
       labels:
+        long: 1h
         severity: critical
+        short: 5m
         group: prometheus
+    - alert: KubeAPIErrorBudgetBurn
       annotations:
-        description: 'At least one device in MD RAID array "{{`{{ $labels.device }}`}}" on "{{`{{ $labels.instance }}`}}" has failed'
-        summary: 'An MD RAID has failed'
-
-    # Alert for Storage Nodes, which has older version of Node Exporter running
-    - alert: MdRaidDegradedOlderNodeExporter
-      expr: (node_md_disks - node_md_disks_active) != 0
-      for: 1m
-      labels:
-        severity: critical
-        group: prometheus
-      annotations:
-        description: 'An MD RAID array "{{`{{ $labels.device }}`}}" on "{{`{{ $labels.instance }}`}}" is in Degraded state: {{`{{ $value }}`}} disks failed'
-        summary: 'An MD RAID array is in Degraded state'
-
-    # Alert for Nodes, running newer version of Node Exporter running
-    - alert: MdRaidDegraded
-      expr: |
-        node_md_disks_required - ignoring (state) (node_md_disks{state="active"}) > 0
+        description: The API server is burning too much error budget.
+        summary: The API server is burning too much error budget.
+      expr: |-
+        sum(apiserver_request:burnrate6h) > (6.00 * 0.01000)
+        and
+        sum(apiserver_request:burnrate30m) > (6.00 * 0.01000)
       for: 15m
       labels:
+        long: 6h
         severity: critical
+        short: 30m
         group: prometheus
+    - alert: KubeAPIErrorBudgetBurn
       annotations:
-        description: 'An MD RAID array "{{`{{ $labels.device }}`}}" on "{{`{{ $labels.instance }}`}}" is in degraded state due to failure of {{`{{ $value }}`}} disks.'
-        summary: 'An MD RAID array is in Degraded state'
+        description: The API server is burning too much error budget.
+        summary: The API server is burning too much error budget.
+      expr: |-
+        sum(apiserver_request:burnrate1d) > (3.00 * 0.01000)
+        and
+        sum(apiserver_request:burnrate2h) > (3.00 * 0.01000)
+      for: 1h
+      labels:
+        long: 1d
+        severity: warning
+        short: 2h
+        group: prometheus
+    - alert: KubeAPIErrorBudgetBurn
+      annotations:
+        description: The API server is burning too much error budget.
+        summary: The API server is burning too much error budget.
+      expr: |-
+        sum(apiserver_request:burnrate3d) > (1.00 * 0.01000)
+        and
+        sum(apiserver_request:burnrate6h) > (1.00 * 0.01000)
+      for: 3h
+      labels:
+        long: 3d
+        severity: warning
+        short: 6h
+        group: prometheus
 {{- end }}

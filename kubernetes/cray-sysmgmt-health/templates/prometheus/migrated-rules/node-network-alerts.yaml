@@ -21,11 +21,11 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 #
-{{- if and (index .Values "customRules" "create") (index .Values "customRules" "rules" "switch-alerts") }}
+{{- if and (index .Values "customRules" "create") (index .Values "customRules" "rules" "node-network") }}
 apiVersion: operator.victoriametrics.com/v1beta1
 kind: VMRule
 metadata:
-  name: {{ printf "%s-%s" (include "cray-sysmgmt-health.fullname" .) "switch-alerts.rules" | trunc 63 | trimSuffix "-" }}
+  name: {{ printf "%s-%s" (include "cray-sysmgmt-health.fullname" .) "node-network" | trunc 63 | trimSuffix "-" }}
   namespace: {{ .Release.Namespace }}
   labels:
     app: {{ template "cray-sysmgmt-health.name" . }}
@@ -39,15 +39,17 @@ metadata:
 {{- end }}
 spec:
   groups:
-  - name: Switch status
+  - name: node-network
     rules:
-    - alert: SwitchPortDown
+    - alert: NodeNetworkInterfaceFlapping
       annotations:
-        description: 'Port "{{`{{ $labels.ifName }}`}}" - "{{`{{ $labels.ifAlias }}`}}" is down, this may result in connectivity loss.'
-      expr: ifOperStatus != ifAdminStatus
-      for: 5m
+        description: >
+          Network interface "{{`{{ $labels.device }}`}}" changing its up status
+          often on node-exporter "{{`{{ $labels.namespace }}`}}"/"{{`{{ $labels.pod }}`}}"
+        summary: Network interface is often changing its status
+      expr: changes(node_network_up{job="node-exporter",device!~"veth.+"}[2m]) > 2
+      for: 2m
       labels:
-        severity: critical
+        severity: warning
         group: prometheus
-
 {{- end }}

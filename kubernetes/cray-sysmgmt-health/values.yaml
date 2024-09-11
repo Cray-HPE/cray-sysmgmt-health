@@ -38,7 +38,7 @@ alertmanagerSecret:
     - name: "null"
     route:
       group_by:
-      - job
+      - group
       group_interval: 5m
       group_wait: 30s
       receiver: "null"
@@ -112,6 +112,33 @@ prometheus-snmp-exporter:
       release: cray-sysmgmt-health
 
 victoria-metrics-k8s-stack:
+  defaultRules:
+    create: false
+    rules:
+      etcd: true
+      general: true
+      k8s: true
+      kubeApiserver: true
+      kubeApiserverAvailability: true
+      kubeApiserverBurnrate: true
+      kubeApiserverHistogram: true
+      kubeApiserverSlos: true
+      kubelet: true
+      kubePrometheusGeneral: true
+      kubePrometheusNodeRecording: true
+      kubernetesApps: true
+      kubernetesResources: true
+      kubernetesStorage: true
+      kubernetesSystem: true
+      kubeScheduler: true
+      kubeStateMetrics: true
+      network: true
+      node: true
+      vmagent: true
+      vmsingle: true
+      vmhealth: true
+      alertmanager: true
+
   nameOverride: "vms"
   fullnameOverride: "vms"
   namespace: sysmgmt-health
@@ -699,6 +726,20 @@ customRules:
     smartmon-alerts: true
     switch-alerts: true
     istio-alerts: true
+    etcd: true
+    general: true
+    kube-apiserver-slos: true
+    kube-state-metrics: true
+    kubernetes-apps: true
+    kubernetes-resources: true
+    kubernetes-storage: true
+    kubernetes-system: true
+    kubernetes-system-apiserver: true
+    kubernetes-system-controller-manager: true
+    kubernetes-system-kubelet: true
+    kubernetes-system-scheduler: true
+    node-exporter: true
+    node-network: true
   labels:
     release: cray-sysmgmt-health
   ## Annotations for default rules
