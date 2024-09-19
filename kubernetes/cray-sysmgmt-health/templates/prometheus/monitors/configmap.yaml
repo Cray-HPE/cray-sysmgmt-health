@@ -46,7 +46,7 @@ data:
 
     echo "Disabling etcdHighNumberOfFailedGRPCRequests alert"
     mfile=/tmp/vms-etcd.yaml
-    kubectl get vmrules.operator.victoriametrics.com -n sysmgmt-health vms-etcd -o yaml > $mfile
+    kubectl get vmrules.operator.victoriametrics.com -n sysmgmt-health cray-sysmgmt-health-etcd -o yaml > $mfile
     sed -i '/- alert: etcdHighNumberOfFailedGRPCRequests/,/severity: critical/d' $mfile
     kubectl -n sysmgmt-health apply -f $mfile
 
@@ -55,7 +55,7 @@ data:
 
     echo "Update KubeClientCertificateExpiration alert"
     mfile=/tmp/vms-api.yaml
-    kubectl get vmrules.operator.victoriametrics.com -n sysmgmt-health vms-kubernetes-system-apiserver -o yaml > $mfile
+    kubectl get vmrules.operator.victoriametrics.com -n sysmgmt-health cray-sysmgmt-health-kubernetes-system-apiserver -o yaml > $mfile
     sed -i 's/604800/7776000/' $mfile
     sed -i 's/86400/1209600/' $mfile
     sed -i 's/less than 24.0 hours/less than 14.0 days/' $mfile
