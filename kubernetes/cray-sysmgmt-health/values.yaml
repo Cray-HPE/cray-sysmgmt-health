@@ -183,11 +183,11 @@ victoria-metrics-k8s-stack:
         replicaCount: 2
         resources:
           limits:
-            cpu: '2'
-            memory: 5Gi
+            cpu: '4'
+            memory: 8Gi
           requests:
-            cpu: '1'
-            memory: 2Gi
+            cpu: '2'
+            memory: 4Gi
         storage:
           volumeClaimTemplate:
             spec:
@@ -202,11 +202,11 @@ victoria-metrics-k8s-stack:
         replicaCount: 2
         resources:
           limits:
-            cpu: '2'
-            memory: 2Gi
+            cpu: '4'
+            memory: 8Gi
           requests:
-            cpu: '0.5m'
-            memory: 1Gi
+            cpu: '2'
+            memory: 4Gi
         storage:
           volumeClaimTemplate:
             spec:
@@ -223,11 +223,11 @@ victoria-metrics-k8s-stack:
           maxLabelsPerTimeseries: "100"
         resources:
           limits:
+            cpu: '4'
+            memory: 6Gi
+          requests:
             cpu: '2'
             memory: 2Gi
-          requests:
-            cpu: '0.5m'
-            memory: 1Gi
 
   vmalert:
     enabled: true
@@ -235,6 +235,13 @@ victoria-metrics-k8s-stack:
       image:
         repository: artifactory.algol60.net/csm-docker/stable/docker.io/victoriametrics/vmalert
         tag: v1.102.0
+      resources:
+        limits:
+          cpu: '2'
+          memory: 4Gi
+        requests:
+          cpu: '1'
+          memory: 2Gi
 
   vmagent:
     enabled: true
@@ -249,10 +256,10 @@ victoria-metrics-k8s-stack:
         - etcd-client-cert
       resources:
         limits:
-          cpu: '2'
-          memory: 5Gi
+          cpu: '4'
+          memory: 6Gi
         requests:
-          cpu: '1'
+          cpu: '2'
           memory: 2Gi
       scrapeInterval: 25s
       externalLabels:
@@ -354,11 +361,11 @@ victoria-metrics-k8s-stack:
                 storage: 50Gi
       resources:
         requests:
-          cpu: 100m
-          memory: 64Mi
+          cpu: 3
+          memory: 3Gi
         limits:
-          cpu: 500m
-          memory: 128Mi
+          cpu: 2
+          memory: 2Gi
       # Configure external hostname for Istio ingress
       # Setup with Ansible
       # externalAuthority: alertmanager-shs.local
@@ -810,24 +817,6 @@ cephExporter:
     metricsRelabelings: {}
     relabelings: {}
 
-logstashExporter:
-  enabled: true
-  endpoints: []
-  service:
-    port: 9198
-    targetPort: 9198
-  serviceMonitor:
-    interval: 30s
-    scheme: http
-    # honor_labels: false
-    # serverName: ""
-    # caFile: ""
-    # certFile: ""
-    # keyFile: ""
-    insecureSkipVerify: false
-    metricsRelabelings: {}
-    relabelings: {}
-
 uanNodeExporter:
   enabled: false
   endpoints: []
@@ -1038,11 +1027,11 @@ servicemonitors:
     cluster: etcd
     serviceMonitor:
       namespace: sysmgmt-health
-      port: http-client
+      port: client
       matchNamespace:
       - services
       matchLabels:
-        etcd_cluster: cray-bss-etcd
+        app.kubernetes.io/name: cray-bss-bitnami-etcd
       interval: 30s
       scheme: http
       metricsRelabelings: {}
@@ -1080,6 +1069,26 @@ servicemonitors:
       metricsRelabelings: {}
       relabelings: {}
 
+  logstashExporter:
+    enabled: true
+    servicename: logstash
+    endpoints: []
+    service:
+      port: 9198
+      targetPort: 9198
+    serviceMonitor:
+      namespace: sysmgmt-health
+      interval: 30s
+      scheme: http
+    # honor_labels: false
+    # serverName: ""
+    # caFile: ""
+    # certFile: ""
+    # keyFile: ""
+      insecureSkipVerify: false
+      metricsRelabelings: {}
+      relabelings: {}
+
   externaldnsEtcdExporter:
     enabled: true
     servicename: externaldns
@@ -1102,11 +1111,11 @@ servicemonitors:
     cluster: etcd
     serviceMonitor:
       namespace: sysmgmt-health
-      port: http-client
+      port: client
       matchNamespace:
       - services
       matchLabels:
-        etcd_cluster: cray-fas-etcd
+        app.kubernetes.io/name: cray-fas-bitnami-etcd
       interval: 30s
       scheme: http
       metricsRelabelings: {}
@@ -1150,11 +1159,11 @@ servicemonitors:
     cluster: etcd
     serviceMonitor:
       namespace: sysmgmt-health
-      port: http-client
+      port: client
       matchNamespace:
       - services
       matchLabels:
-        etcd_cluster: cray-hmnfd-etcd
+        app.kubernetes.io/name: cray-hmnfd-bitnami-tcd
       interval: 30s
       scheme: http
       metricsRelabelings: {}

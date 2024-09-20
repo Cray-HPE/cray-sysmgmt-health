@@ -1,0 +1,24 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMServiceScrape
+metadata:
+  annotations:
+    meta.helm.sh/release-name: fluentbit
+  labels:
+    app.kubernetes.io/instance: fluentbit
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: fluent-bit
+    release: cray-sysmgmt-health
+  name: fluentbit-collector
+  namespace: sysmgmt-health
+spec:
+  endpoints:
+  - interval: 30s
+    path: /api/v1/metrics/prometheus
+    port: metrics-port
+    scheme: http
+  namespaceSelector:
+    matchNames:
+    - sma
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: sma-fluentbit
