@@ -260,8 +260,8 @@ victoria-metrics-k8s-stack:
           memory: 6Gi
         requests:
           cpu: '2'
-          memory: 2Gi
-      scrapeInterval: 25s
+          memory: 4Gi
+      scrapeInterval: 30s
       externalLabels:
         cluster: cluster-name
       shardCount: 2
@@ -361,11 +361,11 @@ victoria-metrics-k8s-stack:
                 storage: 50Gi
       resources:
         requests:
-          cpu: 3
-          memory: 3Gi
-        limits:
           cpu: 2
           memory: 2Gi
+        limits:
+          cpu: 4
+          memory: 4Gi
       # Configure external hostname for Istio ingress
       # Setup with Ansible
       # externalAuthority: alertmanager-shs.local
@@ -1089,22 +1089,6 @@ servicemonitors:
       metricsRelabelings: {}
       relabelings: {}
 
-  externaldnsEtcdExporter:
-    enabled: true
-    servicename: externaldns
-    cluster: etcd
-    serviceMonitor:
-      namespace: sysmgmt-health
-      port: http-client
-      matchNamespace:
-      - services
-      matchLabels:
-        etcd_cluster: cray-externaldns-etcd
-      interval: 30s
-      scheme: http
-      metricsRelabelings: {}
-      relabelings: {}
-
   fasEtcdExporter:
     enabled: true
     servicename: fas
@@ -1127,11 +1111,11 @@ servicemonitors:
     cluster: etcd
     serviceMonitor:
       namespace: sysmgmt-health
-      port: http-client
+      port: client
       matchNamespace:
       - services
       matchLabels:
-        etcd_cluster: cray-hbtd-etcd
+        app.kubernetes.io/name: cray-hbtd-bitnami-etcd
       interval: 30s
       scheme: http
       metricsRelabelings: {}
