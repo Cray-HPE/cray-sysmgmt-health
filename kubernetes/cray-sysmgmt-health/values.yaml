@@ -113,31 +113,31 @@ prometheus-snmp-exporter:
 
 victoria-metrics-k8s-stack:
   defaultRules:
-    create: false
+    create: true
     rules:
-      etcd: true
-      general: true
+      etcd: false
+      general: false
       k8s: true
-      kubeApiserver: true
+      kubeApiserver: false
       kubeApiserverAvailability: true
       kubeApiserverBurnrate: true
       kubeApiserverHistogram: true
-      kubeApiserverSlos: true
+      kubeApiserverSlos: false
       kubelet: true
-      kubePrometheusGeneral: true
-      kubePrometheusNodeRecording: true
-      kubernetesApps: true
-      kubernetesResources: true
-      kubernetesStorage: true
-      kubernetesSystem: true
-      kubeScheduler: true
-      kubeStateMetrics: true
-      network: true
-      node: true
-      vmagent: true
-      vmsingle: true
-      vmhealth: true
-      alertmanager: true
+      kubePrometheusGeneral: false
+      kubePrometheusNodeRecording: false
+      kubernetesApps: false
+      kubernetesResources: false
+      kubernetesStorage: false
+      kubernetesSystem: false
+      kubeScheduler: false
+      kubeStateMetrics: false
+      network: false
+      node: false
+      vmagent: false
+      vmsingle: false
+      vmhealth: false
+      alertmanager: false
 
   nameOverride: "vms"
   fullnameOverride: "vms"
@@ -183,11 +183,11 @@ victoria-metrics-k8s-stack:
         replicaCount: 2
         resources:
           limits:
+            cpu: '8'
+            memory: 16Gi
+          requests:
             cpu: '4'
             memory: 8Gi
-          requests:
-            cpu: '2'
-            memory: 4Gi
         storage:
           volumeClaimTemplate:
             spec:
@@ -570,10 +570,10 @@ victoria-metrics-k8s-stack:
     resources:
       limits:
         cpu: "6"
-        memory: 2Gi
+        memory: 6Gi
       requests:
         cpu: "1"
-        memory: 1Gi
+        memory: 3Gi
     ## Liveness probe
     ##
     livenessProbe:
@@ -652,6 +652,8 @@ victoria-metrics-k8s-stack:
         endpoints:
           - port: metrics
             scheme: https
+            scrape_interval: 90s
+            scrapeTimeout: 60s
             tlsConfig:
               caFile: /etc/vm/secrets/etcd-client-cert/etcd-ca
               insecureSkipVerify: true
@@ -749,6 +751,9 @@ customRules:
     kubernetes-system-scheduler: true
     node-exporter: true
     node-network: true
+    node.rules: true
+    node-exporter.rules: true
+    kube-scheduler.rules: true
   labels:
     release: cray-sysmgmt-health
   ## Annotations for default rules
@@ -1079,14 +1084,12 @@ servicemonitors:
     serviceMonitor:
       namespace: sysmgmt-health
       interval: 30s
+      port: http
       scheme: http
-    # honor_labels: false
-    # serverName: ""
-    # caFile: ""
-    # certFile: ""
-    # keyFile: ""
-      insecureSkipVerify: false
-      metricsRelabelings: {}
+      matchNamespace:
+      - sysmgmt-health
+      matchLabels:
+        app: logstash-exporter
       relabelings: {}
 
   fasEtcdExporter:
@@ -1207,34 +1210,6 @@ servicemonitors:
       - services
       matchLabels:
         service: cray-dns-powerdns-api
-      interval: 1m
-      scheme: http
-      metricsRelabelings: {}
-      relabelings: {}
-  cray-spire:
-    enabled: true
-    servicename: cray-spire
-    serviceMonitor:
-      namespace: sysmgmt-health
-      port: metrics
-      matchNamespace:
-      - cray-spire
-      matchLabels:
-        app.kubernetes.io/name: cray-spire-server
-      interval: 1m
-      scheme: http
-      metricsRelabelings: {}
-      relabelings: {}
-  spire:
-    enabled: true
-    servicename: spire
-    serviceMonitor:
-      namespace: sysmgmt-health
-      port: metrics
-      matchNamespace:
-      - spire
-      matchLabels:
-        app.kubernetes.io/name: spire-server
       interval: 1m
       scheme: http
       metricsRelabelings: {}
