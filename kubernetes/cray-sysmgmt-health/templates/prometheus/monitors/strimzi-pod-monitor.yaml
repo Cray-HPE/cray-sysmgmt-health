@@ -1,24 +1,6 @@
 apiVersion: operator.victoriametrics.com/v1beta1
 kind: VMPodScrape
 metadata:
-  name: cluster-operator-metrics
-  labels:
-    app: strimzi
-    release: cray-sysmgmt-health
-spec:
-  selector:
-    matchLabels:
-      strimzi.io/kind: cluster-operator
-  namespaceSelector:
-    matchNames:
-      - sma
-  podMetricsEndpoints:
-  - path: /metrics
-    port: http
----
-apiVersion: operator.victoriametrics.com/v1beta1
-kind: VMPodScrape
-metadata:
   name: entity-operator-metrics
   labels:
     release: cray-sysmgmt-health

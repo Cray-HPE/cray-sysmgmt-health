@@ -1009,23 +1009,6 @@ dhcpKeaExporter:
     metricsRelabelings: {}
     relabelings: {}
 
-servicemonitors:
-  bosEtcdExporter:
-    enabled: true
-    servicename: bos
-    cluster: etcd
-    serviceMonitor:
-      namespace: sysmgmt-health
-      port: http-client
-      matchNamespace:
-      - services
-      matchLabels:
-        etcd_cluster: cray-bos-etcd
-      interval: 30s
-      scheme: http
-      metricsRelabelings: {}
-      relabelings: {}
-
   bssEtcdExporter:
     enabled: true
     servicename: bss
@@ -1037,38 +1020,6 @@ servicemonitors:
       - services
       matchLabels:
         app.kubernetes.io/name: cray-bss-bitnami-etcd
-      interval: 30s
-      scheme: http
-      metricsRelabelings: {}
-      relabelings: {}
-
-  cpsEtcdExporter:
-    enabled: true
-    servicename: cps
-    cluster: etcd
-    serviceMonitor:
-      namespace: sysmgmt-health
-      port: http-client
-      matchNamespace:
-      - services
-      matchLabels:
-        etcd_cluster: cray-cps-etcd
-      interval: 30s
-      scheme: http
-      metricsRelabelings: {}
-      relabelings: {}
-
-  crusEtcdExporter:
-    enabled: true
-    servicename: crus
-    cluster: etcd
-    serviceMonitor:
-      namespace: sysmgmt-health
-      port: http-client
-      matchNamespace:
-      - services
-      matchLabels:
-        etcd_cluster: cray-crus-etcd
       interval: 30s
       scheme: http
       metricsRelabelings: {}
@@ -1124,22 +1075,6 @@ servicemonitors:
       metricsRelabelings: {}
       relabelings: {}
 
-  redsEtcdExporter:
-    enabled: true
-    servicename: reds
-    cluster: etcd
-    serviceMonitor:
-      namespace: sysmgmt-health
-      matchNamespace:
-      - services
-      matchLabels:
-        etcd_cluster: cray-reds-etcd
-      interval: 30s
-      scheme: http
-      port: http-client
-      metricsRelabelings: {}
-      relabelings: {}
-
   hmnfdEtcdExporter:
     enabled: true
     servicename: hmnfd
@@ -1162,11 +1097,12 @@ servicemonitors:
     cluster: etcd
     serviceMonitor:
       namespace: sysmgmt-health
-      port: http-client
+      port: client
       matchNamespace:
       - services
       matchLabels:
-        etcd_cluster: cray-uas-mgr-etcd
+        app.kubernetes.io/instance: cray-uas-mgr
+        app.kubernetes.io/name: etcd
       interval: 30s
       scheme: http
       metricsRelabelings: {}
