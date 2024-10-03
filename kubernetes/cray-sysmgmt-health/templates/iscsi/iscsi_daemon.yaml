@@ -30,7 +30,7 @@ spec:
         - mountPath: /iscsi
           name: sysfs
           readOnly: true
-        - mountPath: /etc/target/saveconfig.json 
+        - mountPath: /etc/target/
           name: saveconfig
           readOnly: true
         - mountPath: /var/lib/node_exporter
@@ -45,7 +45,7 @@ spec:
           path: /sys/kernel/config/target/iscsi/
       - name: saveconfig
         hostPath:
-          path: /etc/target/saveconfig.json
+          path: /etc/target/
       - name: host-textfile
         hostPath:
           path: /var/lib/node_exporter
