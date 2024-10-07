@@ -1009,6 +1009,7 @@ dhcpKeaExporter:
     metricsRelabelings: {}
     relabelings: {}
 
+servicemonitors:
   bssEtcdExporter:
     enabled: true
     servicename: bss

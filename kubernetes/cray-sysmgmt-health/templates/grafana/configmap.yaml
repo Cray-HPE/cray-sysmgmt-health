@@ -867,3 +867,16 @@ data:
   fluentbit.json: |-
     {{- .Files.Get "dashboards_json/fluentbit/fluentbit.json" | nindent 4 }}
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "cray-sysmgmt-health.fullname" . }}-iscsi
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
+    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
+    {{- end }}
+data:
+  iscsi.json: |-
+    {{- .Files.Get "dashboards_json/iscsi/iscsi.json" | nindent 4 }}
+---
