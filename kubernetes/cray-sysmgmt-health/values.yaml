@@ -1198,14 +1198,6 @@ servicemonitors:
       metricsRelabelings: {}
       relabelings: {}
 
-grafterm:
-  image:
-    repository: artifactory.algol60.net/csm-docker/stable/cray-grafterm
-    tag: 1.0.3
-    pullPolicy: IfNotPresent
-  dashboards:
-    enabled: true
-
 smartmetrics:
   enabled: true
   image:
