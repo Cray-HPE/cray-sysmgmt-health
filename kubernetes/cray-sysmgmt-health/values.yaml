@@ -152,7 +152,7 @@ victoria-metrics-k8s-stack:
     enabled: true
     image:
       repository: artifactory.algol60.net/csm-docker/stable/docker.io/victoriametrics/operator
-      tag: v0.35.1
+      tag: v0.46.4
       pullPolicy: IfNotPresent
     env:
       - name: VM_VMAGENTDEFAULT_CONFIGRELOADIMAGE
@@ -162,8 +162,8 @@ victoria-metrics-k8s-stack:
   # -- Tells helm to remove CRD after chart remove
     cleanupCRD: true
     cleanupImage:
-      repository: artifactory.algol60.net/csm-docker/stable/docker-kubectl
-      tag: 1.24.17
+      repository: artifactory.algol60.net/csm-docker/stable/docker.io/bitnami/kubectl
+      tag: 1.31.1
       pullPolicy: IfNotPresent
     createCRD: false
     operator:
@@ -179,7 +179,7 @@ victoria-metrics-k8s-stack:
       vmstorage:
         image:
           repository: artifactory.algol60.net/csm-docker/stable/docker.io/victoriametrics/vmstorage
-          tag: v1.93.1-cluster
+          tag: v1.102.1-cluster
         replicaCount: 2
         resources:
           limits:
@@ -198,7 +198,7 @@ victoria-metrics-k8s-stack:
       vmselect:
         image:
           repository: artifactory.algol60.net/csm-docker/stable/docker.io/victoriametrics/vmselect
-          tag: v1.93.1-cluster
+          tag: v1.102.1-cluster
         replicaCount: 2
         resources:
           limits:
@@ -217,7 +217,7 @@ victoria-metrics-k8s-stack:
       vminsert:
         image:
           repository: artifactory.algol60.net/csm-docker/stable/docker.io/victoriametrics/vminsert
-          tag: v1.96.0-cluster
+          tag: v1.102.1-cluster
         replicaCount: 2
         extraArgs:
           maxLabelsPerTimeseries: "100"
@@ -251,7 +251,7 @@ victoria-metrics-k8s-stack:
       selectAllByDefault: true
       image:
         repository: artifactory.algol60.net/csm-docker/stable/docker.io/victoriametrics/vmagent
-        tag: v1.93.1
+        tag: v1.102.1
       secrets:
         - etcd-client-cert
       resources:
@@ -389,7 +389,8 @@ victoria-metrics-k8s-stack:
     downloadDashboards:
       securityContext: {}
     downloadDashboardsImage:
-      repository: artifactory.algol60.net/csm-docker/stable/docker.io/curlimages/curl
+      registry: artifactory.algol60.net
+      repository: csm-docker/stable/docker.io/curlimages/curl
       tag: 7.81.0
       sha: ""
       pullPolicy: IfNotPresent
@@ -431,7 +432,8 @@ victoria-metrics-k8s-stack:
 
     sidecar:
       image:
-        repository: artifactory.algol60.net/csm-docker/stable/docker.io/kiwigrid/k8s-sidecar
+        registry: artifactory.algol60.net
+        repository: csm-docker/stable/docker.io/kiwigrid/k8s-sidecar
         tag: 0.1.151
       dashboards:
         enabled: true
@@ -474,8 +476,10 @@ victoria-metrics-k8s-stack:
           isDefault: true
 
     testFramework:
-      image: artifactory.algol60.net/csm-docker/stable/docker.io/bats/bats
-      tag: v1.4.1
+      image:
+        registry: artifactory.algol60.net
+        image: csm-docker/stable/docker.io/bats/bats
+        tag: v1.4.1
 
   # Exporters
   kubelet:
@@ -678,7 +682,8 @@ victoria-metrics-k8s-stack:
         - 'downwardAPI'
         - 'persistentVolumeClaim'
     image:
-      repository: artifactory.algol60.net/csm-docker/stable/docker.io/bitnami/kube-state-metrics
+      registry: artifactory.algol60.net
+      repository: csm-docker/stable/docker.io/bitnami/kube-state-metrics
       tag: v2.8.0
     collectors:
       - certificatesigningrequests
