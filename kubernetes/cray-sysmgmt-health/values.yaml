@@ -384,7 +384,8 @@ victoria-metrics-k8s-stack:
       hosts:
         - grafana.domain.com
     image:
-      repository: artifactory.algol60.net/csm-docker/stable/docker.io/grafana/grafana
+      registry: artifactory.algol60.net
+      repository: csm-docker/stable/docker.io/grafana/grafana
       tag: 11.0.0
     downloadDashboards:
       securityContext: {}
@@ -569,7 +570,8 @@ victoria-metrics-k8s-stack:
       container.apparmor.security.beta.kubernetes.io/node-exporter: "unconfined"
 
     image:
-      repository: artifactory.algol60.net/csm-docker/stable/quay.io/prometheus/node-exporter
+      registry: artifactory.algol60.net
+      repository: csm-docker/stable/quay.io/prometheus/node-exporter
       tag: v1.5.0
     resources:
       limits:
