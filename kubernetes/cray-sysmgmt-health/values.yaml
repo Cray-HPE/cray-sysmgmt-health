@@ -479,7 +479,7 @@ victoria-metrics-k8s-stack:
     testFramework:
       image:
         registry: artifactory.algol60.net
-        image: csm-docker/stable/docker.io/bats/bats
+        repository: csm-docker/stable/docker.io/bats/bats
         tag: v1.4.1
 
   # Exporters
