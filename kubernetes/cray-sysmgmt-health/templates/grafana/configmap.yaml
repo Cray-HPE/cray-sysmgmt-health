@@ -877,6 +877,6 @@ metadata:
     {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
     {{- end }}
 data:
-  iscsi.json: |-
+  sma-flow-stats.json: |-
     {{- .Files.Get "dashboards_json/flow/sma-flow-stats.json" | nindent 4 }}
 ---
