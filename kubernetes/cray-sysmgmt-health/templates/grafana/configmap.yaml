@@ -506,19 +506,6 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "cray-sysmgmt-health.fullname" . }}-timescaledb
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
-    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
-    {{- end }}
-data:
-  timescaledb.json: |-
-    {{- .Files.Get "dashboards_json/timescaledb/timescaledb.json" | nindent 4 }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
   name: {{ include "cray-sysmgmt-health.fullname" . }}-goss-tests
   namespace: {{ .Release.Namespace }}
   labels:
@@ -879,4 +866,17 @@ metadata:
 data:
   iscsi.json: |-
     {{- .Files.Get "dashboards_json/iscsi/iscsi.json" | nindent 4 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "cray-sysmgmt-health.fullname" . }}-flow
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
+    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
+    {{- end }}
+data:
+  sma-flow-stats.json: |-
+    {{- .Files.Get "dashboards_json/flow/sma-flow-stats.json" | nindent 4 }}
 ---

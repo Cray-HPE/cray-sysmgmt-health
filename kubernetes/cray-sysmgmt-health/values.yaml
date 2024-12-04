@@ -1130,6 +1130,48 @@ servicemonitors:
       scheme: http
       metricsRelabelings: {}
       relabelings: {}
+  flowslingExporter:
+    enabled: true
+    servicename: cray-hms-flow-sling
+    serviceMonitor:
+      namespace: sysmgmt-health
+      port: telsling-stats
+      matchNamespace:
+      - sma
+      matchLabels:
+        app.kubernetes.io/instance: cray-hms-flow
+      interval: 1m
+      scheme: http
+      metricsRelabelings: {}
+      relabelings: {}
+  flowldmsExporter:
+    enabled: true
+    servicename: cray-hms-flow-ldms
+    serviceMonitor:
+      namespace: sysmgmt-health
+      port: ldms-stats
+      matchNamespace:
+      - sma
+      matchLabels:
+        app.kubernetes.io/instance: cray-hms-flow
+      interval: 1m
+      scheme: http
+      metricsRelabelings: {}
+      relabelings: {}
+  flowredfishExporter:
+    enabled: true
+    servicename: cray-hms-flow-redfish
+    serviceMonitor:
+      namespace: sysmgmt-health
+      port: redfish-stats
+      matchNamespace:
+      - sma
+      matchLabels:
+        app.kubernetes.io/instance: cray-hms-flow
+      interval: 1m
+      scheme: http
+      metricsRelabelings: {}
+      relabelings: {}
   dnsUnbound:
     enabled: true
     servicename: cray-dns-unbound
