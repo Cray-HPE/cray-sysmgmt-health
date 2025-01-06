@@ -1139,7 +1139,7 @@ servicemonitors:
       matchNamespace:
       - sma
       matchLabels:
-        app.kubernetes.io/instance: cray-hms-flow
+        app.kubernetes.io/instance: sma-hms-flow
       interval: 1m
       scheme: http
       metricsRelabelings: {}
@@ -1153,7 +1153,7 @@ servicemonitors:
       matchNamespace:
       - sma
       matchLabels:
-        app.kubernetes.io/instance: cray-hms-flow
+        app.kubernetes.io/instance: sma-hms-flow
       interval: 1m
       scheme: http
       metricsRelabelings: {}
@@ -1167,7 +1167,7 @@ servicemonitors:
       matchNamespace:
       - sma
       matchLabels:
-        app.kubernetes.io/instance: cray-hms-flow
+        app.kubernetes.io/instance: sma-hms-flow
       interval: 1m
       scheme: http
       metricsRelabelings: {}
