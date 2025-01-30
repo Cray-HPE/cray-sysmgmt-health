@@ -113,15 +113,6 @@ spec:
       annotations:
         description: 'Replication Slot "{{`{{ $labels.slot_name }}`}}" is not active which may cause this replica to be out of sync with master.'
         summary: 'Postgresql replication slot is inactive.'
-    - alert: PostgresqlReplicationLagSMA
-      expr: pg_stat_replication_pg_wal_lsn_diff{namespace='sma'} > 1e+9
-      for: 5m
-      labels:
-        severity: warning
-        group: prometheus
-      annotations:
-        description: 'Replica "{{`{{ $labels.application_name }}`}}" is lagging behind master "{{`{{ $labels.pod }}`}}" by "{{`{{ $value }}`}}" bytes.'
-        summary: 'Postgresql replication lag on replica "{{`{{ $labels.application_name }}`}}"'
     - alert: PostgresqlReplicationLagServices
       expr: pg_stat_replication_pg_wal_lsn_diff{namespace!='sma'} > 3e+8
       for: 5m
@@ -131,15 +122,6 @@ spec:
       annotations:
         description: 'Replica "{{`{{ $labels.application_name }}`}}" is lagging behind master "{{`{{ $labels.pod }}`}}" by "{{`{{ $value }}`}}" bytes.'
         summary: 'Postgresql replication lag on replica "{{`{{ $labels.application_name }}`}}"'
-    - alert: PostgresqlFollowerReplicationLagSMA
-      expr: pg_replication_slots_pg_wal_lsn_diff{namespace='sma'} > 1e+9
-      for: 5m
-      labels:
-        severity: warning
-        group: prometheus
-      annotations:
-        description: 'Replica from follower "{{`{{ $labels.application_name }}`}}" is lagging behind master "{{`{{ $labels.pod }}`}}" by "{{`{{ $value }}`}}" bytes.'
-        summary: 'Postgresql replication lag from follower on replica "{{`{{ $labels.application_name }}`}}"'
     - alert: PostgresqlFollowerReplicationLagServices
       expr: pg_replication_slots_pg_wal_lsn_diff{namespace!='sma'} > 3e+8
       for: 5m

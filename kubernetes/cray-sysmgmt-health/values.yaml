@@ -336,6 +336,7 @@ victoria-metrics-k8s-stack:
         promscrape.cluster.replicationFactor: "2"
         promscrape.streamParse: "true"
         remoteWrite.forcePromProto: "true"
+        promscrape.suppressScrapeErrorsDelay: "600s"
 
   alertmanager:
     enabled: true
@@ -954,25 +955,6 @@ keycloakPostgresExporter:
     namespace: sysmgmt-health
     matchNamespace:
     - services
-    interval: 30s
-    scheme: http
-    port: exporter
-    metricsRelabelings: {}
-    relabelings: {}
-
-smaPostgresExporter:
-  enabled: true
-  service:
-    namespace: sma
-    port: 9187
-    targetPort: 9187
-    selector:
-      cluster-name: sma-postgres-cluster
-      application: spilo
-  serviceMonitor:
-    namespace: sysmgmt-health
-    matchNamespace:
-    - sma
     interval: 30s
     scheme: http
     port: exporter
