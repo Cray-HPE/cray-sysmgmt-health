@@ -387,7 +387,7 @@ victoria-metrics-k8s-stack:
     image:
       registry: artifactory.algol60.net
       repository: csm-docker/stable/docker.io/grafana/grafana
-      tag: 11.0.0
+      tag: 11.5.2
     downloadDashboards:
       securityContext: {}
     downloadDashboardsImage:
