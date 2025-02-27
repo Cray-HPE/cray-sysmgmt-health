@@ -23,7 +23,7 @@
 #
 apiVersion: v2
 name: cray-sysmgmt-health
-version: 1.1.7
+version: 1.2.1
 description: An extension of the official prometheus-operator helm chart for monitoring
 keywords:
 - sysmgmt-health
@@ -44,7 +44,7 @@ dependencies:
   version: 0.24.5
 - name: prometheus-snmp-exporter
   repository: https://prometheus-community.github.io/helm-charts
-  version: 1.1.0
+  version: 7.0.0
 - name: logstash-exporter
   repository: https://artifactory.algol60.net/artifactory/csm-helm-charts
   version: 1.0.2
@@ -62,8 +62,6 @@ annotations:
       image: artifactory.algol60.net/csm-docker/stable/quay.io/prometheus/alertmanager:v0.25.0
     - name: configmap-reload
       image: artifactory.algol60.net/csm-docker/stable/docker.io/jimmidyson/configmap-reload:v0.3.0
-    - name: prometheus
-      image: artifactory.algol60.net/csm-docker/stable/quay.io/prometheus/prometheus:v2.41.0
     - name: prometheus-config-reloader
       image: artifactory.algol60.net/csm-docker/stable/docker.io/prom/prometheus-config-reloader:v0.62.0
   artifacthub.io/license: MIT
