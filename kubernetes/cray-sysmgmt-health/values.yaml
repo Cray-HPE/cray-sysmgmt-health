@@ -386,7 +386,7 @@ victoria-metrics-k8s-stack:
         - grafana.domain.com
     image:
       registry: artifactory.algol60.net
-      repository: csm-docker/unstable/docker.io/grafana/grafana
+      repository: csm-docker/stable/docker.io/grafana/grafana
       tag: 11.5.2
     downloadDashboards:
       securityContext: {}
