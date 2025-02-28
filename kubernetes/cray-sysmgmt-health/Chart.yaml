@@ -44,7 +44,7 @@ dependencies:
   version: 0.24.5
 - name: prometheus-snmp-exporter
   repository: https://prometheus-community.github.io/helm-charts
-  version: 1.1.0
+  version: 7.0.0
 - name: logstash-exporter
   repository: https://artifactory.algol60.net/artifactory/csm-helm-charts
   version: 1.0.2
