@@ -160,6 +160,15 @@ victoria-metrics-k8s-stack:
       - name: VM_VMALERTDEFAULT_CONFIGRELOADIMAGE
         value: artifactory.algol60.net/csm-docker/stable/docker.io/jimmidyson/configmap-reload:v0.3.0
   # -- Tells helm to remove CRD after chart remove
+    crds:
+    # -- added temporary, till new operator version released
+      plain: true
+      cleanup:
+        enabled: true
+        image:
+          repository: registry.local/arti.hpc.amslabs.hpecorp.net/csm-docker-remote/stable/docker.io/bitnami/kubectl
+          tag: 1.31.1
+          pullPolicy: IfNotPresent
     cleanupCRD: true
     cleanupImage:
       repository: artifactory.algol60.net/csm-docker/stable/docker.io/bitnami/kubectl
