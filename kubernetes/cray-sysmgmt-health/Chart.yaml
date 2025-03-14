@@ -23,7 +23,7 @@
 #
 apiVersion: v2
 name: cray-sysmgmt-health
-version: 1.2.8
+version: 1.2.9
 description: An extension of the official prometheus-operator helm chart for monitoring
 keywords:
 - sysmgmt-health
@@ -41,7 +41,7 @@ sources:
 dependencies:
 - name: victoria-metrics-k8s-stack
   repository: https://victoriametrics.github.io/helm-charts
-  version: 0.24.5
+  version: 0.42.0
 - name: prometheus-snmp-exporter
   repository: https://prometheus-community.github.io/helm-charts
   version: 7.0.0
@@ -55,7 +55,7 @@ dependencies:
 maintainers:
 - name: rambabubolla
 - name: shreniagrawal
-appVersion: 0.24.5
+appVersion: 0.42.0
 annotations:
   artifacthub.io/images: |
     - name: alertmanager

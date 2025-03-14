@@ -145,6 +145,11 @@ victoria-metrics-k8s-stack:
   labels:
     release: cray-sysmgmt-health
   defaultDashboardsEnabled: false
+  defaultDashboards:
+  # -- Enable custom dashboards installation
+    enabled: false
+    labels:
+      release: cray-sysmgmt-health
   vmselect:
     vmselectSpec:
       externalAuthority: vmselect.local
@@ -152,19 +157,24 @@ victoria-metrics-k8s-stack:
     enabled: true
     image:
       repository: artifactory.algol60.net/csm-docker/stable/docker.io/victoriametrics/operator
-      tag: v0.46.4
+      tag: v0.55.0
       pullPolicy: IfNotPresent
     env:
       - name: VM_VMAGENTDEFAULT_CONFIGRELOADIMAGE
-        value: artifactory.algol60.net/csm-docker/stable/docker.io/prom/prometheus-config-reloader:v0.62.0
+        value: artifactory.algol60.net/csm-docker/stable/docker.io/prom/prometheus-config-reloader:v0.81.0
       - name: VM_VMALERTDEFAULT_CONFIGRELOADIMAGE
-        value: artifactory.algol60.net/csm-docker/stable/docker.io/jimmidyson/configmap-reload:v0.3.0
+        value: artifactory.algol60.net/csm-docker/stable/docker.io/jimmidyson/configmap-reload:v0.9.0
   # -- Tells helm to remove CRD after chart remove
+    crds:
+    # -- added temporary, till new operator version released
+      plain: true
+      cleanup:
+        enabled: true
+        image:
+          repository: artifactory.algol60.net/csm-docker/stable/docker.io/bitnami/kubectl
+          tag: 1.31.1
+          pullPolicy: IfNotPresent
     cleanupCRD: true
-    cleanupImage:
-      repository: artifactory.algol60.net/csm-docker/stable/docker.io/bitnami/kubectl
-      tag: 1.31.1
-      pullPolicy: IfNotPresent
     createCRD: false
     operator:
     # -- By default, operator converts prometheus-operator objects.
@@ -179,7 +189,7 @@ victoria-metrics-k8s-stack:
       vmstorage:
         image:
           repository: artifactory.algol60.net/csm-docker/stable/docker.io/victoriametrics/vmstorage
-          tag: v1.102.1-cluster
+          tag: v1.115.0-cluster
         replicaCount: 2
         resources:
           limits:
@@ -198,7 +208,7 @@ victoria-metrics-k8s-stack:
       vmselect:
         image:
           repository: artifactory.algol60.net/csm-docker/stable/docker.io/victoriametrics/vmselect
-          tag: v1.102.1-cluster
+          tag: v1.115.0-cluster
         replicaCount: 2
         resources:
           limits:
@@ -217,7 +227,7 @@ victoria-metrics-k8s-stack:
       vminsert:
         image:
           repository: artifactory.algol60.net/csm-docker/stable/docker.io/victoriametrics/vminsert
-          tag: v1.102.1-cluster
+          tag: v1.115.0-cluster
         replicaCount: 2
         extraArgs:
           maxLabelsPerTimeseries: "100"
@@ -234,7 +244,7 @@ victoria-metrics-k8s-stack:
     spec:
       image:
         repository: artifactory.algol60.net/csm-docker/stable/docker.io/victoriametrics/vmalert
-        tag: v1.102.0
+        tag: v1.115.0
       resources:
         limits:
           cpu: '2'
@@ -251,7 +261,7 @@ victoria-metrics-k8s-stack:
       selectAllByDefault: true
       image:
         repository: artifactory.algol60.net/csm-docker/stable/docker.io/victoriametrics/vmagent
-        tag: v1.102.1
+        tag: v1.115.0
       secrets:
         - etcd-client-cert
       resources:
@@ -345,7 +355,7 @@ victoria-metrics-k8s-stack:
     spec:
       image:
         repository: artifactory.algol60.net/csm-docker/stable/quay.io/prometheus/alertmanager
-        tag: v0.25.0
+        tag: v0.28.1
       containers:
       - name: config-reloader
         image: artifactory.algol60.net/csm-docker/stable/docker.io/jimmidyson/configmap-reload:v0.3.0
@@ -393,7 +403,7 @@ victoria-metrics-k8s-stack:
     downloadDashboardsImage:
       registry: artifactory.algol60.net
       repository: csm-docker/stable/docker.io/curlimages/curl
-      tag: 7.81.0
+      tag: 8.13.0
       sha: ""
       pullPolicy: IfNotPresent
     env:
@@ -436,7 +446,7 @@ victoria-metrics-k8s-stack:
       image:
         registry: artifactory.algol60.net
         repository: csm-docker/stable/docker.io/kiwigrid/k8s-sidecar
-        tag: 0.1.151
+        tag: 1.30.3
       dashboards:
         enabled: true
         label: grafana_dashboard
@@ -482,7 +492,7 @@ victoria-metrics-k8s-stack:
       image:
         registry: artifactory.algol60.net
         repository: csm-docker/stable/docker.io/bats/bats
-        tag: v1.4.1
+        tag: 1.11.1
 
   # Exporters
   kubelet:
@@ -574,7 +584,7 @@ victoria-metrics-k8s-stack:
     image:
       registry: artifactory.algol60.net
       repository: csm-docker/stable/quay.io/prometheus/node-exporter
-      tag: v1.5.0
+      tag: v1.9.1
     resources:
       limits:
         cpu: "6"
@@ -649,7 +659,7 @@ victoria-metrics-k8s-stack:
         readOnly: true
         mountPropagation: HostToContainer
 
-    vmServiceScrape:
+    vmScrape:
     # wheter we should create a service scrape resource for node-exporter
       enabled: true
 
