@@ -687,7 +687,7 @@ victoria-metrics-k8s-stack:
     image:
       registry: artifactory.algol60.net
       repository: csm-docker/stable/docker.io/bitnami/kube-state-metrics
-      tag: v2.8.0
+      tag: 2.15.0
     collectors:
       - certificatesigningrequests
       - configmaps
