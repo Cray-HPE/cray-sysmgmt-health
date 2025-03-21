@@ -1,4 +1,35 @@
 {
+  "__inputs": [
+    {
+      "name": "DS_VICTORISMETRICS",
+      "label": "victorismetrics",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    }
+  ],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "11.5.2"
+    },
+    {
+      "type": "datasource",
+      "id": "prometheus",
+      "name": "Prometheus",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
   "annotations": {
     "list": [
       {
@@ -18,13 +49,13 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 67,
+  "id": null,
   "links": [],
   "panels": [
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "P1EB0681B67ED710F"
+        "uid": "${DS_VICTORISMETRICS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -38,6 +69,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -95,49 +127,25 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "P1EB0681B67ED710F"
+            "uid": "${DS_VICTORISMETRICS}"
           },
           "editorMode": "code",
-          "expr": "avg(flow_consumed_messages{endpoint=\"telsling-stats\"})",
+          "expr": "flow_consumed_messages{pod=~\"$Pod\", endpoint=~\"$Endpoint\"}",
           "instant": false,
-          "legendFormat": "Telemetry/Slingshot",
+          "legendFormat": "{{pod}}-{{endpoint}}",
           "range": true,
           "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "P1EB0681B67ED710F"
-          },
-          "editorMode": "code",
-          "expr": "avg(flow_consumed_messages{endpoint=\"ldms-stats\"})",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "LDMS",
-          "range": true,
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "P1EB0681B67ED710F"
-          },
-          "editorMode": "code",
-          "expr": "avg(flow_consumed_messages{endpoint=\"redfish-stats\"})",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "Redfish",
-          "range": true,
-          "refId": "C"
         }
       ],
       "title": "Flow Consumed Messages",
@@ -146,7 +154,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "P1EB0681B67ED710F"
+        "uid": "${DS_VICTORISMETRICS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -160,6 +168,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -217,49 +226,25 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "P1EB0681B67ED710F"
+            "uid": "${DS_VICTORISMETRICS}"
           },
           "editorMode": "code",
-          "expr": "avg(flow_transformed_messages{endpoint=\"telsling-stats\"})",
+          "expr": "flow_transformed_messages{pod=~\"$Pod\", endpoint=~\"$Endpoint\"}",
           "instant": false,
-          "legendFormat": "Telemetry/Slingshot",
+          "legendFormat": "{{pod}}-{{endpoint}}",
           "range": true,
           "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "P1EB0681B67ED710F"
-          },
-          "editorMode": "code",
-          "expr": "avg(flow_transformed_messages{endpoint=\"ldms-stats\"})",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "LDMS",
-          "range": true,
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "P1EB0681B67ED710F"
-          },
-          "editorMode": "code",
-          "expr": "avg(flow_transformed_messages{endpoint=\"redfish-stats\"})",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "Redfish",
-          "range": true,
-          "refId": "C"
         }
       ],
       "title": "Flow Transformed Messages",
@@ -268,7 +253,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "P1EB0681B67ED710F"
+        "uid": "${DS_VICTORISMETRICS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -282,6 +267,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -339,49 +325,25 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "P1EB0681B67ED710F"
+            "uid": "${DS_VICTORISMETRICS}"
           },
           "editorMode": "code",
-          "expr": "avg(flow_samples_parsed{endpoint=\"telsling-stats\"})",
+          "expr": "flow_samples_parsed{pod=~\"$Pod\", endpoint=~\"$Endpoint\"}",
           "instant": false,
-          "legendFormat": "Telemetry/Slingshot",
+          "legendFormat": "{{pod}}-{{endpoint}}",
           "range": true,
           "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "P1EB0681B67ED710F"
-          },
-          "editorMode": "code",
-          "expr": "avg(flow_samples_parsed{endpoint=\"ldms-stats\"})",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "LDMS",
-          "range": true,
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "P1EB0681B67ED710F"
-          },
-          "editorMode": "code",
-          "expr": "avg(flow_samples_parsed{endpoint=\"redfish-stats\"})",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "Redfish",
-          "range": true,
-          "refId": "C"
         }
       ],
       "title": "Flow Samples Parsed",
@@ -390,7 +352,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "P1EB0681B67ED710F"
+        "uid": "${DS_VICTORISMETRICS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -404,6 +366,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -461,49 +424,25 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "P1EB0681B67ED710F"
+            "uid": "${DS_VICTORISMETRICS}"
           },
           "editorMode": "code",
-          "expr": "avg(flow_samples_written{endpoint=\"telsling-stats\"})",
+          "expr": "flow_samples_written{pod=~\"$Pod\", endpoint=~\"$Endpoint\"}",
           "instant": false,
-          "legendFormat": "Telemetry/Slingshot",
+          "legendFormat": "{{pod}}-{{endpoint}}",
           "range": true,
           "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "P1EB0681B67ED710F"
-          },
-          "editorMode": "code",
-          "expr": "avg(flow_samples_written{endpoint=\"ldms-stats\"})",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "LDMS",
-          "range": true,
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "P1EB0681B67ED710F"
-          },
-          "editorMode": "code",
-          "expr": "avg(flow_samples_written{endpoint=\"redfish-stats\"})",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "Redfish",
-          "range": true,
-          "refId": "C"
         }
       ],
       "title": "Flow Samples Written",
@@ -512,7 +451,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "P1EB0681B67ED710F"
+        "uid": "${DS_VICTORISMETRICS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -526,6 +465,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -583,49 +523,25 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "P1EB0681B67ED710F"
+            "uid": "${DS_VICTORISMETRICS}"
           },
           "editorMode": "code",
-          "expr": "avg(flow_transform_errors{endpoint=\"telsling-stats\"})",
+          "expr": "flow_transform_errors{pod=~\"$Pod\", endpoint=~\"$Endpoint\"}",
           "instant": false,
-          "legendFormat": "Telemetry/Slingshot",
+          "legendFormat": "{{pod}}-{{endpoint}}",
           "range": true,
           "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "P1EB0681B67ED710F"
-          },
-          "editorMode": "code",
-          "expr": "avg(flow_transform_errors{endpoint=\"ldms-stats\"})",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "LDMS",
-          "range": true,
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "P1EB0681B67ED710F"
-          },
-          "editorMode": "code",
-          "expr": "avg(flow_transform_errors{endpoint=\"redfish-stats\"})",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "Redfish",
-          "range": true,
-          "refId": "C"
         }
       ],
       "title": "Flow Transform Errors",
@@ -634,7 +550,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "P1EB0681B67ED710F"
+        "uid": "${DS_VICTORISMETRICS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -648,6 +564,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -705,49 +622,25 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "P1EB0681B67ED710F"
+            "uid": "${DS_VICTORISMETRICS}"
           },
           "editorMode": "code",
-          "expr": "avg(flow_flush_errors{endpoint=\"telsling-stats\"})",
+          "expr": "flow_flush_errors{pod=~\"$Pod\", endpoint=~\"$Endpoint\"}",
           "instant": false,
-          "legendFormat": "Telemetry/Slingshot",
+          "legendFormat": "{{pod}}-{{endpoint}}",
           "range": true,
           "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "P1EB0681B67ED710F"
-          },
-          "editorMode": "code",
-          "expr": "avg(flow_flush_errors{endpoint=\"ldms-stats\"})",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "LDMS",
-          "range": true,
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "P1EB0681B67ED710F"
-          },
-          "editorMode": "code",
-          "expr": "avg(flow_flush_errors{endpoint=\"redfish-stats\"})",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "Redfish",
-          "range": true,
-          "refId": "C"
         }
       ],
       "title": "Flow Flush Errors",
@@ -756,7 +649,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "P1EB0681B67ED710F"
+        "uid": "${DS_VICTORISMETRICS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -770,6 +663,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -827,58 +721,34 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "P1EB0681B67ED710F"
+            "uid": "${DS_VICTORISMETRICS}"
           },
           "editorMode": "code",
-          "expr": "avg(flow_flush_errors{endpoint=\"telsling-stats\"})",
+          "expr": "flow_write_errors{pod=~\"$Pod\", endpoint=~\"$Endpoint\"}",
           "instant": false,
-          "legendFormat": "Telemetry/Slingshot",
+          "legendFormat": "{{pod}}-{{endpoint}}",
           "range": true,
           "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "P1EB0681B67ED710F"
-          },
-          "editorMode": "code",
-          "expr": "avg(flow_flush_errors{endpoint=\"ldms-stats\"})",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "LDMS",
-          "range": true,
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "P1EB0681B67ED710F"
-          },
-          "editorMode": "code",
-          "expr": "avg(flow_flush_errors{endpoint=\"redfish-stats\"})",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "Redfish",
-          "range": true,
-          "refId": "C"
         }
       ],
-      "title": "Flow Flush Errors",
+      "title": "Flow Write Errors",
       "type": "timeseries"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "P1EB0681B67ED710F"
+        "uid": "${DS_VICTORISMETRICS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -892,6 +762,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -949,49 +820,25 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "P1EB0681B67ED710F"
+            "uid": "${DS_VICTORISMETRICS}"
           },
           "editorMode": "code",
-          "expr": "avg(flow_reconnect_attempts{endpoint=\"telsling-stats\"})",
+          "expr": "flow_reconnect_attempts{pod=~\"$Pod\", endpoint=~\"$Endpoint\"}",
           "instant": false,
-          "legendFormat": "Telemetry/Slingshot",
+          "legendFormat": "{{pod}}-{{endpoint}}",
           "range": true,
           "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "P1EB0681B67ED710F"
-          },
-          "editorMode": "code",
-          "expr": "avg(flow_reconnect_attempts{endpoint=\"ldms-stats\"})",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "LDMS",
-          "range": true,
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "P1EB0681B67ED710F"
-          },
-          "editorMode": "code",
-          "expr": "avg(flow_reconnect_attempts{endpoint=\"redfish-stats\"})",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "Redfish",
-          "range": true,
-          "refId": "C"
         }
       ],
       "title": "Flow Reconnect Attempts",
@@ -1000,7 +847,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "P1EB0681B67ED710F"
+        "uid": "${DS_VICTORISMETRICS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1014,6 +861,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -1071,69 +919,77 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "P1EB0681B67ED710F"
+            "uid": "${DS_VICTORISMETRICS}"
           },
           "editorMode": "code",
-          "expr": "avg(flow_line_too_long{endpoint=\"telsling-stats\"})",
+          "expr": "flow_line_too_long{pod=~\"$Pod\", endpoint=~\"$Endpoint\"}",
           "instant": false,
-          "legendFormat": "Telemetry/Slingshot",
+          "legendFormat": "{{pod}}-{{endpoint}}",
           "range": true,
           "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "P1EB0681B67ED710F"
-          },
-          "editorMode": "code",
-          "expr": "avg(flow_line_too_long{endpoint=\"ldms-stats\"})",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "LDMS",
-          "range": true,
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "P1EB0681B67ED710F"
-          },
-          "editorMode": "code",
-          "expr": "avg(flow_line_too_long{endpoint=\"redfish-stats\"})",
-          "hide": false,
-          "instant": false,
-          "legendFormat": "Redfish",
-          "range": true,
-          "refId": "C"
         }
       ],
       "title": "Flow Line Too Long",
       "type": "timeseries"
     }
   ],
-  "schemaVersion": 39,
+  "schemaVersion": 40,
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {},
+        "definition": "label_values(flow_consumed_messages,pod)",
+        "includeAll": true,
+        "multi": true,
+        "name": "Pod",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(flow_consumed_messages,pod)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      },
+      {
+        "current": {},
+        "definition": "label_values(flow_consumed_messages,endpoint)",
+        "includeAll": true,
+        "multi": true,
+        "name": "Endpoint",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(flow_consumed_messages,endpoint)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      }
+    ]
   },
   "time": {
     "from": "now-30m",
     "to": "now"
   },
-  "timeRangeUpdatedDuringEditOrView": false,
   "timepicker": {},
   "timezone": "browser",
   "title": "SMA-Flow Service Stats",
-  "uid": "be5vqh2dgzmdcd",
-  "version": 3,
+  "uid": "be5vqh2dgzmdce",
+  "version": 1,
   "weekStart": ""
 }
