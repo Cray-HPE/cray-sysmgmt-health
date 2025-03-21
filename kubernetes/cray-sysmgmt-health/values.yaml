@@ -54,8 +54,8 @@ canuTest:
 
 grokExporter:
   image:
-    repository: artifactory.algol60.net/csm-docker/stable/docker.io/grok-exporter/grok-exporter
-    tag: latest
+    repository: artifactory.algol60.net/csm-docker/unstable/docker.io/grok-exporter/grok-exporter
+    tag: v1.0.0.RC5
     pullPolicy: IfNotPresent
 
 kubectl:
