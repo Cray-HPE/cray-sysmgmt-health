@@ -1,7 +1,7 @@
 #
 # MIT License
 #
-# (C) Copyright 2022-2023 Hewlett Packard Enterprise Development LP
+# (C) Copyright 2025 Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -55,7 +55,7 @@ canuTest:
 grokExporter:
   image:
     repository: artifactory.algol60.net/csm-docker/stable/docker.io/grok-exporter/grok-exporter
-    tag: latest
+    tag: v1.0.0.RC5
     pullPolicy: IfNotPresent
 
 kubectl:
@@ -69,7 +69,7 @@ logstash-exporter:
     url: http://sma-logstash-headless.sma.svc.cluster.local:9600
   image:
     repository: artifactory.algol60.net/csm-docker/stable/docker.io/kuskoman/logstash-exporter
-    tag: v1.5.6
+    tag: v1.9.0
 
 redfish-exporter:
   image:
@@ -687,7 +687,7 @@ victoria-metrics-k8s-stack:
     image:
       registry: artifactory.algol60.net
       repository: csm-docker/stable/docker.io/bitnami/kube-state-metrics
-      tag: v2.8.0
+      tag: 2.15.0
     collectors:
       - certificatesigningrequests
       - configmaps
@@ -1240,5 +1240,5 @@ iscsimetrics:
   enabled: true
   image:
     repository: artifactory.algol60.net/csm-docker/stable/iscsi-metrics
-    tag: 1.0.1
+    tag: 1.0.2
     pullPolicy: IfNotPresent

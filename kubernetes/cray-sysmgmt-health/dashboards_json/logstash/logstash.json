@@ -1,48 +1,4 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_PROMETHEUS",
-      "label": "victorismetrics",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "prometheus",
-      "pluginName": "Prometheus"
-    },
-    {
-      "name": "VAR_CPU_THRESHOLD",
-      "type": "constant",
-      "label": "CPU Threshold",
-      "value": "1.0",
-      "description": ""
-    }
-  ],
-  "__elements": {},
-  "__requires": [
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "11.0.0"
-    },
-    {
-      "type": "datasource",
-      "id": "prometheus",
-      "name": "Prometheus",
-      "version": "1.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "stat",
-      "name": "Stat",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "timeseries",
-      "name": "Time series",
-      "version": ""
-    }
-  ],
   "annotations": {
     "list": [
       {
@@ -70,11 +26,9 @@
   "description": "Logstash Health Monitoring: System, JVM, Pipeline and individual plugin stats for Logstash replicas running on Kubernetes.",
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "gnetId": 18628,
   "graphTooltip": 0,
-  "id": null,
+  "id": 68,
   "links": [],
-  "liveNow": false,
   "panels": [
     {
       "datasource": {
@@ -127,6 +81,7 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -139,7 +94,7 @@
         "textMode": "value_and_name",
         "wideLayout": true
       },
-      "pluginVersion": "11.0.0",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -287,6 +242,7 @@
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -298,7 +254,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.0.0",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -330,10 +286,6 @@
     },
     {
       "collapsed": false,
-      "datasource": {
-        "type": "datasource",
-        "uid": "grafana"
-      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -342,15 +294,6 @@
       },
       "id": 6793,
       "panels": [],
-      "targets": [
-        {
-          "datasource": {
-            "type": "datasource",
-            "uid": "grafana"
-          },
-          "refId": "A"
-        }
-      ],
       "title": "Status Overview",
       "type": "row"
     },
@@ -417,6 +360,7 @@
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -429,7 +373,7 @@
         "textMode": "value_and_name",
         "wideLayout": true
       },
-      "pluginVersion": "11.0.0",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -522,6 +466,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -586,12 +531,13 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.0.0",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -618,10 +564,6 @@
     },
     {
       "collapsed": false,
-      "datasource": {
-        "type": "datasource",
-        "uid": "grafana"
-      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -630,15 +572,6 @@
       },
       "id": 6763,
       "panels": [],
-      "targets": [
-        {
-          "datasource": {
-            "type": "datasource",
-            "uid": "grafana"
-          },
-          "refId": "A"
-        }
-      ],
       "title": "System Load Averages by Instance",
       "type": "row"
     },
@@ -660,6 +593,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 25,
             "gradientMode": "none",
@@ -788,14 +722,13 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "maxHeight": 600,
           "mode": "single",
           "sort": "asc"
         }
       },
-      "pluginVersion": "8.4.7",
-      "repeat": "pod",
-      "repeatDirection": "h",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -839,6 +772,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 25,
             "gradientMode": "none",
@@ -967,13 +901,13 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "maxHeight": 600,
           "mode": "single",
           "sort": "asc"
         }
       },
-      "pluginVersion": "8.4.7",
-      "repeatDirection": "h",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -1001,7 +935,6 @@
     },
     {
       "collapsed": false,
-      "datasource": "Prometheus",
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -1010,23 +943,6 @@
       },
       "id": 2459,
       "panels": [],
-      "targets": [
-        {
-          "datasource": {
-            "0": "P",
-            "1": "r",
-            "2": "o",
-            "3": "m",
-            "4": "e",
-            "5": "t",
-            "6": "h",
-            "7": "e",
-            "8": "u",
-            "9": "s"
-          },
-          "refId": "A"
-        }
-      ],
       "title": "Process Metrics (All Selected Instance)",
       "type": "row"
     },
@@ -1048,6 +964,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 9,
             "gradientMode": "hue",
@@ -1106,11 +1023,13 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "maxHeight": 600,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -1147,6 +1066,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
@@ -1209,13 +1129,13 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "8.4.7",
-      "repeatDirection": "v",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -1253,6 +1173,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
@@ -1313,12 +1234,13 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "8.4.7",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -1353,7 +1275,6 @@
     },
     {
       "collapsed": false,
-      "datasource": "Prometheus",
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -1362,23 +1283,6 @@
       },
       "id": 953,
       "panels": [],
-      "targets": [
-        {
-          "datasource": {
-            "0": "P",
-            "1": "r",
-            "2": "o",
-            "3": "m",
-            "4": "e",
-            "5": "t",
-            "6": "h",
-            "7": "e",
-            "8": "u",
-            "9": "s"
-          },
-          "refId": "A"
-        }
-      ],
       "title": "JVM  (All Selected Instances)",
       "type": "row"
     },
@@ -1399,6 +1303,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
@@ -1461,12 +1366,13 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.5.5",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -1501,6 +1407,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -1558,12 +1465,13 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.5.5",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -1613,6 +1521,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
@@ -1672,12 +1581,13 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.5.5",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -1726,6 +1636,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -1785,12 +1696,13 @@
           "showLegend": false
         },
         "tooltip": {
+          "hideZeros": false,
           "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.5.5",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -1878,6 +1790,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -1937,12 +1850,13 @@
           "showLegend": false
         },
         "tooltip": {
+          "hideZeros": false,
           "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.5.5",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -2022,6 +1936,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
@@ -2081,13 +1996,13 @@
           "showLegend": false
         },
         "tooltip": {
+          "hideZeros": false,
           "maxHeight": 600,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.5.5",
-      "repeatDirection": "h",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -2160,7 +2075,6 @@
     },
     {
       "collapsed": false,
-      "datasource": "Prometheus",
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -2169,23 +2083,6 @@
       },
       "id": 2639,
       "panels": [],
-      "targets": [
-        {
-          "datasource": {
-            "0": "P",
-            "1": "r",
-            "2": "o",
-            "3": "m",
-            "4": "e",
-            "5": "t",
-            "6": "h",
-            "7": "e",
-            "8": "u",
-            "9": "s"
-          },
-          "refId": "A"
-        }
-      ],
       "title": "Pipeline",
       "type": "row"
     },
@@ -2270,7 +2167,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "8.4.7",
+      "pluginVersion": "11.5.2",
       "repeat": "pod",
       "repeatDirection": "h",
       "targets": [
@@ -2408,10 +2305,6 @@
     },
     {
       "collapsed": false,
-      "datasource": {
-        "type": "datasource",
-        "uid": "grafana"
-      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -2420,15 +2313,6 @@
       },
       "id": 6761,
       "panels": [],
-      "targets": [
-        {
-          "datasource": {
-            "type": "datasource",
-            "uid": "grafana"
-          },
-          "refId": "A"
-        }
-      ],
       "title": "Pipeline Inputs",
       "type": "row"
     },
@@ -2502,7 +2386,6 @@
       },
       "hideTimeOverride": false,
       "id": 5934,
-      "interval": "",
       "options": {
         "legend": {
           "calcs": [
@@ -2519,7 +2402,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "8.4.7",
+      "pluginVersion": "11.5.2",
       "repeat": "pod",
       "repeatDirection": "h",
       "targets": [
@@ -2623,7 +2506,7 @@
           "sort": "asc"
         }
       },
-      "pluginVersion": "8.4.7",
+      "pluginVersion": "11.5.2",
       "repeat": "pod",
       "repeatDirection": "h",
       "targets": [
@@ -2646,10 +2529,6 @@
     },
     {
       "collapsed": false,
-      "datasource": {
-        "type": "datasource",
-        "uid": "grafana"
-      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -2658,15 +2537,6 @@
       },
       "id": 6795,
       "panels": [],
-      "targets": [
-        {
-          "datasource": {
-            "type": "datasource",
-            "uid": "grafana"
-          },
-          "refId": "A"
-        }
-      ],
       "title": "Pipeline Outputs ($pipeline)",
       "type": "row"
     },
@@ -2739,7 +2609,6 @@
         "y": 103
       },
       "id": 6745,
-      "interval": "",
       "options": {
         "legend": {
           "calcs": [
@@ -2755,7 +2624,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "8.4.7",
+      "pluginVersion": "11.5.2",
       "repeat": "pod",
       "repeatDirection": "h",
       "targets": [
@@ -2847,7 +2716,6 @@
       },
       "hideTimeOverride": false,
       "id": 6098,
-      "interval": "",
       "options": {
         "legend": {
           "calcs": [
@@ -2864,7 +2732,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "8.4.7",
+      "pluginVersion": "11.5.2",
       "repeat": "pod",
       "repeatDirection": "h",
       "targets": [
@@ -2888,10 +2756,6 @@
     },
     {
       "collapsed": false,
-      "datasource": {
-        "type": "datasource",
-        "uid": "grafana"
-      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -2900,15 +2764,6 @@
       },
       "id": 6813,
       "panels": [],
-      "targets": [
-        {
-          "datasource": {
-            "type": "datasource",
-            "uid": "grafana"
-          },
-          "refId": "A"
-        }
-      ],
       "title": "Pipeline I/O Health ($pipeline)",
       "type": "row"
     },
@@ -2997,7 +2852,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "8.4.7",
+      "pluginVersion": "11.5.2",
       "repeat": "pod",
       "repeatDirection": "h",
       "targets": [
@@ -3044,43 +2899,37 @@
       "type": "timeseries"
     }
   ],
+  "preload": false,
   "refresh": "5s",
-  "schemaVersion": 39,
+  "schemaVersion": 40,
   "tags": [],
   "templating": {
     "list": [
       {
+        "current": {
+          "text": "${VAR_CPU_THRESHOLD}",
+          "value": "${VAR_CPU_THRESHOLD}"
+        },
         "description": "Number of cores or K8s CPU limit (Used as load threshold line)",
         "hide": 2,
         "label": "CPU Threshold",
         "name": "cpu_threshold",
         "query": "${VAR_CPU_THRESHOLD}",
-        "skipUrlSync": false,
-        "type": "constant",
-        "current": {
-          "value": "${VAR_CPU_THRESHOLD}",
-          "text": "${VAR_CPU_THRESHOLD}",
-          "selected": false
-        },
-        "options": [
-          {
-            "value": "${VAR_CPU_THRESHOLD}",
-            "text": "${VAR_CPU_THRESHOLD}",
-            "selected": false
-          }
-        ]
+        "skipUrlSync": true,
+        "type": "constant"
       },
       {
-        "current": {},
+        "current": {
+          "text": "10.41.0.137:9198",
+          "value": "10.41.0.137:9198"
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
         "definition": "label_values(logstash_info_node,instance)",
-        "hide": 0,
         "includeAll": false,
         "label": "Instance",
-        "multi": false,
         "name": "instance",
         "options": [],
         "query": {
@@ -3090,22 +2939,21 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": "aiops_anomaly_detection",
+          "value": "aiops_anomaly_detection"
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
         "definition": "label_values(logstash_stats_pipeline_events_in{instance=~\"$instance\"},pipeline)",
         "description": "Logstash Pipeline",
-        "hide": 0,
         "includeAll": false,
         "label": "Logstash Pipeline",
-        "multi": false,
         "name": "pipeline",
         "options": [],
         "query": {
@@ -3115,20 +2963,19 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": "kafka",
+          "value": "kafka"
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
         "definition": "label_values(logstash_stats_pipeline_plugin_events_out{instance=~\"$instance\", plugin_type=\"input\"},plugin)",
-        "hide": 0,
         "includeAll": false,
-        "multi": false,
         "name": "input_plugin",
         "options": [],
         "query": {
@@ -3138,20 +2985,19 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": "mutate",
+          "value": "mutate"
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
         "definition": "label_values(logstash_stats_pipeline_plugin_events_out{instance=~\"$instance\", plugin_type=\"filter\"},plugin)",
-        "hide": 0,
         "includeAll": false,
-        "multi": false,
         "name": "filter_plugin",
         "options": [],
         "query": {
@@ -3161,20 +3007,19 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": "http",
+          "value": "http"
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
         "definition": "label_values(logstash_stats_pipeline_plugin_events_out{instance=~\"$instance\", plugin_type=\"output\"},plugin)",
-        "hide": 0,
         "includeAll": false,
-        "multi": false,
         "name": "output_plugin",
         "options": [],
         "query": {
@@ -3184,22 +3029,21 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": "codec:decode",
+          "value": "codec:decode"
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
         "definition": "label_values(logstash_stats_pipeline_plugin_events_out{instance=~\"$instance\"},plugin_type)",
         "description": "Pipeline Plugin Type",
-        "hide": 0,
         "includeAll": false,
         "label": "Plugin Type",
-        "multi": false,
         "name": "plugin_type",
         "options": [],
         "query": {
@@ -3209,27 +3053,20 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
         "type": "query"
       },
       {
         "current": {
-          "selected": false,
           "text": "victorismetrics",
           "value": "P1EB0681B67ED710F"
         },
-        "hide": 0,
         "includeAll": false,
         "label": "Data Source",
-        "multi": false,
         "name": "DS_PROMETHEUS",
         "options": [],
         "query": "prometheus",
-        "queryValue": "",
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
         "type": "datasource"
       }
     ]
@@ -3238,24 +3075,10 @@
     "from": "now-15m",
     "to": "now"
   },
-  "timeRangeUpdatedDuringEditOrView": false,
-  "timepicker": {
-    "refresh_intervals": [
-      "5s",
-      "10s",
-      "30s",
-      "1m",
-      "5m",
-      "15m",
-      "30m",
-      "1h",
-      "2h",
-      "1d"
-    ]
-  },
+  "timepicker": {},
   "timezone": "",
   "title": "Logstash",
   "uid": "fdy9m1ui16mf4a",
-  "version": 6,
+  "version": 1,
   "weekStart": ""
 }

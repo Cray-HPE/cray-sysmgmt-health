@@ -6,7 +6,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "10.4.2"
+      "version": "11.5.2"
     },
     {
       "type": "datasource",
@@ -206,7 +206,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.2",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -268,7 +268,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.2",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -330,7 +330,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.2",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -396,7 +396,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.2",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -462,7 +462,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "10.4.2",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -560,7 +560,7 @@
         },
         "showHeader": true
       },
-      "pluginVersion": "10.4.2",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -664,7 +664,7 @@
           "sort": "asc"
         }
       },
-      "pluginVersion": "9.2.6",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -796,7 +796,7 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "9.2.6",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -901,7 +901,7 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "9.2.6",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -1004,7 +1004,7 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "9.2.6",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -1107,7 +1107,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.2.6",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -1207,7 +1207,7 @@
           }
         ]
       },
-      "pluginVersion": "9.2.7",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -1335,7 +1335,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.2.6",
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
@@ -1463,7 +1463,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "9.2.6",
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -1577,7 +1577,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "9.2.6",
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -1691,7 +1691,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "9.2.6",
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -1807,7 +1807,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "9.2.6",
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -1932,7 +1932,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "9.2.6",
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -2040,7 +2040,7 @@
               "sort": "none"
             }
           },
-          "pluginVersion": "9.2.6",
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -2148,7 +2148,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "9.2.6",
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -2278,7 +2278,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "9.2.6",
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -2380,7 +2380,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "9.2.6",
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -2482,7 +2482,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "9.2.6",
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -2583,7 +2583,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "9.2.6",
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -2682,7 +2682,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "9.2.6",
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -2811,7 +2811,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "9.2.6",
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -2913,7 +2913,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "8.0.3",
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {
@@ -3012,7 +3012,7 @@
               "sort": "none"
             }
           },
-          "pluginVersion": "9.2.6",
+          "pluginVersion": "11.5.2",
           "targets": [
             {
               "datasource": {

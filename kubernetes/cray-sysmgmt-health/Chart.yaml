@@ -1,7 +1,7 @@
 #
 # MIT License
 #
-# (C) Copyright 2022-2023 Hewlett Packard Enterprise Development LP
+# (C) Copyright 2025 Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -47,7 +47,7 @@ dependencies:
   version: 7.0.0
 - name: logstash-exporter
   repository: https://artifactory.algol60.net/artifactory/csm-helm-charts
-  version: 1.0.2
+  version: 1.0.3
 - name: redfish-exporter
   repository: https://artifactory.algol60.net/artifactory/csm-helm-charts
   version: 1.1.0
