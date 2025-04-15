@@ -30,7 +30,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "P1EB0681B67ED710F"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {},
@@ -110,7 +110,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "P1EB0681B67ED710F"
+            "uid": "prometheus"
           },
           "editorMode": "code",
           "expr": "canu_test",
@@ -276,8 +276,8 @@
     "list": [
       {
         "current": {
-          "text": "victorismetrics",
-          "value": "P1EB0681B67ED710F"
+          "text": "VictoriaMetrics",
+          "value": "prometheus"
         },
         "includeAll": false,
         "label": "Data source",

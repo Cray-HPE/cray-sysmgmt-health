@@ -3057,8 +3057,8 @@
       },
       {
         "current": {
-          "text": "victorismetrics",
-          "value": "P1EB0681B67ED710F"
+          "text": "VictoriaMetrics",
+          "value": "prometheus"
         },
         "includeAll": false,
         "label": "Data Source",

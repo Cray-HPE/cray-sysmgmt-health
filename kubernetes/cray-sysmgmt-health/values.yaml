@@ -471,11 +471,12 @@ victoria-metrics-k8s-stack:
         deleteDatasources:
         - name: thanos
         datasources:
-        - name: victorismetrics
+        - name: VictoriaMetrics
           type: prometheus
           url: http://vmselect-vms.sysmgmt-health.svc.cluster.local:8481/select/0/prometheus
           access: proxy
           isDefault: true
+          uid: prometheus
 
     testFramework:
       image:
