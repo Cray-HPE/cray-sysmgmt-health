@@ -358,7 +358,7 @@ victoria-metrics-k8s-stack:
         tag: v0.28.1
       containers:
       - name: config-reloader
-        image: artifactory.algol60.net/csm-docker/stable/docker.io/jimmidyson/configmap-reload:v0.3.0
+        image: artifactory.algol60.net/csm-docker/stable/docker.io/jimmidyson/configmap-reload:v0.9.0
       retention: 48h
       logLevel: debug
       replicaCount: 1
