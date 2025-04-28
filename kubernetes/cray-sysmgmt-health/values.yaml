@@ -114,30 +114,100 @@ prometheus-snmp-exporter:
 victoria-metrics-k8s-stack:
   defaultRules:
     create: true
-    rules:
-      etcd: false
-      general: false
-      k8s: true
-      kubeApiserver: false
-      kubeApiserverAvailability: true
-      kubeApiserverBurnrate: true
-      kubeApiserverHistogram: true
-      kubeApiserverSlos: false
-      kubelet: true
-      kubePrometheusGeneral: false
-      kubePrometheusNodeRecording: false
-      kubernetesApps: false
-      kubernetesResources: false
-      kubernetesStorage: false
-      kubernetesSystem: false
-      kubeScheduler: false
-      kubeStateMetrics: false
-      network: false
-      node: false
-      vmagent: false
-      vmsingle: false
-      vmhealth: false
-      alertmanager: false
+    groups:
+      etcd:
+        create: false
+      general:
+        create: false
+      k8sContainerCpuLimits:
+        create: false
+      k8sContainerCpuRequests:
+        create: false
+      k8sContainerCpuUsageSecondsTotal:
+        create: false
+      k8sContainerMemoryLimits:
+        create: false
+      k8sContainerMemoryRequests:
+        create: false
+      k8sContainerMemoryRss:
+        create: false
+      k8sContainerMemoryCache:
+        create: false
+      k8sContainerMemoryWorkingSetBytes:
+        create: false
+      k8sContainerMemorySwap:
+        create: false
+      k8sPodOwner:
+        create: false
+      k8sContainerResource:
+        create: false
+      kubeApiserver:
+        create: false
+      kubeApiserverAvailability:
+        create: false
+      kubeApiserverBurnrate:
+        create: false
+      kubeApiserverHistogram:
+        create: false
+      kubeApiserverSlos:
+        create: false
+      kubelet:
+        create: false
+      kubePrometheusGeneral:
+        create: false
+      kubePrometheusNodeRecording:
+        create: false
+      kubernetesApps:
+        create: false
+      kubernetesResources:
+        create: false
+      kubernetesStorage:
+        create: false
+      kubernetesSystem:
+        create: false
+      kubernetesSystemKubelet:
+        create: false
+      kubernetesSystemApiserver:
+        create: false
+      kubernetesSystemControllerManager:
+        create: false
+      kubeScheduler:
+        create: false
+      kubernetesSystemScheduler:
+        create: false
+      kubeStateMetrics:
+        create: false
+      nodeNetwork:
+        create: false
+      node:
+        create: false
+      vmagent:
+        create: true
+        spec:
+          labels:
+            group: prometheus
+      vmsingle:
+        create: false
+      vmcluster:
+        create: true
+        spec:
+          labels:
+            group: prometheus
+      vmHealth:
+        create: true
+        spec:
+          labels:
+            group: prometheus
+      vmoperator:
+        create: true
+        spec:
+          labels:
+            group: prometheus
+      alertmanager:
+        create: true
+        spec:
+          labels:
+            group: prometheus
 
   nameOverride: "vms"
   fullnameOverride: "vms"
@@ -179,6 +249,8 @@ victoria-metrics-k8s-stack:
     operator:
     # -- By default, operator converts prometheus-operator objects.
       disable_prometheus_converter: true
+    admissionWebhooks:
+      enabled: false
   vmsingle:
     enabled: false
   vmcluster:
@@ -377,6 +449,11 @@ victoria-metrics-k8s-stack:
         limits:
           cpu: 4
           memory: 4Gi
+
+      securityContext:
+        fsGroup: 1
+        supplementalGroups:
+        - 1
       # Configure external hostname for Istio ingress
       # Setup with Ansible
       # externalAuthority: alertmanager-shs.local
@@ -506,18 +583,19 @@ victoria-metrics-k8s-stack:
 
   kubeControllerManager:
     enabled: true
-    spec:
-      jobLabel: jobLabel
-      endpoints:
-        - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
-          # bearerTokenSecret:
-          #   key: ""
-          port: http-metrics
-          scheme: https
-          tlsConfig:
-            caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-            serverName: kubernetes
-            insecureSkipVerify: true
+    vmScrape:
+      spec:
+        jobLabel: jobLabel
+        endpoints:
+          - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+            # bearerTokenSecret:
+            #   key: ""
+            port: http-metrics
+            scheme: https
+            tlsConfig:
+              caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+              serverName: kubernetes
+              insecureSkipVerify: true
     service:
       https: true
       port: 10257
@@ -528,17 +606,18 @@ victoria-metrics-k8s-stack:
 
   kubeScheduler:
     enabled: true
-    spec:
-      jobLabel: jobLabel
-      endpoints:
-        - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
-          # bearerTokenSecret:
-          #   key: ""
-          port: http-metrics
-          scheme: https
-          tlsConfig:
-            caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-            insecureSkipVerify: true
+    vmScrape:
+      spec:
+        jobLabel: jobLabel
+        endpoints:
+          - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+            # bearerTokenSecret:
+            #   key: ""
+            port: http-metrics
+            scheme: https
+            tlsConfig:
+              caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+              insecureSkipVerify: true
     service:
       https: true
       port: 10259
@@ -551,17 +630,18 @@ victoria-metrics-k8s-stack:
     # Configure secure access to the etcd cluster via the key and certs
     # defined in the `etcd-client-cert` secret (see below).
     enabled: true
-    spec:
-      jobLabel: jobLabel
-      endpoints:
-        - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
-          port: http-metrics
-          scheme: https
-          tlsConfig:
-            caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-            certFile: /etc/vm/secrets/etcd-client-cert/etcd-client
-            keyFile: /etc/vm/secrets/etcd-client-cert/etcd-client-key
-            insecureSkipVerify: true
+    vmScrape:
+      spec:
+        jobLabel: jobLabel
+        endpoints:
+          - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+            port: http-metrics
+            scheme: https
+            tlsConfig:
+              caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+              certFile: /etc/vm/secrets/etcd-client-cert/etcd-client
+              keyFile: /etc/vm/secrets/etcd-client-cert/etcd-client-key
+              insecureSkipVerify: true
     service:
       enabled: true
       port: 2379
@@ -734,17 +814,18 @@ victoria-metrics-k8s-stack:
     enabled: true
   kubeProxy:
     enabled: true
-    spec:
-      jobLabel: jobLabel
-      endpoints:
-        - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
-          # bearerTokenSecret:
-          #   key: ""
-          port: http-metrics
-          scheme: http
-          tlsConfig:
-            caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-            insecureSkipVerify: true
+    vmScrape:
+      spec:
+        jobLabel: jobLabel
+        endpoints:
+          - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+            # bearerTokenSecret:
+            #   key: ""
+            port: http-metrics
+            scheme: http
+            tlsConfig:
+              caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+              insecureSkipVerify: true
 
 customRules:
   create: true
