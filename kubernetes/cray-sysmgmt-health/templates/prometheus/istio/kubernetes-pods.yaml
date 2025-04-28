@@ -72,3 +72,5 @@ spec:
     - sourceLabels: [__meta_kubernetes_pod_phase]
       action: drop
       regex: ^(Succeeded|Failed)$
+    - sourceLabels: [__meta_kubernetes_pod_annotation_prometheus_io_port, __meta_kubernetes_pod_container_port_number]
+      action: keep_if_equal

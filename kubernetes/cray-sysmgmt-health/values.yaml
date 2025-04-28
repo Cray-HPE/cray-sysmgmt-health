@@ -113,7 +113,7 @@ prometheus-snmp-exporter:
 
 victoria-metrics-k8s-stack:
   defaultRules:
-    create: true
+    create: false
     rules:
       etcd: false
       general: false
@@ -439,8 +439,6 @@ victoria-metrics-k8s-stack:
         header_name: X-WEBAUTH-USER
         header_property: username
         auto_sign_up: true
-      plugins:
-        allow_loading_unsigned_plugins: hpe-clusterview-panel
 
     sidecar:
       image:
@@ -506,18 +504,19 @@ victoria-metrics-k8s-stack:
 
   kubeControllerManager:
     enabled: true
-    spec:
-      jobLabel: jobLabel
-      endpoints:
-        - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
-          # bearerTokenSecret:
-          #   key: ""
-          port: http-metrics
-          scheme: https
-          tlsConfig:
-            caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-            serverName: kubernetes
-            insecureSkipVerify: true
+    vmScrape:
+      spec:
+        jobLabel: jobLabel
+        endpoints:
+          - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+            # bearerTokenSecret:
+            #   key: ""
+            port: http-metrics
+            scheme: https
+            tlsConfig:
+              caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+              serverName: kubernetes
+              insecureSkipVerify: true
     service:
       https: true
       port: 10257
@@ -528,17 +527,18 @@ victoria-metrics-k8s-stack:
 
   kubeScheduler:
     enabled: true
-    spec:
-      jobLabel: jobLabel
-      endpoints:
-        - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
-          # bearerTokenSecret:
-          #   key: ""
-          port: http-metrics
-          scheme: https
-          tlsConfig:
-            caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-            insecureSkipVerify: true
+    vmScrape:
+      spec:
+        jobLabel: jobLabel
+        endpoints:
+          - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+            # bearerTokenSecret:
+            #   key: ""
+            port: http-metrics
+            scheme: https
+            tlsConfig:
+              caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+              insecureSkipVerify: true
     service:
       https: true
       port: 10259
@@ -551,17 +551,18 @@ victoria-metrics-k8s-stack:
     # Configure secure access to the etcd cluster via the key and certs
     # defined in the `etcd-client-cert` secret (see below).
     enabled: true
-    spec:
-      jobLabel: jobLabel
-      endpoints:
-        - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
-          port: http-metrics
-          scheme: https
-          tlsConfig:
-            caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-            certFile: /etc/vm/secrets/etcd-client-cert/etcd-client
-            keyFile: /etc/vm/secrets/etcd-client-cert/etcd-client-key
-            insecureSkipVerify: true
+    vmScrape:
+      spec:
+        jobLabel: jobLabel
+        endpoints:
+          - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+            port: http-metrics
+            scheme: https
+            tlsConfig:
+              caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+              certFile: /etc/vm/secrets/etcd-client-cert/etcd-client
+              keyFile: /etc/vm/secrets/etcd-client-cert/etcd-client-key
+              insecureSkipVerify: true
     service:
       enabled: true
       port: 2379
@@ -734,17 +735,18 @@ victoria-metrics-k8s-stack:
     enabled: true
   kubeProxy:
     enabled: true
-    spec:
-      jobLabel: jobLabel
-      endpoints:
-        - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
-          # bearerTokenSecret:
-          #   key: ""
-          port: http-metrics
-          scheme: http
-          tlsConfig:
-            caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-            insecureSkipVerify: true
+    vmScrape:
+      spec:
+        jobLabel: jobLabel
+        endpoints:
+          - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+            # bearerTokenSecret:
+            #   key: ""
+            port: http-metrics
+            scheme: http
+            tlsConfig:
+              caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+              insecureSkipVerify: true
 
 customRules:
   create: true
