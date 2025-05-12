@@ -1320,7 +1320,7 @@ servicemonitors:
       scheme: http
       metricsRelabelings: {}
       relabelings: {}
-      
+
   smaVmExporter:
     enabled: true
     servicename: sma-vm-metrics
