@@ -25,19 +25,6 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "cray-sysmgmt-health.fullname" . }}-node-exporter-full
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
-    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
-    {{- end }}
-data:
-  node-exporter-full.json: |-
-    {{- .Files.Get "dashboards_json/node-exporter/node-exporter-full.json" | nindent 4 }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
   name: {{ include "cray-sysmgmt-health.fullname" . }}-ceph-cluster
   namespace: {{ .Release.Namespace }}
   labels:
@@ -177,305 +164,6 @@ metadata:
 data:
   rbd-overview.json: |-
     {{- .Files.Get "dashboards_json/ceph-nautilus/rbd-overview.json" | nindent 4 }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ include "cray-sysmgmt-health.fullname" . }}-apiserver
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
-    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
-    {{- end }}
-data:
-  apiserver.json: |-
-    {{- .Files.Get "dashboards_json/kubernetes/apiserver.json" | nindent 4 }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ include "cray-sysmgmt-health.fullname" . }}-cluster-total
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
-    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
-    {{- end }}
-data:
-  cluster-total.json: |-
-    {{- .Files.Get "dashboards_json/kubernetes/cluster-total.json" | nindent 4 }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ include "cray-sysmgmt-health.fullname" . }}-controller-manager
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
-    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
-    {{- end }}
-data:
-  controller-manager.json: |-
-    {{- .Files.Get "dashboards_json/kubernetes/controller-manager.json" | nindent 4 }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ include "cray-sysmgmt-health.fullname" . }}-etcd
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
-    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
-    {{- end }}
-data:
-  etcd.json: |-
-    {{- .Files.Get "dashboards_json/kubernetes/etcd.json" | nindent 4 }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ include "cray-sysmgmt-health.fullname" . }}-k8s-coredns
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
-    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
-    {{- end }}
-data:
-  k8s-coredns.json: |-
-    {{- .Files.Get "dashboards_json/kubernetes/k8s-coredns.json" | nindent 4 }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ include "cray-sysmgmt-health.fullname" . }}-k8s-resources-cluster
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
-    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
-    {{- end }}
-data:
-  k8s-resources-cluster.json: |-
-    {{- .Files.Get "dashboards_json/kubernetes/k8s-resources-cluster.json" | nindent 4 }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ include "cray-sysmgmt-health.fullname" . }}-k8s-resources-namespace
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
-    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
-    {{- end }}
-data:
-  k8s-resources-namespace.json: |-
-    {{- .Files.Get "dashboards_json/kubernetes/k8s-resources-namespace.json" | nindent 4 }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ include "cray-sysmgmt-health.fullname" . }}-k8s-resources-node
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
-    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
-    {{- end }}
-data:
-  k8s-resources-node.json: |-
-    {{- .Files.Get "dashboards_json/kubernetes/k8s-resources-node.json" | nindent 4 }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ include "cray-sysmgmt-health.fullname" . }}-k8s-resources-pod
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
-    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
-    {{- end }}
-data:
-  k8s-resources-pod.json: |-
-    {{- .Files.Get "dashboards_json/kubernetes/k8s-resources-pod.json" | nindent 4 }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ include "cray-sysmgmt-health.fullname" . }}-k8s-resources-workload
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
-    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
-    {{- end }}
-data:
-  k8s-resources-workload.json: |-
-    {{- .Files.Get "dashboards_json/kubernetes/k8s-resources-workload.json" | nindent 4 }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ include "cray-sysmgmt-health.fullname" . }}-k8s-resources-workloads-namespace
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
-    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
-    {{- end }}
-data:
-  k8s-resources-workloads-namespace.json: |-
-    {{- .Files.Get "dashboards_json/kubernetes/k8s-resources-workloads-namespace.json" | nindent 4 }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ include "cray-sysmgmt-health.fullname" . }}-kubelet
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
-    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
-    {{- end }}
-data:
-  kubelet.json: |-
-    {{- .Files.Get "dashboards_json/kubernetes/kubelet.json" | nindent 4 }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ include "cray-sysmgmt-health.fullname" . }}-namespace-by-pod
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
-    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
-    {{- end }}
-data:
-  namespace-by-pod.json: |-
-    {{- .Files.Get "dashboards_json/kubernetes/namespace-by-pod.json" | nindent 4 }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ include "cray-sysmgmt-health.fullname" . }}-namespace-by-workload
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
-    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
-    {{- end }}
-data:
-  namespace-by-workload.json: |-
-    {{- .Files.Get "dashboards_json/kubernetes/namespace-by-workload.json" | nindent 4 }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ include "cray-sysmgmt-health.fullname" . }}-node-cluster-rsrc-use
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
-    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
-    {{- end }}
-data:
-  node-cluster-rsrc-use.json: |-
-    {{- .Files.Get "dashboards_json/kubernetes/node-cluster-rsrc-use.json" | nindent 4 }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ include "cray-sysmgmt-health.fullname" . }}-node-rsrc-use
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
-    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
-    {{- end }}
-data:
-  node-rsrc-use.json: |-
-    {{- .Files.Get "dashboards_json/kubernetes/node-rsrc-use.json" | nindent 4 }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ include "cray-sysmgmt-health.fullname" . }}-nodes
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
-    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
-    {{- end }}
-data:
-  nodes.json: |-
-    {{- .Files.Get "dashboards_json/kubernetes/nodes.json" | nindent 4 }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ include "cray-sysmgmt-health.fullname" . }}-persistentvolumesusage
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
-    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
-    {{- end }}
-data:
-  persistentvolumesusage.json: |-
-    {{- .Files.Get "dashboards_json/kubernetes/persistentvolumesusage.json" | nindent 4 }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ include "cray-sysmgmt-health.fullname" . }}-pod-total
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
-    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
-    {{- end }}
-data:
-  pod-total.json: |-
-    {{- .Files.Get "dashboards_json/kubernetes/pod-total.json" | nindent 4 }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ include "cray-sysmgmt-health.fullname" . }}-proxy
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
-    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
-    {{- end }}
-data:
-  proxy.json: |-
-    {{- .Files.Get "dashboards_json/kubernetes/proxy.json" | nindent 4 }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ include "cray-sysmgmt-health.fullname" . }}-scheduler
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
-    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
-    {{- end }}
-data:
-  scheduler.json: |-
-    {{- .Files.Get "dashboards_json/kubernetes/scheduler.json" | nindent 4 }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ include "cray-sysmgmt-health.fullname" . }}-statefulset
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
-    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
-    {{- end }}
-data:
-  statefulset.json: |-
-    {{- .Files.Get "dashboards_json/kubernetes/statefulset.json" | nindent 4 }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ include "cray-sysmgmt-health.fullname" . }}-workload-total
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
-    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
-    {{- end }}
-data:
-  workload-total.json: |-
-    {{- .Files.Get "dashboards_json/kubernetes/workload-total.json" | nindent 4 }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -805,41 +493,15 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "cray-sysmgmt-health.fullname" . }}-operator
+  name: {{ include "cray-sysmgmt-health.fullname" . }}-sma-vmcluster
   namespace: {{ .Release.Namespace }}
   labels:
     {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
     {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
     {{- end }}
 data:
-  operator.json: |-
-    {{- .Files.Get "dashboards_json/vm/operator.json" | nindent 4 }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ include "cray-sysmgmt-health.fullname" . }}-vmalert
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
-    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
-    {{- end }}
-data:
-  vmalert.json: |-
-    {{- .Files.Get "dashboards_json/vm/vmalert.json" | nindent 4 }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ include "cray-sysmgmt-health.fullname" . }}-vmagent
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
-    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
-    {{- end }}
-data:
-  vmagent.json: |-
-    {{- .Files.Get "dashboards_json/vm/vmagent.json" | nindent 4 }}
+  sma-vmcluster.json: |-
+    {{- .Files.Get "dashboards_json/vm/sma-vmcluster.json" | nindent 4 }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -879,4 +541,43 @@ metadata:
 data:
   sma-flow-stats.json: |-
     {{- .Files.Get "dashboards_json/flow/sma-flow-stats.json" | nindent 4 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "cray-sysmgmt-health.fullname" . }}-statefulset
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
+    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
+    {{- end }}
+data:
+  statefulset.json: |-
+    {{- .Files.Get "dashboards_json/kubernetes/statefulset.json" | nindent 4 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "cray-sysmgmt-health.fullname" . }}-persistentvolumesusage
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
+    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
+    {{- end }}
+data:
+  persistentvolumesusage.json: |-
+    {{- .Files.Get "dashboards_json/kubernetes/persistentvolumesusage.json" | nindent 4 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "cray-sysmgmt-health.fullname" . }}-operator
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
+    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
+    {{- end }}
+data:
+  operator.json: |-
+    {{- .Files.Get "dashboards_json/vm/operator.json" | nindent 4 }}
 ---
