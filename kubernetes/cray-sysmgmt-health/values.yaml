@@ -1321,6 +1321,21 @@ servicemonitors:
       metricsRelabelings: {}
       relabelings: {}
 
+  smaVmExporter:
+    enabled: true
+    servicename: sma-vm-metrics
+    serviceMonitor:
+      namespace: sysmgmt-health
+      port: http
+      matchNamespace:
+      - sma
+      matchLabels:
+        app.kubernetes.io/instance: sma-vm-cluster
+      interval: 30s
+      scheme: http
+      metricsRelabelings: {}
+      relabelings: {}
+
 smartmetrics:
   enabled: true
   image:
