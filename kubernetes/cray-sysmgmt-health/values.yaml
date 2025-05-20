@@ -208,18 +208,28 @@ victoria-metrics-k8s-stack:
         spec:
           labels:
             group: prometheus
+      windowsNode:
+        create: false
+      windowsPod:
+        create: false
 
   nameOverride: "vms"
   fullnameOverride: "vms"
   namespace: sysmgmt-health
   labels:
     release: cray-sysmgmt-health
-  defaultDashboardsEnabled: false
   defaultDashboards:
   # -- Enable custom dashboards installation
-    enabled: false
+    enabled: true
     labels:
       release: cray-sysmgmt-health
+    dashboards:
+      victoriametrics-cluster:
+        enabled: false
+      victoriametrics-single-node:
+        enabled: false
+      victoriametrics-operator:
+        enabled: false
   vmselect:
     vmselectSpec:
       externalAuthority: vmselect.local
@@ -1316,6 +1326,21 @@ servicemonitors:
       - sysmgmt-health
       matchLabels:
         app.selector: grok
+      interval: 30s
+      scheme: http
+      metricsRelabelings: {}
+      relabelings: {}
+
+  smaVmExporter:
+    enabled: true
+    servicename: sma-vm-metrics
+    serviceMonitor:
+      namespace: sysmgmt-health
+      port: http
+      matchNamespace:
+      - sma
+      matchLabels:
+        app.kubernetes.io/instance: sma-vm-cluster
       interval: 30s
       scheme: http
       metricsRelabelings: {}
