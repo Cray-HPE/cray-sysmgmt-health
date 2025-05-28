@@ -252,7 +252,7 @@ victoria-metrics-k8s-stack:
         enabled: true
         image:
           repository: artifactory.algol60.net/csm-docker/stable/docker.io/bitnami/kubectl
-          tag: 1.31.1
+          tag: 1.33.1
           pullPolicy: IfNotPresent
     cleanupCRD: true
     createCRD: false
@@ -526,8 +526,6 @@ victoria-metrics-k8s-stack:
         header_name: X-WEBAUTH-USER
         header_property: username
         auto_sign_up: true
-      plugins:
-        allow_loading_unsigned_plugins: hpe-clusterview-panel
 
     sidecar:
       image:
