@@ -1344,6 +1344,21 @@ servicemonitors:
       metricsRelabelings: {}
       relabelings: {}
 
+  hubbleExporter:
+    enabled: true
+    servicename: hubble-metrics
+    serviceMonitor:
+      namespace: sysmgmt-health
+      port: hubble-metrics
+      matchNamespace:
+      - kube-system
+      matchLabels:
+        app.kubernetes.io/name: hubble
+      interval: 30s
+      scheme: http
+      metricsRelabelings: {}
+      relabelings: {}
+
 smartmetrics:
   enabled: true
   image:
