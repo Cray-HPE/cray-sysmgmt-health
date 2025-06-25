@@ -1691,7 +1691,9 @@
   "preload": false,
   "refresh": "30s",
   "schemaVersion": 40,
-  "tags": [],
+  "tags": [
+    "cilium"
+  ],
   "templating": {
     "list": []
   },

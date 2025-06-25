@@ -851,7 +851,7 @@
   "schemaVersion": 37,
   "style": "dark",
   "tags": [
-    "no-results"
+    "ceph-exporter"
   ],
   "templating": {
     "list": [

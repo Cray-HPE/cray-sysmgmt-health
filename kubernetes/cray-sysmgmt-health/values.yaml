@@ -86,7 +86,7 @@ snmpExporter:
   scrapeTimeout: 10s
   path: /snmp
   module:
-    - if_mib
+    - "system,if_mib"
   additionalMetricsRelabels: {}
   relabelings: []
   selector:
@@ -230,6 +230,8 @@ victoria-metrics-k8s-stack:
         enabled: false
       victoriametrics-operator:
         enabled: false
+      kubernetes-views-namespaces:
+        enabled: false
   vmselect:
     vmselectSpec:
       externalAuthority: vmselect.local
@@ -292,6 +294,8 @@ victoria-metrics-k8s-stack:
           repository: artifactory.algol60.net/csm-docker/stable/docker.io/victoriametrics/vmselect
           tag: v1.115.0-cluster
         replicaCount: 2
+        extraArgs:
+          dedup.minScrapeInterval: 30s
         resources:
           limits:
             cpu: '4'

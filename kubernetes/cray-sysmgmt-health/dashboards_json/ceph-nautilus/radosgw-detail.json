@@ -1,32 +1,4 @@
 {
-  "__inputs": [],
-  "__elements": {},
-  "__requires": [
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "11.5.2"
-    },
-    {
-      "type": "panel",
-      "id": "piechart",
-      "name": "Pie chart",
-      "version": ""
-    },
-    {
-      "type": "datasource",
-      "id": "prometheus",
-      "name": "Prometheus",
-      "version": "1.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "timeseries",
-      "name": "Time series",
-      "version": ""
-    }
-  ],
   "annotations": {
     "list": [
       {
@@ -52,16 +24,11 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": null,
+  "id": 68,
   "links": [],
-  "liveNow": false,
   "panels": [
     {
       "collapsed": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
-      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -70,16 +37,7 @@
       },
       "id": 12,
       "panels": [],
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "refId": "A"
-        }
-      ],
-      "title": "RGW Host Detail : $rgw_servers",
+      "title": "RGW Host Detail : $instance_id",
       "type": "row"
     },
     {
@@ -92,11 +50,13 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
@@ -105,6 +65,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -147,7 +108,6 @@
         "y": 1
       },
       "id": 34,
-      "links": [],
       "options": {
         "legend": {
           "calcs": [],
@@ -156,6 +116,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
@@ -166,20 +127,24 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "sum by (ceph_daemon) (rate(ceph_rgw_get_initial_lat_sum{ceph_daemon=~\"($rgw_servers)\"}[1m]) / rate(ceph_rgw_get_initial_lat_count{ceph_daemon=~\"($rgw_servers)\"}[1m]))",
+          "editorMode": "code",
+          "expr": "sum by (instance_id) (rate(ceph_rgw_get_initial_lat_sum{instance_id=~\"($instance_id)\"}[1m]) / rate(ceph_rgw_get_initial_lat_count{instance_id=~\"($instance_id)\"}[1m]))",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "GET {{ceph_daemon}}",
+          "legendFormat": "GET {{instance_id}}",
+          "range": true,
           "refId": "A"
         },
         {
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "sum by (ceph_daemon)(rate(ceph_rgw_put_initial_lat_sum{ceph_daemon=~\"($rgw_servers)\"}[1m]) / rate(ceph_rgw_put_initial_lat_count{ceph_daemon=~\"($rgw_servers)\"}[1m]))",
+          "editorMode": "code",
+          "expr": "sum by (instance_id) (rate(ceph_rgw_put_initial_lat_sum{instance_id=~\"($instance_id)\"}[1m]) / rate(ceph_rgw_put_initial_lat_count{instance_id=~\"($instance_id)\"}[1m]))",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "PUT {{ceph_daemon}}",
+          "legendFormat": "PUT {{instance_id}}",
+          "range": true,
           "refId": "B"
         }
       ],
@@ -196,11 +161,13 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
@@ -209,6 +176,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -252,7 +220,6 @@
         "y": 1
       },
       "id": 18,
-      "links": [],
       "options": {
         "legend": {
           "calcs": [],
@@ -261,6 +228,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
@@ -271,20 +239,24 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "rate(ceph_rgw_get_b{ceph_daemon=~\"[[rgw_servers]]\"}[1m])",
+          "editorMode": "code",
+          "expr": "rate(ceph_rgw_get_b{instance_id=~\"$instance_id\"}[1m])",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "GETs {{ceph_daemon}}",
+          "legendFormat": "GETs {{instance_id}}",
+          "range": true,
           "refId": "B"
         },
         {
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "rate(ceph_rgw_put_b{ceph_daemon=~\"[[rgw_servers]]\"}[1m])",
+          "editorMode": "code",
+          "expr": "rate(ceph_rgw_put_b{instance_id=~\"$instance_id\"}[1m])",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "PUTs {{ceph_daemon}}",
+          "legendFormat": "PUTs {{instance_id}}",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -301,11 +273,13 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
@@ -314,6 +288,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -431,7 +406,6 @@
         "y": 8
       },
       "id": 14,
-      "links": [],
       "options": {
         "legend": {
           "calcs": [],
@@ -440,6 +414,7 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
@@ -450,40 +425,48 @@
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "rate(ceph_rgw_failed_req{ceph_daemon=~\"[[rgw_servers]]\"}[1m])",
+          "editorMode": "code",
+          "expr": "rate(ceph_rgw_failed_req{instance_id=~\"$instance_id\"}[1m])",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "Requests Failed {{ceph_daemon}}",
+          "legendFormat": "Requests Failed {{instance_id}}",
+          "range": true,
           "refId": "B"
         },
         {
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "rate(ceph_rgw_get{ceph_daemon=~\"[[rgw_servers]]\"}[1m])",
+          "editorMode": "code",
+          "expr": "rate(ceph_rgw_get{instance_id=~\"$instance_id\"}[1m])",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "GETs {{ceph_daemon}}",
+          "legendFormat": "GETs {{instance_id}}",
+          "range": true,
           "refId": "C"
         },
         {
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "rate(ceph_rgw_put{ceph_daemon=~\"[[rgw_servers]]\"}[1m])",
+          "editorMode": "code",
+          "expr": "rate(ceph_rgw_put{instance_id=~\"$instance_id\"}[1m])",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "PUTs {{ceph_daemon}}",
+          "legendFormat": "PUTs {{instance_id}}",
+          "range": true,
           "refId": "D"
         },
         {
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "rate(ceph_rgw_req{ceph_daemon=~\"[[rgw_servers]]\"}[1m]) -  (rate(ceph_rgw_get{ceph_daemon=~\"[[rgw_servers]]\"}[1m]) +   rate(ceph_rgw_put{ceph_daemon=~\"[[rgw_servers]]\"}[1m]))",
+          "editorMode": "code",
+          "expr": "rate(ceph_rgw_req{instance_id=~\"$instance_id\"}[1m]) -  (rate(ceph_rgw_get{instance_id=~\"$instance_id\"}[1m]) +   rate(ceph_rgw_put{instance_id=~\"$instance_id\"}[1m]))",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "Other {{ceph_daemon}}",
+          "legendFormat": "Other {{instance_id}}",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -517,7 +500,6 @@
         "y": 8
       },
       "id": 23,
-      "links": [],
       "maxDataPoints": 3,
       "options": {
         "legend": {
@@ -534,49 +516,59 @@
           "values": false
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "11.5.2",
       "targets": [
         {
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "rate(ceph_rgw_failed_req{ceph_daemon=~\"[[rgw_servers]]\"}[1m])",
+          "editorMode": "code",
+          "expr": "rate(ceph_rgw_failed_req{instance_id=~\"$instance_id\"}[1m])",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "Failures {{ceph_daemon}}",
+          "legendFormat": "Failures {{instance_id}}",
+          "range": true,
           "refId": "A"
         },
         {
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "rate(ceph_rgw_get{ceph_daemon=~\"[[rgw_servers]]\"}[1m])",
+          "editorMode": "code",
+          "expr": "rate(ceph_rgw_get{instance_id=~\"$instance_id\"}[1m])",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "GETs {{ceph_daemon}}",
+          "legendFormat": "GETs {{instance_id}}",
+          "range": true,
           "refId": "B"
         },
         {
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "rate(ceph_rgw_put{ceph_daemon=~\"[[rgw_servers]]\"}[1m])",
+          "editorMode": "code",
+          "expr": "rate(ceph_rgw_put{instance_id=~\"$instance_id\"}[1m])",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "PUTs {{ceph_daemon}}",
+          "legendFormat": "PUTs {{instance_id}}",
+          "range": true,
           "refId": "C"
         },
         {
           "datasource": {
             "uid": "$datasource"
           },
-          "expr": "rate(ceph_rgw_req{ceph_daemon=~\"[[rgw_servers]]\"}[1m]) -  (rate(ceph_rgw_get{ceph_daemon=~\"[[rgw_servers]]\"}[1m]) +   rate(ceph_rgw_put{ceph_daemon=~\"[[rgw_servers]]\"}[1m]))",
+          "editorMode": "code",
+          "expr": "rate(ceph_rgw_req{instance_id=~\"$instance_id\"}[1m]) -  (rate(ceph_rgw_get{instance_id=~\"$instance_id\"}[1m]) +   rate(ceph_rgw_put{instance_id=~\"$instance_id\"}[1m]))",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "Other (DELETE,LIST) {{ceph_daemon}}",
+          "legendFormat": "Other (DELETE,LIST) {{instance_id}}",
+          "range": true,
           "refId": "D"
         }
       ],
@@ -584,9 +576,9 @@
       "type": "piechart"
     }
   ],
+  "preload": false,
   "refresh": "15s",
-  "schemaVersion": 37,
-  "style": "dark",
+  "schemaVersion": 40,
   "tags": [
     "ceph-exporter"
   ],
@@ -594,46 +586,41 @@
     "list": [
       {
         "current": {
-          "selected": false,
           "text": "default",
           "value": "default"
         },
-        "hide": 0,
         "includeAll": false,
         "label": "Data Source",
-        "multi": false,
         "name": "datasource",
         "options": [],
         "query": "prometheus",
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
         "type": "datasource"
       },
       {
-        "current": {},
-        "datasource": {
-          "type": "prometheus",
-          "uid": "$datasource"
+        "current": {
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
         },
-        "definition": "",
-        "hide": 0,
+        "definition": "label_values(instance_id)",
         "includeAll": true,
-        "multi": false,
-        "name": "rgw_servers",
+        "label": "instance_id",
+        "multi": true,
+        "name": "instance_id",
         "options": [],
         "query": {
-          "query": "label_values(ceph_rgw_req, ceph_daemon)",
-          "refId": "Prometheus-rgw_servers-Variable-Query"
+          "qryType": 1,
+          "query": "label_values(instance_id)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
-        "sort": 1,
-        "tagValuesQuery": "",
-        "tagsQuery": "",
-        "type": "query",
-        "useTags": false
+        "type": "query"
       }
     ]
   },
@@ -654,22 +641,10 @@
       "1h",
       "2h",
       "1d"
-    ],
-    "time_options": [
-      "5m",
-      "15m",
-      "1h",
-      "6h",
-      "12h",
-      "24h",
-      "2d",
-      "7d",
-      "30d"
     ]
   },
   "timezone": "",
   "title": "Ceph - RGW Instance Detail",
   "uid": "x5ARzZtmk",
-  "version": 1,
   "weekStart": ""
 }
