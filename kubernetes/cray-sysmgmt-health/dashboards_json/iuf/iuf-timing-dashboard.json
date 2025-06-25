@@ -1,53 +1,4 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_PROMETHEUS",
-      "label": "Prometheus",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "prometheus",
-      "pluginName": "Prometheus"
-    }
-  ],
-  "__elements": {},
-  "__requires": [
-    {
-      "type": "panel",
-      "id": "gauge",
-      "name": "Gauge",
-      "version": ""
-    },
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "11.5.2"
-    },
-    {
-      "type": "datasource",
-      "id": "prometheus",
-      "name": "Prometheus",
-      "version": "1.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "stat",
-      "name": "Stat",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "state-timeline",
-      "name": "State timeline",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "table",
-      "name": "Table",
-      "version": ""
-    }
-  ],
   "annotations": {
     "list": [
       {
@@ -72,17 +23,12 @@
   },
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "gnetId": 1860,
   "graphTooltip": 0,
-  "id": null,
+  "id": 67,
   "links": [],
-  "liveNow": false,
   "panels": [
     {
       "collapsed": false,
-      "datasource": {
-        "uid": "${DS_PROMETHEUS}"
-      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -130,8 +76,9 @@
         "y": 1
       },
       "id": 338,
-      "links": [],
       "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -141,7 +88,8 @@
           "values": false
         },
         "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "showThresholdMarkers": true,
+        "sizing": "auto"
       },
       "pluginVersion": "11.5.2",
       "targets": [
@@ -152,7 +100,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "argo_workflows_operation_counter{pname=~\"$Product\"}",
+          "expr": "argo_workflows_operation_counter{pname=~\"$Product\",pversion=\"$pdversion\"}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -226,12 +174,12 @@
         "y": 1
       },
       "id": 155,
-      "links": [],
       "options": {
         "colorMode": "value",
         "graphMode": "area",
         "justifyMode": "center",
         "orientation": "vertical",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "uniqueValues"
@@ -239,7 +187,9 @@
           "fields": "/^status$/",
           "values": false
         },
-        "textMode": "value"
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
       },
       "pluginVersion": "11.5.2",
       "targets": [
@@ -250,7 +200,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "argo_workflows_operation_counter{pname=~\"$FailedProducts\", status=\"Failed\"}",
+          "expr": "argo_workflows_operation_counter{pname=~\"$FailedProducts\", pversion=\"$pdversion\", status=\"Failed\"}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -309,8 +259,9 @@
         "y": 1
       },
       "id": 340,
-      "links": [],
       "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -320,7 +271,8 @@
           "values": false
         },
         "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "showThresholdMarkers": true,
+        "sizing": "auto"
       },
       "pluginVersion": "11.5.2",
       "targets": [
@@ -331,7 +283,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "argo_workflows_operation_counter{pname=~\"$Product\", pname!~\"$FailedProducts\", status=\"Succeeded\"}",
+          "expr": "argo_workflows_operation_counter{pname=~\"$Product\", pname!~\"$FailedProducts\", status=\"Succeeded\",pversion=\"$pdversion\"}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -391,8 +343,9 @@
         "y": 1
       },
       "id": 342,
-      "links": [],
       "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -402,7 +355,8 @@
           "values": false
         },
         "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "showThresholdMarkers": true,
+        "sizing": "auto"
       },
       "pluginVersion": "11.5.2",
       "targets": [
@@ -413,7 +367,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "argo_workflows_operation_counter{pname=~\"$Product\", pname=~\"$FailedProducts\", status=\"Failed\"}",
+          "expr": "argo_workflows_operation_counter{pname=~\"$Product\", pname=~\"$FailedProducts\", status=\"Failed\",pversion=\"$pdversion\"}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -472,21 +426,23 @@
         "y": 1
       },
       "id": 321,
-      "links": [],
       "options": {
         "colorMode": "value",
         "graphMode": "area",
         "justifyMode": "center",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
-            "firstNotNull"
+            "sum"
           ],
-          "fields": "/^Exec$/",
+          "fields": "/^Value \\(lastNotNull\\)$/",
           "values": false
         },
+        "showPercentChange": false,
         "text": {},
-        "textMode": "auto"
+        "textMode": "auto",
+        "wideLayout": true
       },
       "pluginVersion": "11.5.2",
       "targets": [
@@ -497,7 +453,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "argo_workflows_operation_time{pdname=~\"$Product\"}",
+          "expr": "argo_workflows_operation_time{pdname=~\"$Product\",pdversion=\"$pdversion\"}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -512,29 +468,59 @@
       "title": "Execution time for product selected",
       "transformations": [
         {
-          "id": "reduce",
+          "id": "convertFieldType",
           "options": {
-            "includeTimeField": false,
-            "mode": "reduceFields",
-            "reducers": [
-              "max",
-              "min"
-            ]
+            "conversions": [
+              {
+                "destinationType": "number",
+                "targetField": "opend"
+              },
+              {
+                "destinationType": "number",
+                "targetField": "opstart"
+              }
+            ],
+            "fields": {}
           }
         },
         {
-          "id": "calculateField",
+          "id": "groupBy",
           "options": {
-            "alias": "Exec",
-            "binary": {
-              "left": "opend Max",
-              "operator": "-",
-              "reducer": "sum",
-              "right": "opstart Min"
-            },
-            "mode": "binary",
-            "reduce": {
-              "reducer": "sum"
+            "fields": {
+              "Value": {
+                "aggregations": [
+                  "lastNotNull"
+                ],
+                "operation": "aggregate"
+              },
+              "opend": {
+                "aggregations": [
+                  "max"
+                ],
+                "operation": "aggregate"
+              },
+              "opname": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "opstart": {
+                "aggregations": [
+                  "max"
+                ],
+                "operation": "aggregate"
+              },
+              "pdname": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "pdversion": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "stage": {
+                "aggregations": [],
+                "operation": "groupby"
+              }
             }
           }
         }
@@ -554,7 +540,9 @@
           },
           "custom": {
             "align": "left",
-            "displayMode": "color-text",
+            "cellOptions": {
+              "type": "color-text"
+            },
             "filterable": true,
             "inspect": false
           },
@@ -595,9 +583,10 @@
         "y": 6
       },
       "id": 361,
-      "links": [],
       "options": {
+        "cellHeight": "sm",
         "footer": {
+          "countRows": false,
           "enablePagination": false,
           "fields": [],
           "reducer": [],
@@ -616,7 +605,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(argo_workflows_operation_counter{pname=~\"$Product\", pname=~\"$FailedProducts\", status=\"Failed\"}) by (status, pname)",
+          "expr": "sum(argo_workflows_operation_counter{pname=~\"$Product\", pname=~\"$FailedProducts\", status=\"Failed\",pversion=\"$pdversion\"}) by (status, pname)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -631,7 +620,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(argo_workflows_operation_counter{pname=~\"$Product\", pname!~\"$FailedProducts\", status=~\"Succeeded\"}) by (status, pname)",
+          "expr": "sum(argo_workflows_operation_counter{pname=~\"$Product\", pname!~\"$FailedProducts\", status=~\"Succeeded\",pversion=\"$pdversion\"}) by (status, pname)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -650,18 +639,19 @@
           "id": "filterFieldsByName",
           "options": {
             "include": {
-              "names": [
-                "pname",
-                "status",
-                "Value #C"
-              ]
+              "names": []
             }
           }
         },
         {
           "id": "organize",
           "options": {
-            "excludeByName": {},
+            "excludeByName": {
+              "Time": true,
+              "Value #A": true,
+              "Value #B": true
+            },
+            "includeByName": {},
             "indexByName": {},
             "renameByName": {
               "Time": "Time",
@@ -722,8 +712,9 @@
         "y": 12
       },
       "id": 349,
-      "links": [],
       "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -733,7 +724,8 @@
           "values": false
         },
         "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "showThresholdMarkers": true,
+        "sizing": "auto"
       },
       "pluginVersion": "11.5.2",
       "targets": [
@@ -744,7 +736,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "argo_workflows_operation_counter{pname=~\"$Product\",stage=~\"$Stage\"}",
+          "expr": "argo_workflows_operation_counter{pname=~\"$Product\",stage=~\"$Stage\",pversion=\"$pdversion\"}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -817,12 +809,12 @@
         "y": 12
       },
       "id": 319,
-      "links": [],
       "options": {
         "colorMode": "value",
         "graphMode": "area",
         "justifyMode": "center",
         "orientation": "vertical",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "uniqueValues"
@@ -830,8 +822,10 @@
           "fields": "/.*/",
           "values": false
         },
+        "showPercentChange": false,
         "text": {},
-        "textMode": "value"
+        "textMode": "value",
+        "wideLayout": true
       },
       "pluginVersion": "11.5.2",
       "targets": [
@@ -842,7 +836,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", stage=~\"$FailedStages\", status=\"Failed\"}",
+          "expr": "argo_workflows_operation_counter{pname=~\"$Product\", pversion=\"$pdversion\", stage=~\"$Stage\", stage=~\"$FailedStages\", status=\"Failed\"}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -902,8 +896,9 @@
         "y": 12
       },
       "id": 339,
-      "links": [],
       "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -913,7 +908,8 @@
           "values": false
         },
         "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "showThresholdMarkers": true,
+        "sizing": "auto"
       },
       "pluginVersion": "11.5.2",
       "targets": [
@@ -924,7 +920,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", stage!~\"$FailedStages\", status=\"Succeeded\"}",
+          "expr": "argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", stage!~\"$FailedStages\", status=\"Succeeded\",pversion=\"$pdversion\"}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -984,8 +980,9 @@
         "y": 12
       },
       "id": 343,
-      "links": [],
       "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -995,7 +992,8 @@
           "values": false
         },
         "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "showThresholdMarkers": true,
+        "sizing": "auto"
       },
       "pluginVersion": "11.5.2",
       "targets": [
@@ -1006,7 +1004,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\" ,stage=~\"$FailedStages\", status=\"Failed\"}",
+          "expr": "argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\" ,stage=~\"$FailedStages\", status=\"Failed\",pversion=\"$pdversion\"}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1065,21 +1063,23 @@
         "y": 12
       },
       "id": 364,
-      "links": [],
       "options": {
         "colorMode": "value",
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
-            "firstNotNull"
+            "sum"
           ],
-          "fields": "/^Exec$/",
+          "fields": "/^Value \\(lastNotNull\\)$/",
           "values": false
         },
+        "showPercentChange": false,
         "text": {},
-        "textMode": "auto"
+        "textMode": "auto",
+        "wideLayout": true
       },
       "pluginVersion": "11.5.2",
       "targets": [
@@ -1090,7 +1090,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "argo_workflows_operation_time{pdname=~\"$Product\", stage=~\"$Stage\"}",
+          "expr": "argo_workflows_operation_time{pdname=~\"$Product\", stage=~\"$Stage\", pdversion=\"$pdversion\"}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1105,30 +1105,59 @@
       "title": "Execution time for stage selected",
       "transformations": [
         {
-          "id": "reduce",
+          "id": "convertFieldType",
           "options": {
-            "includeTimeField": false,
-            "labelsToFields": true,
-            "mode": "reduceFields",
-            "reducers": [
-              "max",
-              "min"
-            ]
+            "conversions": [
+              {
+                "destinationType": "number",
+                "targetField": "opend"
+              },
+              {
+                "destinationType": "number",
+                "targetField": "opstart"
+              }
+            ],
+            "fields": {}
           }
         },
         {
-          "id": "calculateField",
+          "id": "groupBy",
           "options": {
-            "alias": "Exec",
-            "binary": {
-              "left": "opend Max",
-              "operator": "-",
-              "reducer": "sum",
-              "right": "opstart Min"
-            },
-            "mode": "binary",
-            "reduce": {
-              "reducer": "sum"
+            "fields": {
+              "Value": {
+                "aggregations": [
+                  "lastNotNull"
+                ],
+                "operation": "aggregate"
+              },
+              "opend": {
+                "aggregations": [
+                  "max"
+                ],
+                "operation": "aggregate"
+              },
+              "opname": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "opstart": {
+                "aggregations": [
+                  "max"
+                ],
+                "operation": "aggregate"
+              },
+              "pdname": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "pdversion": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "stage": {
+                "aggregations": [],
+                "operation": "groupby"
+              }
             }
           }
         }
@@ -1148,7 +1177,9 @@
           },
           "custom": {
             "align": "left",
-            "displayMode": "color-text",
+            "cellOptions": {
+              "type": "color-text"
+            },
             "filterable": true,
             "inspect": false
           },
@@ -1189,9 +1220,10 @@
         "y": 17
       },
       "id": 362,
-      "links": [],
       "options": {
+        "cellHeight": "sm",
         "footer": {
+          "countRows": false,
           "enablePagination": false,
           "fields": [],
           "reducer": [],
@@ -1210,7 +1242,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$FailedStages\", status=\"Failed\"}) by (status, stage)",
+          "expr": "sum(argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$FailedStages\", status=\"Failed\",pversion=\"pdversion\"}) by (status, stage)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1225,7 +1257,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(argo_workflows_operation_counter{pname=~\"$Product\", stage!~\"$FailedStages\", status=~\"Succeeded\"}) by (status, stage)",
+          "expr": "sum(argo_workflows_operation_counter{pname=~\"$Product\", stage!~\"$FailedStages\", status=~\"Succeeded\",pversion=\"$pdversion\"}) by (status, stage)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1317,8 +1349,9 @@
         "y": 23
       },
       "id": 344,
-      "links": [],
       "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -1328,7 +1361,8 @@
           "values": false
         },
         "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "showThresholdMarkers": true,
+        "sizing": "auto"
       },
       "pluginVersion": "11.5.2",
       "targets": [
@@ -1339,7 +1373,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", opname=~\"$Operation\"}",
+          "expr": "argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", opname=~\"$Operation\",pversion=\"$pdversion\"}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1412,12 +1446,12 @@
         "y": 23
       },
       "id": 329,
-      "links": [],
       "options": {
         "colorMode": "value",
         "graphMode": "area",
         "justifyMode": "center",
         "orientation": "vertical",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "uniqueValues"
@@ -1425,8 +1459,10 @@
           "fields": "/.*/",
           "values": false
         },
+        "showPercentChange": false,
         "text": {},
-        "textMode": "value"
+        "textMode": "value",
+        "wideLayout": true
       },
       "pluginVersion": "11.5.2",
       "targets": [
@@ -1437,7 +1473,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", opname=~\"$Operation\", opname=~\"$FailedOperations\", status=~\"Failed\"}",
+          "expr": "argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", opname=~\"$Operation\", opname=~\"$FailedOperations\",pversion=\"$pdversion\", status=~\"Failed\"}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1497,8 +1533,9 @@
         "y": 23
       },
       "id": 345,
-      "links": [],
       "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -1508,7 +1545,8 @@
           "values": false
         },
         "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "showThresholdMarkers": true,
+        "sizing": "auto"
       },
       "pluginVersion": "11.5.2",
       "targets": [
@@ -1519,7 +1557,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", opname=~\"$Operation\", opname!~\"$FailedOperations\", status=\"Succeeded\"}",
+          "expr": "argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", opname=~\"$Operation\", opname!~\"$FailedOperations\", status=\"Succeeded\",pversion=\"$pdversion\"}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1579,8 +1617,9 @@
         "y": 23
       },
       "id": 346,
-      "links": [],
       "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -1590,7 +1629,8 @@
           "values": false
         },
         "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "showThresholdMarkers": true,
+        "sizing": "auto"
       },
       "pluginVersion": "11.5.2",
       "targets": [
@@ -1601,7 +1641,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", opname=~\"$Operation\", opname=~\"$FailedOperations\", status=\"Failed\"}",
+          "expr": "argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", opname=~\"$Operation\", opname=~\"$FailedOperations\", status=\"Failed\",pversion=\"$pdversion\"}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1660,21 +1700,23 @@
         "y": 23
       },
       "id": 366,
-      "links": [],
       "options": {
         "colorMode": "value",
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
-            "lastNotNull"
+            "sum"
           ],
-          "fields": "/^Value$/",
+          "fields": "/^Value \\(lastNotNull\\)$/",
           "values": false
         },
+        "showPercentChange": false,
         "text": {},
-        "textMode": "auto"
+        "textMode": "auto",
+        "wideLayout": true
       },
       "pluginVersion": "11.5.2",
       "targets": [
@@ -1685,7 +1727,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "argo_workflows_operation_time{pdname=~\"$Product\", stage=~\"$Stage\", opname=~\"$Operation\"}",
+          "expr": "argo_workflows_operation_time{pdname=~\"$Product\", stage=~\"$Stage\", opname=~\"$Operation\",pdversion=\"$pdversion\"}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1700,17 +1742,60 @@
       "title": "Execution time for operation selected",
       "transformations": [
         {
-          "id": "filterFieldsByName",
-          "options": {}
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "number",
+                "targetField": "opend"
+              },
+              {
+                "destinationType": "number",
+                "targetField": "opstart"
+              }
+            ],
+            "fields": {}
+          }
         },
         {
-          "id": "reduce",
+          "id": "groupBy",
           "options": {
-            "includeTimeField": false,
-            "mode": "reduceFields",
-            "reducers": [
-              "sum"
-            ]
+            "fields": {
+              "Value": {
+                "aggregations": [
+                  "lastNotNull"
+                ],
+                "operation": "aggregate"
+              },
+              "opend": {
+                "aggregations": [
+                  "max"
+                ],
+                "operation": "aggregate"
+              },
+              "opname": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "opstart": {
+                "aggregations": [
+                  "max"
+                ],
+                "operation": "aggregate"
+              },
+              "pdname": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "pdversion": {
+                "aggregations": [],
+                "operation": "groupby"
+              },
+              "stage": {
+                "aggregations": [],
+                "operation": "groupby"
+              }
+            }
           }
         }
       ],
@@ -1729,7 +1814,9 @@
           },
           "custom": {
             "align": "left",
-            "displayMode": "color-text",
+            "cellOptions": {
+              "type": "color-text"
+            },
             "filterable": true,
             "inspect": false
           },
@@ -1770,15 +1857,16 @@
         "y": 28
       },
       "id": 363,
-      "links": [],
       "options": {
+        "cellHeight": "sm",
         "footer": {
+          "countRows": false,
           "enablePagination": false,
           "fields": [],
           "reducer": [],
           "show": false
         },
-        "frameIndex": 1,
+        "frameIndex": 0,
         "showHeader": true,
         "sortBy": []
       },
@@ -1791,22 +1879,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(argo_workflows_operation_counter{pname=~\"$Product\",stage=~\"$Stage\",opname=~\"$FailedOperations\",status=\"Failed\"}) by (status, opname)",
-          "format": "table",
-          "hide": false,
-          "instant": true,
-          "legendFormat": "__auto",
-          "range": false,
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "sum(argo_workflows_operation_counter{pname=~\"$Product\",stage=~\"$Stage\",opname!~\"$FailedOperations\",status=~\"Succeeded\"}) by (status, opname)",
+          "expr": "argo_workflows_operation_counter{pname=\"$Product\",pversion=\"$pdversion\", stage=~\"$Stage\",opname=~\"$Operation\"}",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1821,150 +1894,93 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(argo_workflows_operation_time{pdname=~\"$Product\",stage=~\"$Stage\",opname=~\"$Operation\"}) by (opname)",
+          "expr": "argo_workflows_operation_time{pdname=\"$Product\",pdversion=\"$pdversion\", stage=~\"$Stage\",opname=~\"$Operation\"}",
           "format": "table",
           "hide": false,
           "instant": true,
           "legendFormat": "__auto",
           "range": false,
-          "refId": "C"
+          "refId": "A"
         }
       ],
       "title": "Operation detail",
       "transformations": [
         {
-          "id": "merge",
-          "options": {}
+          "id": "renameByRegex",
+          "options": {
+            "regex": "^pd(.*)",
+            "renamePattern": "p$1"
+          }
         },
         {
-          "id": "filterFieldsByName",
+          "id": "joinByField",
           "options": {
-            "include": {
-              "names": [
-                "opname",
-                "status",
-                "Value #C"
-              ]
-            }
+            "byField": "opname",
+            "mode": "outer"
           }
         },
         {
           "id": "organize",
           "options": {
-            "excludeByName": {},
+            "excludeByName": {
+              "Time": true,
+              "Time 1": true,
+              "Time 2": true,
+              "Value #B": true,
+              "__name__": true,
+              "__name__ 1": true,
+              "__name__ 2": true,
+              "cluster": true,
+              "cluster 1": true,
+              "cluster 2": true,
+              "container": true,
+              "container 1": true,
+              "container 2": true,
+              "endpoint": true,
+              "endpoint 1": true,
+              "endpoint 2": true,
+              "instance": true,
+              "instance 1": true,
+              "instance 2": true,
+              "job": true,
+              "job 1": true,
+              "job 2": true,
+              "namespace": true,
+              "namespace 1": true,
+              "namespace 2": true,
+              "opend": true,
+              "opstart": true,
+              "pname": true,
+              "pod": true,
+              "pod 1": true,
+              "pod 2": true,
+              "prometheus": true,
+              "prometheus 1": true,
+              "prometheus 2": true,
+              "pversion": true,
+              "service": true,
+              "service 1": true,
+              "service 2": true,
+              "stage": true,
+              "stage 1": true,
+              "stage 2": true,
+              "status": false,
+              "type": true,
+              "type 1": true,
+              "type 2": true
+            },
+            "includeByName": {},
             "indexByName": {},
-            "renameByName": {
-              "Value #C": "Time taken",
-              "opname": "Operation Name",
-              "status": "Status"
-            }
+            "renameByName": {}
           }
         }
       ],
       "type": "table"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "fillOpacity": 15,
-            "lineWidth": 1,
-            "spanNulls": 3600000
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "s"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 35
-      },
-      "id": 360,
-      "options": {
-        "alignValue": "left",
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "mergeValues": true,
-        "rowHeight": 0.9,
-        "showValue": "auto",
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "argo_workflows_operation_time{pdname=~\"$Product\", stage=~\"$Stage\", opname=~\"$Operation\"}",
-          "format": "table",
-          "instant": true,
-          "range": false,
-          "refId": "A"
-        }
-      ],
-      "title": "Graph showing duration for each stage & operation",
-      "transformations": [
-        {
-          "id": "filterFieldsByName",
-          "options": {
-            "include": {
-              "names": [
-                "Value",
-                "Time"
-              ]
-            }
-          }
-        },
-        {
-          "id": "convertFieldType",
-          "options": {
-            "conversions": [
-              {
-                "destinationType": "string",
-                "targetField": "Value"
-              }
-            ],
-            "fields": {}
-          }
-        }
-      ],
-      "type": "state-timeline"
     }
   ],
+  "preload": false,
   "refresh": "",
-  "schemaVersion": 37,
-  "style": "dark",
+  "schemaVersion": 40,
   "tags": [
     "IUF"
   ],
@@ -1972,34 +1988,30 @@
     "list": [
       {
         "current": {
-          "selected": true,
           "text": "default",
           "value": "default"
         },
-        "hide": 0,
         "includeAll": false,
         "label": "Data source",
-        "multi": false,
         "name": "DS_PROMETHEUS",
         "options": [],
         "query": "prometheus",
-        "queryValue": "",
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
         "type": "datasource"
       },
       {
-        "current": {},
+        "current": {
+          "text": "sma",
+          "value": "sma"
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
         "definition": "label_values(argo_workflows_operation_time, pdname)",
-        "hide": 0,
-        "includeAll": true,
+        "includeAll": false,
         "label": "Product",
-        "multi": false,
         "name": "Product",
         "options": [],
         "query": {
@@ -2008,63 +2020,65 @@
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(argo_workflows_operation_time{pdname=~\"$Product\"}, stage)",
-        "hide": 0,
+        "definition": "label_values(argo_workflows_operation_time{pdname=~\"$Product\", pdversion=\"$pdversion\"},stage)",
         "includeAll": true,
         "label": "Stage",
-        "multi": false,
         "name": "Stage",
         "options": [],
         "query": {
-          "query": "label_values(argo_workflows_operation_time{pdname=~\"$Product\"}, stage)",
-          "refId": "StandardVariableQuery"
+          "qryType": 1,
+          "query": "label_values(argo_workflows_operation_time{pdname=~\"$Product\", pdversion=\"$pdversion\"},stage)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
         "sort": 1,
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(argo_workflows_operation_time{pdname=~\"$Product\", stage=~\"$Stage\"}, opname)",
-        "hide": 0,
+        "definition": "label_values(argo_workflows_operation_counter{pname=\"$Product\", stage=~\"$Stage\", pversion=\"$pdversion\"},opname)",
         "includeAll": true,
         "label": "Operation",
-        "multi": false,
         "name": "Operation",
         "options": [],
         "query": {
-          "query": "label_values(argo_workflows_operation_time{pdname=~\"$Product\", stage=~\"$Stage\"}, opname)",
-          "refId": "StandardVariableQuery"
+          "qryType": 1,
+          "query": "label_values(argo_workflows_operation_counter{pname=\"$Product\", stage=~\"$Stage\", pversion=\"$pdversion\"},opname)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(argo_workflows_operation_counter{pname=~\"$Product\", status=\"Failed\"}, pname)",
+        "definition": "label_values(argo_workflows_operation_counter{pname=~\"$Product\", status=\"Failed\", pversion=\"$pdversion\"},pname)",
         "hide": 2,
         "includeAll": true,
         "label": "Failed Products",
@@ -2072,59 +2086,79 @@
         "name": "FailedProducts",
         "options": [],
         "query": {
-          "query": "label_values(argo_workflows_operation_counter{pname=~\"$Product\", status=\"Failed\"}, pname)",
-          "refId": "StandardVariableQuery"
+          "qryType": 1,
+          "query": "label_values(argo_workflows_operation_counter{pname=~\"$Product\", status=\"Failed\", pversion=\"$pdversion\"},pname)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", status=~\"Failed\"}, stage)",
+        "definition": "label_values(argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", status=~\"Failed\", pversion=\"$pdversion\"},stage)",
         "hide": 2,
         "includeAll": true,
         "label": "Failed Stages",
-        "multi": false,
         "name": "FailedStages",
         "options": [],
         "query": {
-          "query": "label_values(argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", status=~\"Failed\"}, stage)",
-          "refId": "StandardVariableQuery"
+          "qryType": 1,
+          "query": "label_values(argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", status=~\"Failed\", pversion=\"$pdversion\"},stage)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
         "sort": 1,
         "type": "query"
       },
       {
-        "current": {},
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", opname=~\"$Operation\", status=~\"Failed\"}, opname)",
+        "definition": "label_values(argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", opname=~\"$Operation\", status=~\"Failed\", pversion=\"$pdversion\"},opname)",
         "hide": 2,
         "includeAll": true,
         "label": "Failed Operations",
-        "multi": false,
         "name": "FailedOperations",
         "options": [],
         "query": {
-          "query": "label_values(argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", opname=~\"$Operation\", status=~\"Failed\"}, opname)",
-          "refId": "StandardVariableQuery"
+          "qryType": 1,
+          "query": "label_values(argo_workflows_operation_counter{pname=~\"$Product\", stage=~\"$Stage\", opname=~\"$Operation\", status=~\"Failed\", pversion=\"$pdversion\"},opname)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": "1.11.4-20250611212838.39c83ce2be12",
+          "value": "1.11.4-20250611212838.39c83ce2be12"
+        },
+        "definition": "label_values(argo_workflows_operation_time{pdname=\"$Product\"},pdversion)",
+        "label": "Product Version",
+        "name": "pdversion",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(argo_workflows_operation_time{pdname=\"$Product\"},pdversion)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
         "type": "query"
       }
     ]
@@ -2133,34 +2167,9 @@
     "from": "now-5m",
     "to": "now"
   },
-  "timepicker": {
-    "refresh_intervals": [
-      "5s",
-      "10s",
-      "30s",
-      "1m",
-      "5m",
-      "15m",
-      "30m",
-      "1h",
-      "2h",
-      "1d"
-    ],
-    "time_options": [
-      "5m",
-      "15m",
-      "1h",
-      "6h",
-      "12h",
-      "24h",
-      "2d",
-      "7d",
-      "30d"
-    ]
-  },
+  "timepicker": {},
   "timezone": "browser",
   "title": "IUF Timing Dashboard",
   "uid": "Timing",
-  "version": 2,
   "weekStart": ""
 }

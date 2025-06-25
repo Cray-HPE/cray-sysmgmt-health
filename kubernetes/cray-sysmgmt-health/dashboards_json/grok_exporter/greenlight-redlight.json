@@ -49,11 +49,11 @@
         "conditions": [
           {
             "color": "red",
-            "expression": "!=1"
+            "expression": "$Value == 0"
           },
           {
             "color": "green",
-            "expression": "1"
+            "expression": "$Value == 1"
           }
         ],
         "fieldgrp1": "switch",

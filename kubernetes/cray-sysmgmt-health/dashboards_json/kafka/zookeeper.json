@@ -655,7 +655,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum without(area)(jvm_memory_bytes_used{job=\"sysmgmt-health/kafka-resources-metrics\", container=\"zookeeper\"})",
+          "expr": "sum without(area)(jvm_memory_used_bytes{job=\"sysmgmt-health/kafka-resources-metrics\", container=\"zookeeper\"})",
           "interval": "",
           "legendFormat": "Used:{{instance}}",
           "range": true,
@@ -1145,6 +1145,5 @@
   "timezone": "",
   "title": "Zookeeper",
   "uid": "zookeeper",
-  "version": 1,
   "weekStart": ""
 }

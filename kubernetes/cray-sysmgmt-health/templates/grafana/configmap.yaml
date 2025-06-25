@@ -620,3 +620,16 @@ data:
   cilium-policy-verdicts.json: |-
     {{- .Files.Get "dashboards_json/cilium/cilium-policy-verdicts.json" | nindent 4 }}
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "cray-sysmgmt-health.fullname" . }}-kubernetes-views-namespaces
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- if (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}
+    {{ (index $.Values "victoria-metrics-k8s-stack" "grafana" "sidecar" "dashboards" "label") }}: "1"
+    {{- end }}
+data:
+  kubernetes_views_namespaces.json: |-
+    {{- .Files.Get "dashboards_json/kubernetes/kubernetes_views_namespaces.json" | nindent 4 }}
+---
