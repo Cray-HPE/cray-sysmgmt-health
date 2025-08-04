@@ -61,7 +61,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
-  "id": 55,
+  "id": 64,
   "links": [],
   "panels": [
     {
@@ -2882,10 +2882,10 @@
         "allValue": ".*",
         "current": {
           "text": [
-            "sma"
+            "argo"
           ],
           "value": [
-            "sma"
+            "argo"
           ]
         },
         "datasource": {
@@ -2951,26 +2951,25 @@
       {
         "current": {
           "text": "All",
-          "value": [
-            "$__all"
-          ]
+          "value": "$__all"
         },
         "datasource": {
           "type": "prometheus",
           "uid": "${datasource}"
         },
-        "definition": "label_values(kube_pod_info{namespace=~\"$namespace\", cluster=~\"$cluster\"},created_by_name)",
+        "definition": "query_result(kube_pod_status_phase{namespace=\"$namespace\",phase=\"Running\"} == 1)",
         "description": "Can be used to filter on a specific deployment, statefulset or deamonset (only relevant panels).",
         "includeAll": true,
         "multi": true,
         "name": "created_by",
         "options": [],
         "query": {
-          "query": "label_values(kube_pod_info{namespace=~\"$namespace\", cluster=~\"$cluster\"},created_by_name)",
+          "qryType": 3,
+          "query": "query_result(kube_pod_status_phase{namespace=\"$namespace\",phase=\"Running\"} == 1)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 2,
-        "regex": "",
+        "regex": "/pod=\"([^\"]+)\"/",
         "sort": 1,
         "type": "query"
       }
@@ -2983,7 +2982,7 @@
   "timepicker": {},
   "timezone": "utc",
   "title": "Kubernetes / Views / Namespaces",
-  "uid": "k8s_views_ns",
-  "version": 1,
+  "uid": "aetz1k6f8tqm8a",
+  "version": 3,
   "weekStart": ""
 }
