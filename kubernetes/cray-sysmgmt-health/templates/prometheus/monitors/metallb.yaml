@@ -65,12 +65,3 @@ spec:
       labels:
         severity: critical
         group: prometheus
-    - alert: MetalLBBGPSessionDown
-      annotations:
-        description: '"{{`{{ $labels.job }}`}}" - MetalLB "{{`{{ $labels.container }}`}}" on "{{`{{ $labels.pod}}`}}" has BGP session "{{`{{ $labels.peer }}`}}" down for > 1 minute'
-        summary: 'MetalLB "{{`{{ $labels.container }}`}}" on "{{`{{ $labels.pod}}`}}" has BGP session "{{`{{ $labels.peer }}`}}" down for > 1 minute'
-      expr: metallb_bgp_session_up{job="metallb"} == 0
-      for: 1m
-      labels:
-        severity: critical
-        group: prometheus
