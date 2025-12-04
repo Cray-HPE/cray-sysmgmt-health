@@ -44,6 +44,7 @@ spec:
     - alert: SwitchPortDown
       annotations:
         description: 'Port "{{`{{ $labels.ifName }}`}}" - "{{`{{ $labels.ifAlias }}`}}" is down, this may result in connectivity loss.'
+        summary: 'Port "{{`{{ $labels.ifName }}`}}" is down.'
       expr: ifOperStatus != ifAdminStatus
       for: 5m
       labels:
