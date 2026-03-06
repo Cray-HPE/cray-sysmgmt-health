@@ -1,7 +1,7 @@
 #
 # MIT License
 #
-# (C) Copyright 2022-2023 Hewlett Packard Enterprise Development LP
+# (C) Copyright 2026 Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -47,21 +47,18 @@ spec:
           env:
           - name: CRAYENV
             value: "k8s"
-          - name: USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: {{ template "cray-sysmgmt-health.fullname" . }}-canu-test-secrets
-                key: USERNAME
-          - name: PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ template "cray-sysmgmt-health.fullname" . }}-canu-test-secrets
-                key: PASSWORD
+          - name: USERNAME_FILE
+            value: /etc/canu-secret/USERNAME
+          - name: PASSWORD_FILE
+            value: /etc/canu-secret/PASSWORD
           ports:
             - containerPort: 8080
           volumeMounts:
             - name: logs
               mountPath: /logs/
+            - name: canu-secret-volume
+              mountPath: /etc/canu-secret
+              readOnly: true
         - name: grok
           image: {{ .Values.grokExporter.image.repository }}:{{ .Values.grokExporter.image.tag }}
           imagePullPolicy: {{ .Values.grokExporter.image.pullPolicy }}
@@ -80,3 +77,7 @@ spec:
             name: {{ template "cray-sysmgmt-health.fullname" . }}-canu-test
         - name: logs
           emptyDir: {}
+        - name: canu-secret-volume
+          secret:
+            secretName: {{ template "cray-sysmgmt-health.fullname" . }}-canu-test-secrets
+
